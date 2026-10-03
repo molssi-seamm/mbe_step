@@ -113,7 +113,7 @@ copies of ``orca.ini`` and ``mopac.ini``:
 - **MOPAC, MDI path:** the same cluster, PM6 high and AM1 low. It ran in
   18 s on warm engines.
 
-**Periodic, real code (MOPAC over MDI):**
+**Periodic, real code (MOPAC over MDI) -- a smoke test, not a validation number:**
 
 - Setup: the 64-water pilot geometry (L = 12.4297 Å), default selection
   (pairs < 4.5 Å, connected triples < 3.5 Å). PM7 high, PM6 molecular and
@@ -177,6 +177,9 @@ The review found the core sound. These were fixed, each with a test:
    is refused.
 #. **Help text.** The labels file's help gives ``job:NAME``; a leading ``/``
    is an absolute path.
+#. **Configuration charge 0 counts as not set** (plain xyz has none), so the
+   molecules' charges win: a Li⁺ structure runs at +1 even if its charge field
+   says 0. The user guide says so.
 #. **Cell without a stress.** It is marked failed with a reason, instead of
    failing in the assembly.
 #. **Order field.** A typed ``$variable`` in it no longer breaks the dialog.

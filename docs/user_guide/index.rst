@@ -39,7 +39,8 @@ The step uses up to four Model Chemistries:
 
 Each field accepts any model chemistry the installed programs offer, typed or
 chosen, and ``$variables`` in its parts. A periodic level must come from a program
-that declares the sign convention of its stress.
+that declares the sign convention of its stress. MOPAC does so from mopac_step
+2026.10.3.2.
 
 Each increment is built entirely from calculations at its own low level. A triple
 referenced to the molecular level subtracts the molecular-level increments of its
@@ -68,6 +69,13 @@ Choosing the fragments
 The molecules are found from the bonds (they are perceived if the structure has
 none) and typed by formula and topology. Charges come from the structure's formal
 charges, or from the type catalog: Li⁺, BF₄⁻, PF₆⁻ and the common monatomic ions.
+The whole system runs with the charge its molecules add up to. If the
+configuration's own charge is set and disagrees, the step refuses to run.
+A configuration charge of 0 counts as not set (plain xyz input has no charge),
+so a structure holding a Li⁺ runs at +1 even if its charge field says 0. To make
+a molecule neutral, give the structure formal charges or give the charge of its
+type.
+
 A cell too small for the cutoffs is refused, because the same molecules could
 form two different fragments.
 
