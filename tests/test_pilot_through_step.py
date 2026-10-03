@@ -93,7 +93,12 @@ def test_pilot_through_the_step(pilot, db, monkeypatch, tmp_path):
         cell=np.eye(3) * box,
         bonds=[(3 * m, 3 * m + k) for m in range(64) for k in (1, 2)],
     )
-    node, P = parameters(**{"periodic low level": "fake periodic"})
+    node, P = parameters(
+        **{
+            "periodic low level": "fake periodic",
+            "energy offsets": "water 2074.69325",
+        }
+    )
     frame = node._frame(conf, node._rules(P), P)
     assert frame["fragments"].names == [m["name"] for m in meta]
     calcs = frame["calculations"]

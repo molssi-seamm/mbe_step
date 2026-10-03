@@ -92,3 +92,11 @@ def test_dialog_layouts(tk_node):
 def test_counterpoise_is_not_offered(tk_node):
     """Counterpoise arrives in phase 3; it must not appear at all yet."""
     assert not any("counterpoise" in key for key in tk_node.node.parameters)
+
+
+def test_variable_order_does_not_break_the_layout(tk_node):
+    """A typed $variable in the order field must not make reset_dialog raise."""
+    tk_node.create_dialog()
+    tk_node["maximum order"].set("$order")
+    tk_node.reset_dialog()
+    assert tk_node["triple rule"].grid_info() != {}

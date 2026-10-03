@@ -178,19 +178,21 @@ metadata["results"] = {
     ),
     "MBE energy": _result("The many-body correction to the energy", "kJ/mol"),
     "per-body energies": _result(
-        "The correction to the energy by order", "kJ/mol", "{order}", "json"
+        "The correction to the energy by order, in kJ/mol", "", "json", "json"
     ),
     "per-body pressures": _result(
-        "The correction to the pressure by order", "atm", "{order}", "json"
+        "The correction to the pressure by order, in atm", "", "json", "json"
     ),
     "fragment counts": _result(
-        "The selected and auxiliary fragments by order", "", "{order}", "json"
+        "The selected and auxiliary fragments by order", "", "json", "json"
     ),
     "maximum increment net force": _result(
         "The largest component of any increment's net force (ideally zero)",
         "kJ/mol/Å",
     ),
-    "maximum force": _result("The largest force on an atom", "kJ/mol/Å"),
+    "maximum force": _result(
+        "The largest Cartesian component of the forces", "kJ/mol/Å"
+    ),
     "rms force": _result("The RMS force on the atoms", "kJ/mol/Å"),
     "configuration name": _result("The configuration", "", _type="string"),
     "model chemistry": _result("The high level", "", _type="string"),

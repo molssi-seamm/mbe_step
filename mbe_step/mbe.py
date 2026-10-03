@@ -187,6 +187,8 @@ class Mbe(seamm.Node):
         directory.mkdir(parents=True, exist_ok=True)
 
         configurations = self.select_configurations(P)
+        if len(configurations) == 0:
+            raise ValueError("The MBE step found no configurations to label.")
         rules = self._rules(P)
         offsets = labels_.parse_offsets(P["energy offsets"])
         frames = [self._frame(c, rules, P) for c in configurations]
@@ -267,6 +269,7 @@ class Mbe(seamm.Node):
             if r1 > 0:
                 periodic[2] = r1
         seamm_mbe.assign_levels(fragments, periodic)
+        self._check_frame(configuration, system, rules, P)
         return {
             "configuration": configuration,
             "system": system,
@@ -274,6 +277,36 @@ class Mbe(seamm.Node):
             "calculations": fragments.calculations(),
             "prefix": f"c{configuration.id}-",
         }
+
+    def _check_frame(self, configuration, system, rules, P):
+        """Refuse, before any calculation, what would fail or be wrong later:
+        missing energy offsets, a configuration charge that disagrees with the
+        molecules', and open-shell molecules inside larger fragments."""
+        name = configuration.name
+        offsets = labels_.parse_offsets(P["energy offsets"])
+        if offsets is not None:
+            missing = sorted(set(system.type_counts()) - set(offsets))
+            if missing:
+                raise ValueError(
+                    f"Configuration {name} has molecules of type(s) {missing} with "
+                    "no energy offset. Give an offset for every type, or 'none'."
+                )
+        total = sum(system.types[m.type].charge for m in system.molecules)
+        given = int(getattr(configuration, "charge", 0) or 0)
+        if given != 0 and given != total:
+            raise ValueError(
+                f"Configuration {name} has charge {given:+d}, but its molecules' "
+                f"charges add up to {total:+d}."
+            )
+        open_shell = sorted(
+            t.name for t in system.types.values() if t.multiplicity != 1
+        )
+        if open_shell and rules.max_order >= 2:
+            raise ValueError(
+                f"Configuration {name} contains open-shell molecules "
+                f"({', '.join(open_shell)}); fragments of several molecules with "
+                "open shells are not supported yet. Use maximum order 1."
+            )
 
     def _levels(self, P, context, frames):
         """Resolve each level's model chemistry, checking what is needed."""
@@ -340,7 +373,7 @@ class Mbe(seamm.Node):
                 system = frame["system"]
                 if name in ("cell", "cluster"):
                     if (name == "cell") == system.periodic:
-                        structures[frame["prefix"] + "cell"] = frame["configuration"]
+                        structures[frame["prefix"] + "cell"] = levels.whole(system)
                     continue
                 fragments = frame["fragments"]
                 for fname in frame["calculations"][name]:
@@ -357,6 +390,11 @@ class Mbe(seamm.Node):
                 )
             )
             results[name] = level.evaluate(self, structures, stress=(name == "cell"))
+            if name == "cell":
+                for result in results[name].values():
+                    if result.ok and result.stress is None:
+                        result.ok = False
+                        result.reason = f"{level.level} returned no stress for the cell"
             done = results[name].values()
             restored = sum(1 for r in done if getattr(r, "restored", False))
             failed = sum(1 for r in done if not r.ok)

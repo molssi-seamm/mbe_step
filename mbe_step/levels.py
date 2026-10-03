@@ -180,6 +180,24 @@ def geometry(system, fragment):
     )
 
 
+def whole(system):
+    """The whole cell or cluster as a ``seamm_exec.Geometry`` with the charge
+    the molecules add up to (their types' charges, from the formal charges or
+    the catalog) -- the same charges the fragments use -- and multiplicity 1
+    (open-shell molecules are refused before this)."""
+    from seamm_exec import Geometry
+
+    charge = sum(system.types[m.type].charge for m in system.molecules)
+    return Geometry(
+        system.atomic_numbers,
+        system.coordinates,
+        charge=charge,
+        multiplicity=1,
+        cell=system.cell,
+        name="whole system",
+    )
+
+
 def to_library(result, *, volume=None, convention=None):
     """An EvaluatorResult in seamm_mbe's units: (energy eV, forces eV/Å), plus
     the virial (eV) when the result has a stress."""

@@ -144,7 +144,13 @@ def _read_frames(path):
         if not text[i].strip():
             i += 1
             continue
-        n = int(text[i])
+        try:
+            n = int(text[i])
+        except ValueError:
+            raise ValueError(
+                f"{path}, line {i + 1}: expected the number of atoms of a frame, "
+                f"found '{text[i][:40]}'. Is it an extended XYZ file?"
+            ) from None
         frames.append(text[i : i + n + 2])
         i += n + 2
     return frames

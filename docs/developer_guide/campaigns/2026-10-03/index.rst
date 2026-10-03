@@ -155,6 +155,57 @@ Bugs found on the way
   over MDI would fail the same way; worth checking in mopac_step
   (``conda run`` with the env's full python path would avoid it).
 
+Review (design, 2026-10-03)
+===========================
+
+The review found the core sound. These were fixed, each with a test:
+
+#. **Release order.** ``Evaluator(resources=...)`` is in no released
+   seamm_exec yet. It is applied on seamm_exec dev by the "worker" session
+   (56ef993; the contract sentence, that the declaration covers both paths,
+   is 5f3139e) and rides in its phase-4 release. mbe_step pins that version
+   once it is on PyPI. ``test_real_evaluator_with_resources`` runs the real
+   Evaluator, so it fails until then. A periodic MOPAC level needs mopac_step
+   2026.10.3.2 (PR molssi-seamm/mopac_step#160).
+#. **Energy offsets.** The default is now ``none``. Offsets that miss a
+   molecule type are refused before any calculation; they used to fail
+   after everything ran, storing nothing.
+#. **The whole system's charge.** It was the configuration's own charge and
+   multiplicity, so a plain-xyz Li⁺ + 2 H₂O ran at charge 0, doublet, while
+   its fragments ran Li⁺ at +1. The whole system is now a Geometry with the
+   molecules' summed charge, singlet. A configuration charge that disagrees
+   is refused.
+#. **Help text.** The labels file's help gives ``job:NAME``; a leading ``/``
+   is an absolute path.
+#. **Cell without a stress.** It is marked failed with a reason, instead of
+   failing in the assembly.
+#. **Order field.** A typed ``$variable`` in it no longer breaks the dialog.
+#. **No configurations** is an error.
+#. **Contract.** The stress declaration covers both paths (seamm_exec docs;
+   mopac_step's docstring and user guide).
+#. **Periodic low level.** It accepts any model chemistry in phase 2; the
+   help text says so.
+#. **Open-shell molecules** in fragments of several molecules are refused
+   before running.
+
+Nits:
+
+- the per-body results have no units on the dictionaries;
+- "maximum force" is the largest Cartesian component;
+- the extxyz reader gives a clear message on a malformed file.
+
+Issues filed for what is not this step's:
+
+- the MOPAC MDI engine under an activated venv,
+  `mopac_step#161 <https://github.com/molssi-seamm/mopac_step/issues/161>`_;
+- the Energy step's nested stress,
+  `energy_step#2 <https://github.com/molssi-seamm/energy_step/issues/2>`_;
+- the extxyz reader without ``Properties=``,
+  `read_structure_step#81 <https://github.com/molssi-seamm/read_structure_step/issues/81>`_.
+
+The ORCA identity run, repeated with the whole system as a Geometry, gave
+identical labels.
+
 Phase-2 limitations (open items)
 ================================
 

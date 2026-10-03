@@ -77,7 +77,10 @@ class MbeParameters(seamm.Parameters):
                 "The periodic code used for the compact fragments (monomers and "
                 "close pairs), the same code as the cell's low level, which "
                 "cancels its errors best. 'none' references every increment to "
-                "the molecular low level."
+                "the molecular low level. For now the fragments are run as "
+                "isolated molecules, so any model chemistry is accepted here; "
+                "the registered periodic boxes for VASP come in a later "
+                "version."
             ),
         },
         "cell low level": {
@@ -219,7 +222,7 @@ class MbeParameters(seamm.Parameters):
         },
         # ------------------------------------------------------ energy scale
         "energy offsets": {
-            "default": "water 2074.69325",
+            "default": "none",
             "kind": "string",
             "default_units": "",
             "enumeration": ("none",),
@@ -228,8 +231,9 @@ class MbeParameters(seamm.Parameters):
             "help_text": (
                 "Added to the energy per molecule of each type, to put the labels "
                 "on the scale of other training data, as entries 'type offset' "
-                "separated by ';'. The default is the water training sets' "
-                "formation-energy scale. 'none' keeps the absolute energy."
+                "separated by ';', e.g. 'water 2074.69325' (the water training "
+                "sets' formation-energy scale). Every molecule type present needs "
+                "one. 'none' keeps the absolute energy."
             ),
         },
         # ------------------------------------------------------------ output
@@ -242,9 +246,9 @@ class MbeParameters(seamm.Parameters):
             "description": "Labels file:",
             "help_text": (
                 "The extended XYZ file the labels are appended to (energy, forces "
-                "and, for cells, the stress), in the step's directory; a name "
-                "starting with '/' is relative to the job's directory. 'none' "
-                "writes no file."
+                "and, for cells, the stress), in the step's directory; "
+                "'job:NAME' puts it in the job's directory, so a loop gathers "
+                "every configuration into one file. 'none' writes no file."
             ),
         },
         # --------------------------------------------------------- execution

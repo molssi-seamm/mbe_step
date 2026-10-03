@@ -173,7 +173,10 @@ class TkMbe(seamm.TkNode):
 
     def shown(self):
         """The parameters that apply to the current choices."""
-        order = int(self._value("maximum order"))
+        try:
+            order = int(self._value("maximum order"))
+        except (TypeError, ValueError):
+            order = 3  # e.g. a $variable: show everything that might apply
         table = self._value("cutoffs") != "single value"
         triples = order >= 3 and self._value("triple rule") != "none"
         periodic = self._value("periodic low level") != "none"
