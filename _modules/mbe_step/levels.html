@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mbe_step.levels &#8212; SEAMM MBE Plug-in 2026.10.3 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=c224919a" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=64cc4de3f052d77215f0"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
+
+    <script src="../../_static/documentation_options.js?v=f64fa391"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/mbe_step/levels';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2026.10.3" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/SEAMM logo.png" class="logo__image only-light" alt=""/>
+    <img src="../../_static/SEAMM Inverted 288x181.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">MBE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    <no title>
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../developer_guide/index.html">
+    Developer Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Documentation
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../authors.html">
+    Development Team
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../history.html">
+    History
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi-seamm.github.io">
+    Main SEAMM documentation
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi-seamm.github.io">
+    SEAMM Documentation
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi.org">
+    MolSSI
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/molssi-seamm/geometry_analysis_step" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i><span class="visually-hidden">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    <no title>
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../developer_guide/index.html">
+    Developer Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../authors.html">
+    Development Team
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../history.html">
+    History
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi-seamm.github.io">
+    Main SEAMM documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi-seamm.github.io">
+    SEAMM Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi.org">
+    MolSSI
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/molssi-seamm/geometry_analysis_step" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i><span class="visually-hidden">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">mbe_step.levels</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for mbe_step.levels</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">"""The MBE step's levels of theory: resolving their model chemistries and</span>
+<span class="sd">evaluating structures with each through seamm_exec's Evaluator.</span>
+
+<span class="sd">The step uses up to four levels:</span>
+
+<span class="sd">* high: every fragment (by default the flowchart's current Model Chemistry);</span>
+<span class="sd">* molecular: the molecular low level, on the fragments referenced to it;</span>
+<span class="sd">* periodic: the periodic low level, on the compact fragments referenced to it;</span>
+<span class="sd">* cell: the low level of the whole cell (or cluster).</span>
+
+<span class="sd">Each level is one Evaluator with its own directory, so each keeps its own task</span>
+<span class="sd">manifest (restart) and bundles; the Evaluator chooses how the level runs</span>
+<span class="sd">(batch tasks or an MDI engine). In this phase the levels run one after the</span>
+<span class="sd">other; running them concurrently is a seamm_exec follow-up.</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">seamm_mbe</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1">#: The sentinel for the flowchart's current Model Chemistry</span>
+<span class="n">CURRENT</span> <span class="o">=</span> <span class="s2">"current model chemistry"</span>
+
+
+<div class="viewcode-block" id="resolve">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.levels.resolve">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">current</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The ``_model_chemistry`` wrapper for a level given as text.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    text : str</span>
+<span class="sd">        A level spec such as ``"ORCA:DFT@r2SCAN-D4/def2-TZVPPD"``, possibly with</span>
+<span class="sd">        ``$variable`` components, or :data:`CURRENT`.</span>
+<span class="sd">    context : dict</span>
+<span class="sd">        The flowchart variables, to dereference any ``$variable``.</span>
+<span class="sd">    current : dict or None</span>
+<span class="sd">        The flowchart's ``_model_chemistry``, for :data:`CURRENT`.</span>
+<span class="sd">    periodic : bool</span>
+<span class="sd">        Whether the level must handle periodic systems.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dict</span>
+<span class="sd">        The ``_model_chemistry`` wrapper: level, step, options, ...</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">model_chemistry_step.model_chemistry</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+        <span class="n">availability_problem</span><span class="p">,</span>
+        <span class="n">discover_model_chemistries</span><span class="p">,</span>
+        <span class="n">match_model_chemistry</span><span class="p">,</span>
+        <span class="n">resolve_level</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">text</span> <span class="o">==</span> <span class="n">CURRENT</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">current</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"The MBE step's high level is the current model chemistry, but "</span>
+                <span class="s2">"there is none: add a Model Chemistry step before the MBE step, "</span>
+                <span class="s2">"or give the high level explicitly."</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">current</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">resolve_level</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="n">available</span> <span class="o">=</span> <span class="n">discover_model_chemistries</span><span class="p">(</span><span class="n">periodic_only</span><span class="o">=</span><span class="n">periodic</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">available</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">available</span><span class="p">[</span><span class="n">text</span><span class="p">]</span>
+    <span class="n">mc</span> <span class="o">=</span> <span class="n">match_model_chemistry</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">available</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">availability_problem</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">available</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="n">periodic</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">mc</span></div>
+
+
+
+<div class="viewcode-block" id="stress_convention">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.levels.stress_convention">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">stress_convention</span><span class="p">(</span><span class="n">mc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The sign convention of a level's stress, as its provider declares it</span>
+<span class="sd">    ("pressure" or "stress"); refuse a periodic level that does not."""</span>
+    <span class="n">convention</span> <span class="o">=</span> <span class="p">(</span><span class="n">mc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"options"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"stress_convention"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">convention</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seamm_mbe</span><span class="o">.</span><span class="n">units</span><span class="o">.</span><span class="n">CONVENTIONS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"The model chemistry '</span><span class="si">{</span><span class="n">mc</span><span class="p">[</span><span class="s1">'level'</span><span class="p">]</span><span class="si">}</span><span class="s2">' does not declare the sign "</span>
+            <span class="s2">"convention of its stress (options['stress_convention'] = 'pressure' "</span>
+            <span class="s2">"or 'stress'), so its stress cannot be used for a periodic cell."</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">convention</span></div>
+
+
+
+<div class="viewcode-block" id="Level">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.levels.Level">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Level</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""One level of theory and how it runs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        "high", "molecular", "periodic" or "cell"; also the directory name.</span>
+<span class="sd">    mc : dict</span>
+<span class="sd">        The ``_model_chemistry`` wrapper.</span>
+<span class="sd">    ranks : int</span>
+<span class="sd">        MPI ranks per calculation.</span>
+<span class="sd">    memory : float</span>
+<span class="sd">        Memory per rank, in MB.</span>
+<span class="sd">    bundle : int</span>
+<span class="sd">        Calculations per batch job on a queue.</span>
+<span class="sd">    walltime : float</span>
+<span class="sd">        Seconds per batch job.</span>
+<span class="sd">    archive : bool</span>
+<span class="sd">        Tar finished bundles.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">mc</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">ranks</span><span class="p">,</span> <span class="n">memory</span><span class="p">,</span> <span class="n">bundle</span><span class="p">,</span> <span class="n">walltime</span><span class="p">,</span> <span class="n">archive</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mc</span> <span class="o">=</span> <span class="n">mc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ranks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ranks</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">memory</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bundle</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bundle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">walltime</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">walltime</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">archive</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">archive</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mc</span><span class="p">[</span><span class="s2">"level"</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Level.resources">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.levels.Level.resources">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">seamm_exec</span><span class="w"> </span><span class="kn">import</span> <span class="n">Resources</span>
+
+        <span class="k">return</span> <span class="n">Resources</span><span class="p">(</span><span class="n">ntasks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ranks</span><span class="p">,</span> <span class="n">mem_per_cpu</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Level.evaluate">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.levels.Level.evaluate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">structures</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">stress</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Evaluate structures at this level.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        node : seamm.Node</span>
+<span class="sd">            The MBE step.</span>
+<span class="sd">        structures : {str: object}</span>
+<span class="sd">            Configurations or ``seamm_exec.Geometry`` objects by key.</span>
+<span class="sd">        stress : bool</span>
+<span class="sd">            Request the stress (for a periodic cell).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        {str: seamm_exec.EvaluatorResult}</span>
+<span class="sd">        """</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">seamm_exec</span>
+
+        <span class="n">properties</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"energy"</span><span class="p">,</span> <span class="s2">"gradients"</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="s2">"stress"</span><span class="p">,)</span> <span class="k">if</span> <span class="n">stress</span> <span class="k">else</span> <span class="p">())</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"archive"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">archive</span><span class="p">,</span> <span class="s2">"bundle_tasks"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bundle</span><span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">walltime</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">options</span><span class="p">[</span><span class="s2">"bundle_walltime"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">walltime</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">with</span> <span class="n">seamm_exec</span><span class="o">.</span><span class="n">Evaluator</span><span class="p">(</span>
+            <span class="n">node</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mc</span><span class="p">,</span>
+            <span class="n">properties</span><span class="o">=</span><span class="n">properties</span><span class="p">,</span>
+            <span class="n">directory</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">task_set_options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span>
+            <span class="n">resources</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">resources</span><span class="p">(),</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"MBE_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>  <span class="c1"># no spaces: it goes into MDI_Init</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">evaluator</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">structure</span> <span class="ow">in</span> <span class="n">structures</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">options</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                    <span class="n">structure</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="n">structure</span>
+                <span class="n">evaluator</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">results</span><span class="p">():</span>
+                <span class="n">results</span><span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">results</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="geometry">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.levels.geometry">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">geometry</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">fragment</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The isolated fragment as a ``seamm_exec.Geometry``: its atoms in</span>
+<span class="sd">    fragment order at the fragment's coordinates, with its charge and</span>
+<span class="sd">    multiplicity."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">seamm_exec</span><span class="w"> </span><span class="kn">import</span> <span class="n">Geometry</span>
+
+    <span class="k">return</span> <span class="n">Geometry</span><span class="p">(</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">atomic_numbers</span><span class="p">[</span><span class="n">fragment</span><span class="o">.</span><span class="n">atoms</span><span class="p">],</span>
+        <span class="n">fragment</span><span class="o">.</span><span class="n">coordinates</span><span class="p">,</span>
+        <span class="n">charge</span><span class="o">=</span><span class="n">fragment</span><span class="o">.</span><span class="n">charge</span><span class="p">,</span>
+        <span class="n">multiplicity</span><span class="o">=</span><span class="n">fragment</span><span class="o">.</span><span class="n">multiplicity</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">fragment</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="whole">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.levels.whole">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">whole</span><span class="p">(</span><span class="n">system</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The whole cell or cluster as a ``seamm_exec.Geometry`` with the charge</span>
+<span class="sd">    the molecules add up to (their types' charges, from the formal charges or</span>
+<span class="sd">    the catalog) -- the same charges the fragments use -- and multiplicity 1</span>
+<span class="sd">    (open-shell molecules are refused before this)."""</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">seamm_exec</span><span class="w"> </span><span class="kn">import</span> <span class="n">Geometry</span>
+
+    <span class="n">charge</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">types</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">type</span><span class="p">]</span><span class="o">.</span><span class="n">charge</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">molecules</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Geometry</span><span class="p">(</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">atomic_numbers</span><span class="p">,</span>
+        <span class="n">system</span><span class="o">.</span><span class="n">coordinates</span><span class="p">,</span>
+        <span class="n">charge</span><span class="o">=</span><span class="n">charge</span><span class="p">,</span>
+        <span class="n">multiplicity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">cell</span><span class="o">=</span><span class="n">system</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"whole system"</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="to_library">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.levels.to_library">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_library</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">convention</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""An EvaluatorResult in seamm_mbe's units: (energy eV, forces eV/Å), plus</span>
+<span class="sd">    the virial (eV) when the result has a stress."""</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"energy"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="s2">"gradients"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">gradients</span><span class="p">)}</span>
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">stress</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">volume</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">"stress"</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">stress</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">seamm_mbe</span><span class="o">.</span><span class="n">units</span><span class="o">.</span><span class="n">from_analyze_task</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="n">volume</span><span class="p">,</span> <span class="n">stress_convention</span><span class="o">=</span><span class="n">convention</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.22.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

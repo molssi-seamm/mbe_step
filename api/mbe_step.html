@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>mbe_step package &#8212; SEAMM MBE Plug-in 2026.10.3 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=c224919a" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=64cc4de3f052d77215f0"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
+
+    <script src="../_static/documentation_options.js?v=f64fa391"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/mbe_step';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Development Team" href="../authors.html" />
+    <link rel="prev" title="mbe_step" href="modules.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2026.10.3" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/SEAMM logo.png" class="logo__image only-light" alt=""/>
+    <img src="../_static/SEAMM Inverted 288x181.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">MBE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    <no title>
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../developer_guide/index.html">
+    Developer Documentation
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API Documentation
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../authors.html">
+    Development Team
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../history.html">
+    History
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi-seamm.github.io">
+    Main SEAMM documentation
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi-seamm.github.io">
+    SEAMM Documentation
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi.org">
+    MolSSI
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/molssi-seamm/geometry_analysis_step" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i><span class="visually-hidden">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    <no title>
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../developer_guide/index.html">
+    Developer Documentation
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    API Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../authors.html">
+    Development Team
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../history.html">
+    History
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi-seamm.github.io">
+    Main SEAMM documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi-seamm.github.io">
+    SEAMM Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi.org">
+    MolSSI
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/molssi-seamm/geometry_analysis_step" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i><span class="visually-hidden">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="modules.html">mbe_step</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">mbe_step package</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">API Documentation</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">mbe_step</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">mbe_step package</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="mbe-step-package">
+<h1>mbe_step package<a class="headerlink" href="#mbe-step-package" title="Link to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-mbe_step.counterpoise">
+<span id="mbe-step-counterpoise-module"></span><h2>mbe_step.counterpoise module<a class="headerlink" href="#module-mbe_step.counterpoise" title="Link to this heading">#</a></h2>
+<p>Pairwise counterpoise for the MBE step, through seamm_bsse.</p>
+<p>For a selected pair, the Boys-Bernardi correction needs each monomer in the
+pair’s basis (the other monomer’s atoms as ghosts): two extra calculations per
+pair at each molecular level. With the pair itself and the two monomers (both
+already computed as fragments), seamm_bsse.combine gives the counterpoise-
+corrected pair energy and gradient, guarded against unphysical ghost gradients.</p>
+<p>The correction enters the sum only (seamm_mbe’s <code class="docutils literal notranslate"><span class="pre">corrections</span></code>): with
+[high - low] for the pair,</p>
+<blockquote>
+<div><p>correction = (E_high^CP - E_high) - (E_low^CP - E_low)</p>
+</div></blockquote>
+<p>the second term only when the pair is referenced to the molecular low level (a
+plane-wave periodic level has no basis-set superposition error). Triples still
+subtract the uncorrected pairs.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.counterpoise.correction">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.counterpoise.</span></span><span class="sig-name descname"><span class="pre">correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragments</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pair</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/counterpoise.html#correction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.counterpoise.correction" title="Link to this definition">#</a></dt>
+<dd><p>The counterpoise correction of one pair at one level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>results</strong> (<em>{str: EvaluatorResult}</em>) – The level’s results by key (the pair, its monomers and its ghost jobs).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>energy</strong> (<em>float</em>) – E^CP - E for the pair, eV.</p></li>
+<li><p><strong>forces</strong> (<em>numpy.ndarray</em>) – (n_atoms, 3) the change of the pair’s forces, eV/Å.</p></li>
+<li><p><strong>fallback</strong> (<em>bool</em>) – Whether seamm_bsse kept the uncorrected gradient (unphysical ghost
+gradients: the energy is corrected, the forces are not).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.counterpoise.ghost_jobs">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.counterpoise.</span></span><span class="sig-name descname"><span class="pre">ghost_jobs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pair</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/counterpoise.html#ghost_jobs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.counterpoise.ghost_jobs" title="Link to this definition">#</a></dt>
+<dd><p>The extra calculations for a pair: {label: (structure, options)} for
+each monomer in the pair’s basis.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.counterpoise.key">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.counterpoise.</span></span><span class="sig-name descname"><span class="pre">key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pair_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/counterpoise.html#key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.counterpoise.key" title="Link to this definition">#</a></dt>
+<dd><p>The task key of a ghost job.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.counterpoise.specs">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.counterpoise.</span></span><span class="sig-name descname"><span class="pre">specs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pair</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/counterpoise.html#specs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.counterpoise.specs" title="Link to this definition">#</a></dt>
+<dd><p>The seamm_bsse job specs for a pair (atom indices within the pair).</p>
+</dd></dl>
+
+</section>
+<section id="module-mbe_step.labels">
+<span id="mbe-step-labels-module"></span><h2>mbe_step.labels module<a class="headerlink" href="#module-mbe_step.labels" title="Link to this heading">#</a></h2>
+<p>Helpers of the MBE step that need no flowchart: parsing the cutoff and
+offset tables, the stress layout, and the extended XYZ labels file.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.labels.counts_text">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.labels.</span></span><span class="sig-name descname"><span class="pre">counts_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fragments</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/labels.html#counts_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.labels.counts_text" title="Link to this definition">#</a></dt>
+<dd><p>‘64 monomers, 391 pairs (+268 outer), 559 triples’.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.labels.parse_offsets">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.labels.</span></span><span class="sig-name descname"><span class="pre">parse_offsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/labels.html#parse_offsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.labels.parse_offsets" title="Link to this definition">#</a></dt>
+<dd><p>Energy offsets in eV per molecule by type, from entries ‘type value’
+separated by ‘;’ or new lines, or None for ‘none’ or an empty text.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.labels.parse_table">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.labels.</span></span><span class="sig-name descname"><span class="pre">parse_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">what</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cutoff'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/labels.html#parse_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.labels.parse_table" title="Link to this definition">#</a></dt>
+<dd><p>A table of values by molecule-type pair.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Entries ‘type type value’ separated by ‘;’ or new lines, e.g.
+‘water water 4.5; Li+ * 3.0’. ‘*’ matches any type.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>{(str, str)</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.labels.to_seamm">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.labels.</span></span><span class="sig-name descname"><span class="pre">to_seamm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/labels.html#to_seamm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.labels.to_seamm" title="Link to this definition">#</a></dt>
+<dd><p>The labels in SEAMM’s units for store_results: energies kJ/mol,
+gradients kJ/mol/Å, stress Voigt [6] in GPa as sigma = -P, pressures in
+atm.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.labels.voigt">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.labels.</span></span><span class="sig-name descname"><span class="pre">voigt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/labels.html#voigt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.labels.voigt" title="Link to this definition">#</a></dt>
+<dd><p>A (3, 3) tensor as Voigt [6]: xx yy zz yz xz xy (symmetrized).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.labels.write_extxyz">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.labels.</span></span><span class="sig-name descname"><span class="pre">write_extxyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">counterpoise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/labels.html#write_extxyz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.labels.write_extxyz" title="Link to this definition">#</a></dt>
+<dd><p>Add one configuration’s labels to an extended XYZ file.</p>
+<p>The file collects configurations (several in one step, or across a loop’s
+iterations when it is a job-level file). Writing is idempotent: an earlier
+frame with the same <code class="docutils literal notranslate"><span class="pre">identifier</span></code> (SEAMM/configuration_id) is replaced, so
+rerunning a job does not duplicate labels.</p>
+<p>The columns are species, pos and REF_forces (eV/Å); the header carries
+REF_energy (eV, the reference scale), REF_stress (the nine values of
+sigma = -P in eV/Å³, for a cell), the Lattice and pbc, the model, whether
+counterpoise was used and the configuration’s name. Note that ASE reads the
+nine-value REF_stress as a flat vector: a reader must reshape it.</p>
+</dd></dl>
+
+</section>
+<section id="module-mbe_step.levels">
+<span id="mbe-step-levels-module"></span><h2>mbe_step.levels module<a class="headerlink" href="#module-mbe_step.levels" title="Link to this heading">#</a></h2>
+<p>The MBE step’s levels of theory: resolving their model chemistries and
+evaluating structures with each through seamm_exec’s Evaluator.</p>
+<p>The step uses up to four levels:</p>
+<ul class="simple">
+<li><p>high: every fragment (by default the flowchart’s current Model Chemistry);</p></li>
+<li><p>molecular: the molecular low level, on the fragments referenced to it;</p></li>
+<li><p>periodic: the periodic low level, on the compact fragments referenced to it;</p></li>
+<li><p>cell: the low level of the whole cell (or cluster).</p></li>
+</ul>
+<p>Each level is one Evaluator with its own directory, so each keeps its own task
+manifest (restart) and bundles; the Evaluator chooses how the level runs
+(batch tasks or an MDI engine). In this phase the levels run one after the
+other; running them concurrently is a seamm_exec follow-up.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="mbe_step.levels.CURRENT">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.levels.</span></span><span class="sig-name descname"><span class="pre">CURRENT</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'current</span> <span class="pre">model</span> <span class="pre">chemistry'</span></span><a class="headerlink" href="#mbe_step.levels.CURRENT" title="Link to this definition">#</a></dt>
+<dd><p>The sentinel for the flowchart’s current Model Chemistry</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mbe_step.levels.Level">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mbe_step.levels.</span></span><span class="sig-name descname"><span class="pre">Level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mc</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bundle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">walltime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">archive</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/levels.html#Level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.levels.Level" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>One level of theory and how it runs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – “high”, “molecular”, “periodic” or “cell”; also the directory name.</p></li>
+<li><p><strong>mc</strong> (<em>dict</em>) – The <code class="docutils literal notranslate"><span class="pre">_model_chemistry</span></code> wrapper.</p></li>
+<li><p><strong>ranks</strong> (<em>int</em>) – MPI ranks per calculation.</p></li>
+<li><p><strong>memory</strong> (<em>float</em>) – Memory per rank, in MB.</p></li>
+<li><p><strong>bundle</strong> (<em>int</em>) – Calculations per batch job on a queue.</p></li>
+<li><p><strong>walltime</strong> (<em>float</em>) – Seconds per batch job.</p></li>
+<li><p><strong>archive</strong> (<em>bool</em>) – Tar finished bundles.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.levels.Level.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">structures</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/levels.html#Level.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.levels.Level.evaluate" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate structures at this level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node</strong> (<em>seamm.Node</em>) – The MBE step.</p></li>
+<li><p><strong>structures</strong> (<em>{str: object}</em>) – Configurations or <code class="docutils literal notranslate"><span class="pre">seamm_exec.Geometry</span></code> objects by key.</p></li>
+<li><p><strong>stress</strong> (<em>bool</em>) – Request the stress (for a periodic cell).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>{str</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>seamm_exec.EvaluatorResult}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mbe_step.levels.Level.level">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">level</span></span><a class="headerlink" href="#mbe_step.levels.Level.level" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.levels.Level.resources">
+<span class="sig-name descname"><span class="pre">resources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/levels.html#Level.resources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.levels.Level.resources" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.levels.geometry">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.levels.</span></span><span class="sig-name descname"><span class="pre">geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/levels.html#geometry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.levels.geometry" title="Link to this definition">#</a></dt>
+<dd><p>The isolated fragment as a <code class="docutils literal notranslate"><span class="pre">seamm_exec.Geometry</span></code>: its atoms in
+fragment order at the fragment’s coordinates, with its charge and
+multiplicity.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.levels.resolve">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.levels.</span></span><span class="sig-name descname"><span class="pre">resolve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/levels.html#resolve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.levels.resolve" title="Link to this definition">#</a></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">_model_chemistry</span></code> wrapper for a level given as text.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – A level spec such as <code class="docutils literal notranslate"><span class="pre">&quot;ORCA:DFT&#64;r2SCAN-D4/def2-TZVPPD&quot;</span></code>, possibly with
+<code class="docutils literal notranslate"><span class="pre">$variable</span></code> components, or <a class="reference internal" href="#mbe_step.levels.CURRENT" title="mbe_step.levels.CURRENT"><code class="xref py py-data docutils literal notranslate"><span class="pre">CURRENT</span></code></a>.</p></li>
+<li><p><strong>context</strong> (<em>dict</em>) – The flowchart variables, to dereference any <code class="docutils literal notranslate"><span class="pre">$variable</span></code>.</p></li>
+<li><p><strong>current</strong> (<em>dict</em><em> or </em><em>None</em>) – The flowchart’s <code class="docutils literal notranslate"><span class="pre">_model_chemistry</span></code>, for <a class="reference internal" href="#mbe_step.levels.CURRENT" title="mbe_step.levels.CURRENT"><code class="xref py py-data docutils literal notranslate"><span class="pre">CURRENT</span></code></a>.</p></li>
+<li><p><strong>periodic</strong> (<em>bool</em>) – Whether the level must handle periodic systems.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The <code class="docutils literal notranslate"><span class="pre">_model_chemistry</span></code> wrapper: level, step, options, …</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.levels.stress_convention">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.levels.</span></span><span class="sig-name descname"><span class="pre">stress_convention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/levels.html#stress_convention"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.levels.stress_convention" title="Link to this definition">#</a></dt>
+<dd><p>The sign convention of a level’s stress, as its provider declares it
+(“pressure” or “stress”); refuse a periodic level that does not.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.levels.to_library">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.levels.</span></span><span class="sig-name descname"><span class="pre">to_library</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convention</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/levels.html#to_library"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.levels.to_library" title="Link to this definition">#</a></dt>
+<dd><p>An EvaluatorResult in seamm_mbe’s units: (energy eV, forces eV/Å), plus
+the virial (eV) when the result has a stress.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mbe_step.levels.whole">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.levels.</span></span><span class="sig-name descname"><span class="pre">whole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/levels.html#whole"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.levels.whole" title="Link to this definition">#</a></dt>
+<dd><p>The whole cell or cluster as a <code class="docutils literal notranslate"><span class="pre">seamm_exec.Geometry</span></code> with the charge
+the molecules add up to (their types’ charges, from the formal charges or
+the catalog) – the same charges the fragments use – and multiplicity 1
+(open-shell molecules are refused before this).</p>
+</dd></dl>
+
+</section>
+<section id="module-mbe_step.mbe">
+<span id="mbe-step-mbe-module"></span><h2>mbe_step.mbe module<a class="headerlink" href="#module-mbe_step.mbe" title="Link to this heading">#</a></h2>
+<p>Non-graphical part of the MBE step in a SEAMM flowchart</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="mbe_step.mbe.Mbe">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mbe_step.mbe.</span></span><span class="sig-name descname"><span class="pre">Mbe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flowchart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MBE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;Logger</span> <span class="pre">mbe_step.mbe</span> <span class="pre">(WARNING)&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/mbe.html#Mbe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.mbe.Mbe" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></p>
+<p>The non-graphical part of a MBE step in a flowchart.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mbe_step.mbe.Mbe.parser">
+<span class="sig-name descname"><span class="pre">parser</span></span><a class="headerlink" href="#mbe_step.mbe.Mbe.parser" title="Link to this definition">#</a></dt>
+<dd><p>The parser object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>configargparse.ArgParser</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mbe_step.mbe.Mbe.options">
+<span class="sig-name descname"><span class="pre">options</span></span><a class="headerlink" href="#mbe_step.mbe.Mbe.options" title="Link to this definition">#</a></dt>
+<dd><p>It contains a two item tuple containing the populated namespace and the
+list of remaining argument strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mbe_step.mbe.Mbe.parameters">
+<span class="sig-name descname"><span class="pre">parameters</span></span><a class="headerlink" href="#mbe_step.mbe.Mbe.parameters" title="Link to this definition">#</a></dt>
+<dd><p>The control parameters for MBE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#mbe_step.mbe_parameters.MbeParameters" title="mbe_step.mbe_parameters.MbeParameters">MbeParameters</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">TkMbe</span></code>, <a class="reference internal" href="#mbe_step.mbe.Mbe" title="mbe_step.mbe.Mbe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mbe</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">MbeParameters</span></code></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.mbe.Mbe.analyze">
+<span class="sig-name descname"><span class="pre">analyze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elapsed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/mbe.html#Mbe.analyze"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.mbe.Mbe.analyze" title="Link to this definition">#</a></dt>
+<dd><p>Print the results of each configuration.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.mbe.Mbe.description_text">
+<span class="sig-name descname"><span class="pre">description_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/mbe.html#Mbe.description_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.mbe.Mbe.description_text" title="Link to this definition">#</a></dt>
+<dd><p>Create the text description of what this step will do.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>P</strong> (<em>dict</em>) – An optional dictionary of the current values of the control
+parameters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A description of the current step.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mbe_step.mbe.Mbe.git_revision">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">git_revision</span></span><a class="headerlink" href="#mbe_step.mbe.Mbe.git_revision" title="Link to this definition">#</a></dt>
+<dd><p>The git version of this module.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.mbe.Mbe.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/mbe.html#Mbe.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.mbe.Mbe.run" title="Link to this definition">#</a></dt>
+<dd><p>Run the MBE step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The next node object in the flowchart.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>seamm.Node</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mbe_step.mbe.Mbe.version">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">version</span></span><a class="headerlink" href="#mbe_step.mbe.Mbe.version" title="Link to this definition">#</a></dt>
+<dd><p>The semantic version of this module.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-mbe_step.mbe_parameters">
+<span id="mbe-step-mbe-parameters-module"></span><h2>mbe_step.mbe_parameters module<a class="headerlink" href="#module-mbe_step.mbe_parameters" title="Link to this heading">#</a></h2>
+<p>Control parameters for the MBE step in a SEAMM flowchart</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="mbe_step.mbe_parameters.CRITERIA">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.mbe_parameters.</span></span><span class="sig-name descname"><span class="pre">CRITERIA</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'center</span> <span class="pre">of</span> <span class="pre">geometry':</span> <span class="pre">'cog',</span> <span class="pre">'center</span> <span class="pre">of</span> <span class="pre">mass':</span> <span class="pre">'com',</span> <span class="pre">'closest</span> <span class="pre">contact':</span> <span class="pre">'contact',</span> <span class="pre">'closest</span> <span class="pre">heavy-atom</span> <span class="pre">contact':</span> <span class="pre">'heavy</span> <span class="pre">contact',</span> <span class="pre">'designated</span> <span class="pre">atoms':</span> <span class="pre">'designated'}</span></span><a class="headerlink" href="#mbe_step.mbe_parameters.CRITERIA" title="Link to this definition">#</a></dt>
+<dd><p>The distance criteria, as shown, and their names in seamm_mbe</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mbe_step.mbe_parameters.MbeParameters">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mbe_step.mbe_parameters.</span></span><span class="sig-name descname"><span class="pre">MbeParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defaults</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/mbe_parameters.html#MbeParameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.mbe_parameters.MbeParameters" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Parameters</span></code></p>
+<p>The control parameters for the MBE step.</p>
+<p>The step corrects a cheap calculation of a whole periodic cell (or cluster)
+with many-body increments of [high - low] computed on small isolated
+fragments: monomers, selected pairs and triples. The bookkeeping is in the
+<code class="docutils literal notranslate"><span class="pre">seamm_mbe</span></code> library; this step runs the calculations through each level’s
+Model Chemistry.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mbe</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">TkMbe</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">MbeStep</span></code></p>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mbe_step.mbe_parameters.MbeParameters.parameters">
+<span class="sig-name descname"><span class="pre">parameters</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'archive':</span> <span class="pre">{'default':</span> <span class="pre">'yes',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Archive</span> <span class="pre">the</span> <span class="pre">calculations:',</span> <span class="pre">'enumeration':</span> <span class="pre">('yes',</span> <span class="pre">'no'),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">'Pack</span> <span class="pre">each</span> <span class="pre">finished</span> <span class="pre">batch</span> <span class="pre">of</span> <span class="pre">fragment</span> <span class="pre">calculations</span> <span class="pre">into</span> <span class="pre">a</span> <span class="pre">tar</span> <span class="pre">file,</span> <span class="pre">keeping</span> <span class="pre">a</span> <span class="pre">frame</span> <span class="pre">to</span> <span class="pre">a</span> <span class="pre">few</span> <span class="pre">files</span> <span class="pre">instead</span> <span class="pre">of</span> <span class="pre">thousands.',</span> <span class="pre">'kind':</span> <span class="pre">'boolean'},</span> <span class="pre">'box</span> <span class="pre">padding':</span> <span class="pre">{'default':</span> <span class="pre">7.5,</span> <span class="pre">'default_units':</span> <span class="pre">'Å',</span> <span class="pre">'description':</span> <span class="pre">'Box</span> <span class="pre">padding:',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'.1f',</span> <span class="pre">'help_text':</span> <span class="pre">&quot;A</span> <span class="pre">periodic</span> <span class="pre">fragment's</span> <span class="pre">box</span> <span class="pre">is</span> <span class="pre">its</span> <span class="pre">largest</span> <span class="pre">extent</span> <span class="pre">plus</span> <span class="pre">this,</span> <span class="pre">at</span> <span class="pre">least</span> <span class="pre">12</span> <span class="pre">Å.</span> <span class="pre">Larger</span> <span class="pre">boxes</span> <span class="pre">reduce</span> <span class="pre">the</span> <span class="pre">interaction</span> <span class="pre">with</span> <span class="pre">the</span> <span class="pre">fragment's</span> <span class="pre">images</span> <span class="pre">at</span> <span class="pre">a</span> <span class="pre">steep</span> <span class="pre">cost.&quot;,</span> <span class="pre">'kind':</span> <span class="pre">'float'},</span> <span class="pre">'bundle</span> <span class="pre">walltime':</span> <span class="pre">{'default':</span> <span class="pre">4.0,</span> <span class="pre">'default_units':</span> <span class="pre">'h',</span> <span class="pre">'description':</span> <span class="pre">'Time</span> <span class="pre">limit</span> <span class="pre">per</span> <span class="pre">job:',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'.1f',</span> <span class="pre">'help_text':</span> <span class="pre">'The</span> <span class="pre">walltime</span> <span class="pre">of</span> <span class="pre">each</span> <span class="pre">batch</span> <span class="pre">job</span> <span class="pre">on</span> <span class="pre">a</span> <span class="pre">queue.',</span> <span class="pre">'kind':</span> <span class="pre">'float'},</span> <span class="pre">'cell</span> <span class="pre">low</span> <span class="pre">level':</span> <span class="pre">{'default':</span> <span class="pre">'automatic',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Whole-system</span> <span class="pre">low</span> <span class="pre">level:',</span> <span class="pre">'enumeration':</span> <span class="pre">('automatic',),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">&quot;The</span> <span class="pre">cheap</span> <span class="pre">model</span> <span class="pre">chemistry</span> <span class="pre">run</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">whole</span> <span class="pre">cell</span> <span class="pre">(or</span> <span class="pre">cluster).</span> <span class="pre">'automatic'</span> <span class="pre">uses</span> <span class="pre">the</span> <span class="pre">periodic</span> <span class="pre">low</span> <span class="pre">level</span> <span class="pre">for</span> <span class="pre">a</span> <span class="pre">periodic</span> <span class="pre">system</span> <span class="pre">and</span> <span class="pre">the</span> <span class="pre">molecular</span> <span class="pre">low</span> <span class="pre">level</span> <span class="pre">for</span> <span class="pre">a</span> <span class="pre">cluster.&quot;,</span> <span class="pre">'kind':</span> <span class="pre">'string'},</span> <span class="pre">'cell</span> <span class="pre">memory':</span> <span class="pre">{'default':</span> <span class="pre">2000,</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Memory</span> <span class="pre">per</span> <span class="pre">core</span> <span class="pre">(MB):',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">&quot;Memory</span> <span class="pre">per</span> <span class="pre">rank</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">cell's</span> <span class="pre">calculation,</span> <span class="pre">in</span> <span class="pre">MB.&quot;,</span> <span class="pre">'kind':</span> <span class="pre">'integer'},</span> <span class="pre">'cell</span> <span class="pre">ranks':</span> <span class="pre">{'default':</span> <span class="pre">16,</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Cores</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">whole</span> <span class="pre">system:',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">'MPI</span> <span class="pre">ranks</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">low-level</span> <span class="pre">calculation</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">cell.',</span> <span class="pre">'kind':</span> <span class="pre">'integer'},</span> <span class="pre">'counterpoise':</span> <span class="pre">{'default':</span> <span class="pre">'none',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Counterpoise:',</span> <span class="pre">'enumeration':</span> <span class="pre">('none',</span> <span class="pre">'pairwise'),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">&quot;'pairwise'</span> <span class="pre">corrects</span> <span class="pre">each</span> <span class="pre">pair</span> <span class="pre">increment</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">basis-set</span> <span class="pre">superposition</span> <span class="pre">error</span> <span class="pre">(Boys-Bernardi,</span> <span class="pre">each</span> <span class="pre">monomer</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">pair's</span> <span class="pre">basis)</span> <span class="pre">at</span> <span class="pre">the</span> <span class="pre">molecular</span> <span class="pre">levels;</span> <span class="pre">the</span> <span class="pre">triples</span> <span class="pre">still</span> <span class="pre">subtract</span> <span class="pre">the</span> <span class="pre">uncorrected</span> <span class="pre">pairs.</span> <span class="pre">Periodic</span> <span class="pre">(plane-wave)</span> <span class="pre">levels</span> <span class="pre">have</span> <span class="pre">no</span> <span class="pre">BSSE.</span> <span class="pre">Not</span> <span class="pre">yet</span> <span class="pre">for</span> <span class="pre">periodic</span> <span class="pre">cells,</span> <span class="pre">whose</span> <span class="pre">stress</span> <span class="pre">would</span> <span class="pre">need</span> <span class="pre">it</span> <span class="pre">too.&quot;,</span> <span class="pre">'kind':</span> <span class="pre">'enum'},</span> <span class="pre">'cutoffs':</span> <span class="pre">{'default':</span> <span class="pre">'single</span> <span class="pre">value',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Cutoffs:',</span> <span class="pre">'enumeration':</span> <span class="pre">('single</span> <span class="pre">value',</span> <span class="pre">'table</span> <span class="pre">by</span> <span class="pre">type</span> <span class="pre">pair'),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">'One</span> <span class="pre">cutoff</span> <span class="pre">for</span> <span class="pre">every</span> <span class="pre">pair</span> <span class="pre">of</span> <span class="pre">molecules,</span> <span class="pre">or</span> <span class="pre">a</span> <span class="pre">table</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">types</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">two</span> <span class="pre">molecules</span> <span class="pre">(needed</span> <span class="pre">for</span> <span class="pre">mixtures).',</span> <span class="pre">'kind':</span> <span class="pre">'enum'},</span> <span class="pre">'distance</span> <span class="pre">criterion':</span> <span class="pre">{'default':</span> <span class="pre">'designated</span> <span class="pre">atoms',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Distance</span> <span class="pre">between</span> <span class="pre">molecules:',</span> <span class="pre">'enumeration':</span> <span class="pre">('designated</span> <span class="pre">atoms',</span> <span class="pre">'closest</span> <span class="pre">contact',</span> <span class="pre">'closest</span> <span class="pre">heavy-atom</span> <span class="pre">contact',</span> <span class="pre">'center</span> <span class="pre">of</span> <span class="pre">mass',</span> <span class="pre">'center</span> <span class="pre">of</span> <span class="pre">geometry'),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">&quot;How</span> <span class="pre">the</span> <span class="pre">distance</span> <span class="pre">between</span> <span class="pre">two</span> <span class="pre">molecules</span> <span class="pre">is</span> <span class="pre">measured:</span> <span class="pre">between</span> <span class="pre">their</span> <span class="pre">designated</span> <span class="pre">atoms</span> <span class="pre">(water's</span> <span class="pre">O,</span> <span class="pre">a</span> <span class="pre">carbonate's</span> <span class="pre">carbonyl</span> <span class="pre">C,</span> <span class="pre">an</span> <span class="pre">ion),</span> <span class="pre">the</span> <span class="pre">closest</span> <span class="pre">contact</span> <span class="pre">of</span> <span class="pre">any</span> <span class="pre">atoms</span> <span class="pre">or</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">heavy</span> <span class="pre">atoms,</span> <span class="pre">or</span> <span class="pre">the</span> <span class="pre">centres</span> <span class="pre">of</span> <span class="pre">mass</span> <span class="pre">or</span> <span class="pre">geometry.&quot;,</span> <span class="pre">'kind':</span> <span class="pre">'enum'},</span> <span class="pre">'energy</span> <span class="pre">offsets':</span> <span class="pre">{'default':</span> <span class="pre">'none',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Energy</span> <span class="pre">offsets</span> <span class="pre">(eV</span> <span class="pre">per</span> <span class="pre">molecule):',</span> <span class="pre">'enumeration':</span> <span class="pre">('none',),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">&quot;Added</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">energy</span> <span class="pre">per</span> <span class="pre">molecule</span> <span class="pre">of</span> <span class="pre">each</span> <span class="pre">type,</span> <span class="pre">to</span> <span class="pre">put</span> <span class="pre">the</span> <span class="pre">labels</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">scale</span> <span class="pre">of</span> <span class="pre">other</span> <span class="pre">training</span> <span class="pre">data,</span> <span class="pre">as</span> <span class="pre">entries</span> <span class="pre">'type</span> <span class="pre">offset'</span> <span class="pre">separated</span> <span class="pre">by</span> <span class="pre">';',</span> <span class="pre">e.g.</span> <span class="pre">'water</span> <span class="pre">2074.69325'</span> <span class="pre">(the</span> <span class="pre">water</span> <span class="pre">training</span> <span class="pre">sets'</span> <span class="pre">formation-energy</span> <span class="pre">scale).</span> <span class="pre">Every</span> <span class="pre">molecule</span> <span class="pre">type</span> <span class="pre">present</span> <span class="pre">needs</span> <span class="pre">one.</span> <span class="pre">'none'</span> <span class="pre">keeps</span> <span class="pre">the</span> <span class="pre">absolute</span> <span class="pre">energy.&quot;,</span> <span class="pre">'kind':</span> <span class="pre">'string'},</span> <span class="pre">'extxyz</span> <span class="pre">file':</span> <span class="pre">{'default':</span> <span class="pre">'mbe_labels.extxyz',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Labels</span> <span class="pre">file:',</span> <span class="pre">'enumeration':</span> <span class="pre">('none',),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">&quot;The</span> <span class="pre">extended</span> <span class="pre">XYZ</span> <span class="pre">file</span> <span class="pre">the</span> <span class="pre">labels</span> <span class="pre">are</span> <span class="pre">appended</span> <span class="pre">to</span> <span class="pre">(energy,</span> <span class="pre">forces</span> <span class="pre">and,</span> <span class="pre">for</span> <span class="pre">cells,</span> <span class="pre">the</span> <span class="pre">stress),</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">step's</span> <span class="pre">directory;</span> <span class="pre">'job:NAME'</span> <span class="pre">puts</span> <span class="pre">it</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">job's</span> <span class="pre">directory,</span> <span class="pre">so</span> <span class="pre">a</span> <span class="pre">loop</span> <span class="pre">gathers</span> <span class="pre">every</span> <span class="pre">configuration</span> <span class="pre">into</span> <span class="pre">one</span> <span class="pre">file.</span> <span class="pre">'none'</span> <span class="pre">writes</span> <span class="pre">no</span> <span class="pre">file.&quot;,</span> <span class="pre">'kind':</span> <span class="pre">'string'},</span> <span class="pre">'grid</span> <span class="pre">spacing':</span> <span class="pre">{'default':</span> <span class="pre">0.0829,</span> <span class="pre">'default_units':</span> <span class="pre">'Å',</span> <span class="pre">'description':</span> <span class="pre">'Largest</span> <span class="pre">FFT</span> <span class="pre">grid</span> <span class="pre">spacing:',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'.4f',</span> <span class="pre">'help_text':</span> <span class="pre">&quot;The</span> <span class="pre">periodic</span> <span class="pre">code's</span> <span class="pre">FFT</span> <span class="pre">grid</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">cell</span> <span class="pre">is</span> <span class="pre">set</span> <span class="pre">explicitly</span> <span class="pre">with</span> <span class="pre">at</span> <span class="pre">most</span> <span class="pre">this</span> <span class="pre">spacing,</span> <span class="pre">and</span> <span class="pre">each</span> <span class="pre">periodic</span> <span class="pre">fragment</span> <span class="pre">is</span> <span class="pre">placed</span> <span class="pre">in</span> <span class="pre">a</span> <span class="pre">box</span> <span class="pre">of</span> <span class="pre">whole</span> <span class="pre">grid</span> <span class="pre">steps,</span> <span class="pre">its</span> <span class="pre">atoms</span> <span class="pre">shifted</span> <span class="pre">by</span> <span class="pre">whole</span> <span class="pre">grid</span> <span class="pre">steps,</span> <span class="pre">so</span> <span class="pre">that</span> <span class="pre">every</span> <span class="pre">atom</span> <span class="pre">keeps</span> <span class="pre">its</span> <span class="pre">offset</span> <span class="pre">from</span> <span class="pre">the</span> <span class="pre">grid</span> <span class="pre">and</span> <span class="pre">the</span> <span class="pre">'egg-box'</span> <span class="pre">error</span> <span class="pre">cancels</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">increments.&quot;,</span> <span class="pre">'kind':</span> <span class="pre">'float'},</span> <span class="pre">'high</span> <span class="pre">level':</span> <span class="pre">{'default':</span> <span class="pre">'current</span> <span class="pre">model</span> <span class="pre">chemistry',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'High</span> <span class="pre">level:',</span> <span class="pre">'enumeration':</span> <span class="pre">('current</span> <span class="pre">model</span> <span class="pre">chemistry',),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">&quot;The</span> <span class="pre">model</span> <span class="pre">chemistry</span> <span class="pre">the</span> <span class="pre">labels</span> <span class="pre">approximate,</span> <span class="pre">run</span> <span class="pre">on</span> <span class="pre">every</span> <span class="pre">fragment,</span> <span class="pre">e.g.</span> <span class="pre">'ORCA:DFT&#64;revDSD-PBEP86-D4/2021/def2-TZVPPD'.</span> <span class="pre">By</span> <span class="pre">default</span> <span class="pre">the</span> <span class="pre">one</span> <span class="pre">chosen</span> <span class="pre">by</span> <span class="pre">the</span> <span class="pre">Model</span> <span class="pre">Chemistry</span> <span class="pre">step</span> <span class="pre">before</span> <span class="pre">this</span> <span class="pre">step.&quot;,</span> <span class="pre">'kind':</span> <span class="pre">'string'},</span> <span class="pre">'maximum</span> <span class="pre">order':</span> <span class="pre">{'default':</span> <span class="pre">'3',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Highest</span> <span class="pre">order:',</span> <span class="pre">'enumeration':</span> <span class="pre">('1',</span> <span class="pre">'2',</span> <span class="pre">'3'),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">'The</span> <span class="pre">largest</span> <span class="pre">fragments:</span> <span class="pre">1</span> <span class="pre">=</span> <span class="pre">monomers,</span> <span class="pre">2</span> <span class="pre">=</span> <span class="pre">pairs,</span> <span class="pre">3</span> <span class="pre">=</span> <span class="pre">triples.',</span> <span class="pre">'kind':</span> <span class="pre">'integer'},</span> <span class="pre">'molecular</span> <span class="pre">bundle':</span> <span class="pre">{'default':</span> <span class="pre">240,</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Molecular</span> <span class="pre">calculations</span> <span class="pre">per</span> <span class="pre">job:',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">'How</span> <span class="pre">many</span> <span class="pre">molecular</span> <span class="pre">fragment</span> <span class="pre">calculations</span> <span class="pre">share</span> <span class="pre">one</span> <span class="pre">batch</span> <span class="pre">job</span> <span class="pre">on</span> <span class="pre">a</span> <span class="pre">queue.',</span> <span class="pre">'kind':</span> <span class="pre">'integer'},</span> <span class="pre">'molecular</span> <span class="pre">low</span> <span class="pre">level':</span> <span class="pre">{'default':</span> <span class="pre">'',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Molecular</span> <span class="pre">low</span> <span class="pre">level:',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">&quot;The</span> <span class="pre">cheap</span> <span class="pre">model</span> <span class="pre">chemistry</span> <span class="pre">run</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">fragments</span> <span class="pre">whose</span> <span class="pre">increments</span> <span class="pre">are</span> <span class="pre">referenced</span> <span class="pre">to</span> <span class="pre">a</span> <span class="pre">molecular</span> <span class="pre">code,</span> <span class="pre">e.g.</span> <span class="pre">'ORCA:DFT&#64;r2SCAN-D4/def2-TZVPPD'.&quot;,</span> <span class="pre">'kind':</span> <span class="pre">'string'},</span> <span class="pre">'molecular</span> <span class="pre">memory':</span> <span class="pre">{'default':</span> <span class="pre">1500,</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Memory</span> <span class="pre">per</span> <span class="pre">core</span> <span class="pre">(MB):',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">'Memory</span> <span class="pre">per</span> <span class="pre">rank</span> <span class="pre">of</span> <span class="pre">a</span> <span class="pre">molecular</span> <span class="pre">calculation,</span> <span class="pre">in</span> <span class="pre">MB.',</span> <span class="pre">'kind':</span> <span class="pre">'integer'},</span> <span class="pre">'molecular</span> <span class="pre">ranks':</span> <span class="pre">{'default':</span> <span class="pre">4,</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Cores</span> <span class="pre">per</span> <span class="pre">molecular</span> <span class="pre">calculation:',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">'MPI</span> <span class="pre">ranks</span> <span class="pre">for</span> <span class="pre">each</span> <span class="pre">molecular</span> <span class="pre">fragment</span> <span class="pre">calculation.',</span> <span class="pre">'kind':</span> <span class="pre">'integer'},</span> <span class="pre">'pair</span> <span class="pre">cutoff':</span> <span class="pre">{'default':</span> <span class="pre">4.5,</span> <span class="pre">'default_units':</span> <span class="pre">'Å',</span> <span class="pre">'description':</span> <span class="pre">'Pair</span> <span class="pre">cutoff:',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'.2f',</span> <span class="pre">'help_text':</span> <span class="pre">'Pairs</span> <span class="pre">of</span> <span class="pre">molecules</span> <span class="pre">closer</span> <span class="pre">than</span> <span class="pre">this</span> <span class="pre">are</span> <span class="pre">selected.',</span> <span class="pre">'kind':</span> <span class="pre">'float'},</span> <span class="pre">'pair</span> <span class="pre">cutoff</span> <span class="pre">table':</span> <span class="pre">{'default':</span> <span class="pre">'*</span> <span class="pre">*</span> <span class="pre">4.5',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Pair</span> <span class="pre">cutoffs</span> <span class="pre">(Å):',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">&quot;The</span> <span class="pre">pair</span> <span class="pre">cutoff</span> <span class="pre">in</span> <span class="pre">Å</span> <span class="pre">by</span> <span class="pre">molecule</span> <span class="pre">types,</span> <span class="pre">as</span> <span class="pre">entries</span> <span class="pre">'type</span> <span class="pre">type</span> <span class="pre">cutoff'</span> <span class="pre">separated</span> <span class="pre">by</span> <span class="pre">';',</span> <span class="pre">e.g.</span> <span class="pre">'water</span> <span class="pre">water</span> <span class="pre">4.5;</span> <span class="pre">Li+</span> <span class="pre">*</span> <span class="pre">3.0;</span> <span class="pre">*</span> <span class="pre">*</span> <span class="pre">5.0'.</span> <span class="pre">'*'</span> <span class="pre">matches</span> <span class="pre">any</span> <span class="pre">type</span> <span class="pre">and</span> <span class="pre">the</span> <span class="pre">most</span> <span class="pre">specific</span> <span class="pre">entry</span> <span class="pre">wins.</span> <span class="pre">Every</span> <span class="pre">pair</span> <span class="pre">of</span> <span class="pre">types</span> <span class="pre">present</span> <span class="pre">must</span> <span class="pre">be</span> <span class="pre">covered.&quot;,</span> <span class="pre">'kind':</span> <span class="pre">'string'},</span> <span class="pre">'periodic</span> <span class="pre">bundle':</span> <span class="pre">{'default':</span> <span class="pre">8,</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Periodic</span> <span class="pre">calculations</span> <span class="pre">per</span> <span class="pre">job:',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">'How</span> <span class="pre">many</span> <span class="pre">periodic</span> <span class="pre">fragment</span> <span class="pre">calculations</span> <span class="pre">share</span> <span class="pre">one</span> <span class="pre">batch</span> <span class="pre">job</span> <span class="pre">on</span> <span class="pre">a</span> <span class="pre">queue.',</span> <span class="pre">'kind':</span> <span class="pre">'integer'},</span> <span class="pre">'periodic</span> <span class="pre">low</span> <span class="pre">level':</span> <span class="pre">{'default':</span> <span class="pre">'none',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Periodic</span> <span class="pre">low</span> <span class="pre">level:',</span> <span class="pre">'enumeration':</span> <span class="pre">('none',),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">&quot;The</span> <span class="pre">periodic</span> <span class="pre">code</span> <span class="pre">used</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">compact</span> <span class="pre">fragments</span> <span class="pre">(monomers</span> <span class="pre">and</span> <span class="pre">close</span> <span class="pre">pairs),</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">code</span> <span class="pre">as</span> <span class="pre">the</span> <span class="pre">cell's</span> <span class="pre">low</span> <span class="pre">level,</span> <span class="pre">which</span> <span class="pre">cancels</span> <span class="pre">its</span> <span class="pre">errors</span> <span class="pre">best.</span> <span class="pre">'none'</span> <span class="pre">references</span> <span class="pre">every</span> <span class="pre">increment</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">molecular</span> <span class="pre">low</span> <span class="pre">level.</span> <span class="pre">For</span> <span class="pre">now</span> <span class="pre">the</span> <span class="pre">fragments</span> <span class="pre">are</span> <span class="pre">run</span> <span class="pre">as</span> <span class="pre">isolated</span> <span class="pre">molecules,</span> <span class="pre">so</span> <span class="pre">any</span> <span class="pre">model</span> <span class="pre">chemistry</span> <span class="pre">is</span> <span class="pre">accepted</span> <span class="pre">here;</span> <span class="pre">the</span> <span class="pre">registered</span> <span class="pre">periodic</span> <span class="pre">boxes</span> <span class="pre">for</span> <span class="pre">VASP</span> <span class="pre">come</span> <span class="pre">in</span> <span class="pre">a</span> <span class="pre">later</span> <span class="pre">version.&quot;,</span> <span class="pre">'kind':</span> <span class="pre">'string'},</span> <span class="pre">'periodic</span> <span class="pre">memory':</span> <span class="pre">{'default':</span> <span class="pre">2000,</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Memory</span> <span class="pre">per</span> <span class="pre">core</span> <span class="pre">(MB):',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">'Memory</span> <span class="pre">per</span> <span class="pre">rank</span> <span class="pre">of</span> <span class="pre">a</span> <span class="pre">periodic</span> <span class="pre">calculation,</span> <span class="pre">in</span> <span class="pre">MB.',</span> <span class="pre">'kind':</span> <span class="pre">'integer'},</span> <span class="pre">'periodic</span> <span class="pre">monomers':</span> <span class="pre">{'default':</span> <span class="pre">'yes',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Periodic</span> <span class="pre">low</span> <span class="pre">level</span> <span class="pre">for</span> <span class="pre">monomers:',</span> <span class="pre">'enumeration':</span> <span class="pre">('yes',</span> <span class="pre">'no'),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">'Reference</span> <span class="pre">the</span> <span class="pre">monomer</span> <span class="pre">increments</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">periodic</span> <span class="pre">low</span> <span class="pre">level.',</span> <span class="pre">'kind':</span> <span class="pre">'boolean'},</span> <span class="pre">'periodic</span> <span class="pre">pair</span> <span class="pre">cutoff':</span> <span class="pre">{'default':</span> <span class="pre">3.5,</span> <span class="pre">'default_units':</span> <span class="pre">'Å',</span> <span class="pre">'description':</span> <span class="pre">'Periodic</span> <span class="pre">low</span> <span class="pre">level</span> <span class="pre">for</span> <span class="pre">pairs</span> <span class="pre">closer</span> <span class="pre">than:',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'.2f',</span> <span class="pre">'help_text':</span> <span class="pre">'Reference</span> <span class="pre">the</span> <span class="pre">increments</span> <span class="pre">of</span> <span class="pre">pairs</span> <span class="pre">closer</span> <span class="pre">than</span> <span class="pre">this</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">periodic</span> <span class="pre">low</span> <span class="pre">level;</span> <span class="pre">extended</span> <span class="pre">fragments</span> <span class="pre">pick</span> <span class="pre">up</span> <span class="pre">interactions</span> <span class="pre">with</span> <span class="pre">their</span> <span class="pre">images</span> <span class="pre">in</span> <span class="pre">affordable</span> <span class="pre">periodic</span> <span class="pre">boxes,</span> <span class="pre">so</span> <span class="pre">they</span> <span class="pre">use</span> <span class="pre">the</span> <span class="pre">molecular</span> <span class="pre">low</span> <span class="pre">level.</span> <span class="pre">0</span> <span class="pre">for</span> <span class="pre">none.',</span> <span class="pre">'kind':</span> <span class="pre">'float'},</span> <span class="pre">'periodic</span> <span class="pre">ranks':</span> <span class="pre">{'default':</span> <span class="pre">8,</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Cores</span> <span class="pre">per</span> <span class="pre">periodic</span> <span class="pre">calculation:',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">'MPI</span> <span class="pre">ranks</span> <span class="pre">for</span> <span class="pre">each</span> <span class="pre">periodic</span> <span class="pre">fragment</span> <span class="pre">calculation.',</span> <span class="pre">'kind':</span> <span class="pre">'integer'},</span> <span class="pre">'results':</span> <span class="pre">{'default':</span> <span class="pre">{},</span> <span class="pre">'default_units':</span> <span class="pre">None,</span> <span class="pre">'description':</span> <span class="pre">'results',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">'The</span> <span class="pre">results</span> <span class="pre">to</span> <span class="pre">save</span> <span class="pre">to</span> <span class="pre">variables</span> <span class="pre">or</span> <span class="pre">in</span> <span class="pre">tables.',</span> <span class="pre">'kind':</span> <span class="pre">'dictionary'},</span> <span class="pre">'source</span> <span class="pre">configuration</span> <span class="pre">name':</span> <span class="pre">{'default':</span> <span class="pre">'',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'s',</span> <span class="pre">'help_text':</span> <span class="pre">'The</span> <span class="pre">configuration</span> <span class="pre">name,</span> <span class="pre">wildcard</span> <span class="pre">pattern</span> <span class="pre">or</span> <span class="pre">regular</span> <span class="pre">expression.',</span> <span class="pre">'kind':</span> <span class="pre">'string'},</span> <span class="pre">'source</span> <span class="pre">configurations':</span> <span class="pre">{'default':</span> <span class="pre">'current',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Configurations:',</span> <span class="pre">'enumeration':</span> <span class="pre">('current',</span> <span class="pre">'all',</span> <span class="pre">'last',</span> <span class="pre">'first',</span> <span class="pre">'name</span> <span class="pre">is',</span> <span class="pre">'name</span> <span class="pre">matches',</span> <span class="pre">'name</span> <span class="pre">regexp'),</span> <span class="pre">'format_string':</span> <span class="pre">'s',</span> <span class="pre">'help_text':</span> <span class="pre">'Which</span> <span class="pre">configurations</span> <span class="pre">of</span> <span class="pre">each</span> <span class="pre">selected</span> <span class="pre">system</span> <span class="pre">to</span> <span class="pre">use:</span> <span class="pre">its</span> <span class="pre">current</span> <span class="pre">configuration,</span> <span class="pre">all</span> <span class="pre">of</span> <span class="pre">them,</span> <span class="pre">the</span> <span class="pre">last</span> <span class="pre">or</span> <span class="pre">first,</span> <span class="pre">or</span> <span class="pre">those</span> <span class="pre">whose</span> <span class="pre">name</span> <span class="pre">is</span> <span class="pre">/</span> <span class="pre">matches</span> <span class="pre">(shell</span> <span class="pre">wildcards)</span> <span class="pre">/</span> <span class="pre">matches</span> <span class="pre">the</span> <span class="pre">regular</span> <span class="pre">expression</span> <span class="pre">given.',</span> <span class="pre">'kind':</span> <span class="pre">'string'},</span> <span class="pre">'source</span> <span class="pre">system</span> <span class="pre">name':</span> <span class="pre">{'default':</span> <span class="pre">'',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'s',</span> <span class="pre">'help_text':</span> <span class="pre">'The</span> <span class="pre">system</span> <span class="pre">name,</span> <span class="pre">wildcard</span> <span class="pre">pattern</span> <span class="pre">or</span> <span class="pre">regular</span> <span class="pre">expression.',</span> <span class="pre">'kind':</span> <span class="pre">'string'},</span> <span class="pre">'source</span> <span class="pre">systems':</span> <span class="pre">{'default':</span> <span class="pre">'current',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Systems:',</span> <span class="pre">'enumeration':</span> <span class="pre">('current',</span> <span class="pre">'all',</span> <span class="pre">'name</span> <span class="pre">is',</span> <span class="pre">'name</span> <span class="pre">matches',</span> <span class="pre">'name</span> <span class="pre">regexp'),</span> <span class="pre">'format_string':</span> <span class="pre">'s',</span> <span class="pre">'help_text':</span> <span class="pre">'Which</span> <span class="pre">systems</span> <span class="pre">to</span> <span class="pre">take</span> <span class="pre">the</span> <span class="pre">structures</span> <span class="pre">from:</span> <span class="pre">the</span> <span class="pre">current</span> <span class="pre">system,</span> <span class="pre">all</span> <span class="pre">systems,</span> <span class="pre">or</span> <span class="pre">those</span> <span class="pre">whose</span> <span class="pre">name</span> <span class="pre">is</span> <span class="pre">/</span> <span class="pre">matches</span> <span class="pre">(shell</span> <span class="pre">wildcards)</span> <span class="pre">/</span> <span class="pre">matches</span> <span class="pre">the</span> <span class="pre">regular</span> <span class="pre">expression</span> <span class="pre">given.</span> <span class="pre">A</span> <span class="pre">variable</span> <span class="pre">($name)</span> <span class="pre">holding</span> <span class="pre">a</span> <span class="pre">list</span> <span class="pre">of</span> <span class="pre">configurations</span> <span class="pre">or</span> <span class="pre">of</span> <span class="pre">systems</span> <span class="pre">may</span> <span class="pre">also</span> <span class="pre">be</span> <span class="pre">given.',</span> <span class="pre">'kind':</span> <span class="pre">'string'},</span> <span class="pre">'triple</span> <span class="pre">cutoff':</span> <span class="pre">{'default':</span> <span class="pre">3.5,</span> <span class="pre">'default_units':</span> <span class="pre">'Å',</span> <span class="pre">'description':</span> <span class="pre">'Triple</span> <span class="pre">cutoff:',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'.2f',</span> <span class="pre">'help_text':</span> <span class="pre">'The</span> <span class="pre">distance</span> <span class="pre">within</span> <span class="pre">which</span> <span class="pre">two</span> <span class="pre">molecules</span> <span class="pre">of</span> <span class="pre">a</span> <span class="pre">triple</span> <span class="pre">count</span> <span class="pre">as</span> <span class="pre">bonded,</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">triple</span> <span class="pre">rule.',</span> <span class="pre">'kind':</span> <span class="pre">'float'},</span> <span class="pre">'triple</span> <span class="pre">cutoff</span> <span class="pre">table':</span> <span class="pre">{'default':</span> <span class="pre">'*</span> <span class="pre">*</span> <span class="pre">3.5',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Triple</span> <span class="pre">cutoffs</span> <span class="pre">(Å):',</span> <span class="pre">'enumeration':</span> <span class="pre">(),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">'The</span> <span class="pre">triple</span> <span class="pre">cutoff</span> <span class="pre">in</span> <span class="pre">Å</span> <span class="pre">by</span> <span class="pre">molecule</span> <span class="pre">types,</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">same</span> <span class="pre">form</span> <span class="pre">as</span> <span class="pre">the</span> <span class="pre">pair</span> <span class="pre">cutoffs.',</span> <span class="pre">'kind':</span> <span class="pre">'string'},</span> <span class="pre">'triple</span> <span class="pre">rule':</span> <span class="pre">{'default':</span> <span class="pre">'connected',</span> <span class="pre">'default_units':</span> <span class="pre">'',</span> <span class="pre">'description':</span> <span class="pre">'Triples:',</span> <span class="pre">'enumeration':</span> <span class="pre">('none',</span> <span class="pre">'connected',</span> <span class="pre">'compact'),</span> <span class="pre">'format_string':</span> <span class="pre">'',</span> <span class="pre">'help_text':</span> <span class="pre">&quot;Which</span> <span class="pre">triples</span> <span class="pre">are</span> <span class="pre">selected:</span> <span class="pre">'connected'</span> <span class="pre">if</span> <span class="pre">at</span> <span class="pre">least</span> <span class="pre">two</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">three</span> <span class="pre">pairs</span> <span class="pre">are</span> <span class="pre">within</span> <span class="pre">the</span> <span class="pre">triple</span> <span class="pre">cutoff</span> <span class="pre">(a</span> <span class="pre">hub</span> <span class="pre">bonded</span> <span class="pre">to</span> <span class="pre">both</span> <span class="pre">others),</span> <span class="pre">'compact'</span> <span class="pre">if</span> <span class="pre">all</span> <span class="pre">three</span> <span class="pre">are.&quot;,</span> <span class="pre">'kind':</span> <span class="pre">'enum'}}</span></span><a class="headerlink" href="#mbe_step.mbe_parameters.MbeParameters.parameters" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-mbe_step.mbe_step">
+<span id="mbe-step-mbe-step-module"></span><h2>mbe_step.mbe_step module<a class="headerlink" href="#module-mbe_step.mbe_step" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mbe_step.mbe_step.MbeStep">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mbe_step.mbe_step.</span></span><span class="sig-name descname"><span class="pre">MbeStep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flowchart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gui</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/mbe_step.html#MbeStep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.mbe_step.MbeStep" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Helper class needed for the stevedore integration.</p>
+<p>This must provide a <cite>description()</cite> method that returns a dict containing a
+description of this node, and <cite>create_node()</cite> and <cite>create_tk_node()</cite> methods
+for creating the graphical and non-graphical nodes.</p>
+<p>The dictionary for the description is the class variable just below these
+comments. The felds are as follows:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>my_description<span class="classifier">{str, str}</span></dt><dd><p>A human-readable description of this step. It can be
+several lines long, and needs to be clear to non-expert users.
+It contains the following keys: description, group, name.</p>
+</dd>
+<dt>my_description[“description”]<span class="classifier">tuple</span></dt><dd><p>A description of the MBE step. It must be
+clear to non-experts.</p>
+</dd>
+<dt>my_description[“group”]<span class="classifier">str</span></dt><dd><p>Which group in the menus to put this step. If the group does
+not exist it will be created. Common groups are “Building”,
+“Control”, “Custom”, “Data”, and “Simulations”.</p>
+</dd>
+<dt>my_description[“name”]<span class="classifier">str</span></dt><dd><p>The name of this step, to be displayed in the menus.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.mbe_step.MbeStep.create_node">
+<span class="sig-name descname"><span class="pre">create_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flowchart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/mbe_step.html#MbeStep.create_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.mbe_step.MbeStep.create_node" title="Link to this definition">#</a></dt>
+<dd><p>Create and return the new node object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>flowchart</strong> (<em>seamm.Node</em>) – A non-graphical SEAMM node</p></li>
+<li><p><strong>**kwargs</strong> (<em>keyword arguments</em>) – Various keyword arguments such as title, namespace or
+extension representing the title displayed in the flowchart,
+the namespace for the plugins of a subflowchart and
+the extension, respectively.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#mbe_step.mbe.Mbe" title="mbe_step.mbe.Mbe">Mbe</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.mbe_step.MbeStep.create_tk_node">
+<span class="sig-name descname"><span class="pre">create_tk_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canvas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/mbe_step.html#MbeStep.create_tk_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.mbe_step.MbeStep.create_tk_node" title="Link to this definition">#</a></dt>
+<dd><p>Create and return the graphical Tk node object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>canvas</strong> (<em>tk.Canvas</em>) – The Tk Canvas widget</p></li>
+<li><p><strong>**kwargs</strong> (<em>keyword arguments</em>) – Various keyword arguments such as tk_flowchart, node, x, y, w, h
+representing a graphical flowchart object, a non-graphical node for
+a step, and dimensions of the graphical node.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#mbe_step.tk_mbe.TkMbe" title="mbe_step.tk_mbe.TkMbe">TkMbe</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.mbe_step.MbeStep.description">
+<span class="sig-name descname"><span class="pre">description</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/mbe_step.html#MbeStep.description"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.mbe_step.MbeStep.description" title="Link to this definition">#</a></dt>
+<dd><p>Return a description of what this step does.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>description</strong></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict(str, str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mbe_step.mbe_step.MbeStep.my_description">
+<span class="sig-name descname"><span class="pre">my_description</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'description':</span> <span class="pre">'Many-body</span> <span class="pre">expansion</span> <span class="pre">(MBE)</span> <span class="pre">corrections</span> <span class="pre">of</span> <span class="pre">periodic</span> <span class="pre">cells</span> <span class="pre">and</span> <span class="pre">clusters',</span> <span class="pre">'group':</span> <span class="pre">'Simulations',</span> <span class="pre">'name':</span> <span class="pre">'MBE'}</span></span><a class="headerlink" href="#mbe_step.mbe_step.MbeStep.my_description" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-mbe_step.metadata">
+<span id="mbe-step-metadata-module"></span><h2>mbe_step.metadata module<a class="headerlink" href="#module-mbe_step.metadata" title="Link to this heading">#</a></h2>
+<p>This file contains metadata describing the results from Mbe</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="mbe_step.metadata.metadata">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.metadata.</span></span><span class="sig-name descname"><span class="pre">metadata</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'results':</span> <span class="pre">{'MBE</span> <span class="pre">energy':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">many-body</span> <span class="pre">correction</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">energy',</span> <span class="pre">'dimensionality':</span> <span class="pre">'scalar',</span> <span class="pre">'type':</span> <span class="pre">'float',</span> <span class="pre">'units':</span> <span class="pre">'kJ/mol'},</span> <span class="pre">'MBE</span> <span class="pre">pressure':</span> <span class="pre">{'description':</span> <span class="pre">&quot;The</span> <span class="pre">many-body</span> <span class="pre">correction's</span> <span class="pre">contribution</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">pressure&quot;,</span> <span class="pre">'dimensionality':</span> <span class="pre">'scalar',</span> <span class="pre">'format':</span> <span class="pre">'.1f',</span> <span class="pre">'type':</span> <span class="pre">'float',</span> <span class="pre">'units':</span> <span class="pre">'atm'},</span> <span class="pre">'configuration</span> <span class="pre">name':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">configuration',</span> <span class="pre">'dimensionality':</span> <span class="pre">'scalar',</span> <span class="pre">'type':</span> <span class="pre">'string',</span> <span class="pre">'units':</span> <span class="pre">''},</span> <span class="pre">'counterpoise</span> <span class="pre">correction':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">pairwise</span> <span class="pre">counterpoise</span> <span class="pre">correction</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">energy',</span> <span class="pre">'dimensionality':</span> <span class="pre">'scalar',</span> <span class="pre">'format':</span> <span class="pre">'.3f',</span> <span class="pre">'type':</span> <span class="pre">'float',</span> <span class="pre">'units':</span> <span class="pre">'kJ/mol'},</span> <span class="pre">'counterpoise</span> <span class="pre">fallbacks':</span> <span class="pre">{'description':</span> <span class="pre">'Pairs</span> <span class="pre">whose</span> <span class="pre">counterpoise</span> <span class="pre">gradient</span> <span class="pre">was</span> <span class="pre">unphysical</span> <span class="pre">(forces</span> <span class="pre">left</span> <span class="pre">uncorrected)',</span> <span class="pre">'dimensionality':</span> <span class="pre">'scalar',</span> <span class="pre">'type':</span> <span class="pre">'integer',</span> <span class="pre">'units':</span> <span class="pre">''},</span> <span class="pre">'energy':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">MBE-corrected</span> <span class="pre">total</span> <span class="pre">energy',</span> <span class="pre">'dimensionality':</span> <span class="pre">'scalar',</span> <span class="pre">'format':</span> <span class="pre">'.3f',</span> <span class="pre">'property':</span> <span class="pre">'energy#MBE#{model}',</span> <span class="pre">'type':</span> <span class="pre">'float',</span> <span class="pre">'units':</span> <span class="pre">'kJ/mol'},</span> <span class="pre">'fragment</span> <span class="pre">counts':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">selected</span> <span class="pre">and</span> <span class="pre">auxiliary</span> <span class="pre">fragments</span> <span class="pre">by</span> <span class="pre">order',</span> <span class="pre">'dimensionality':</span> <span class="pre">'json',</span> <span class="pre">'type':</span> <span class="pre">'json',</span> <span class="pre">'units':</span> <span class="pre">''},</span> <span class="pre">'gradients':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">MBE-corrected</span> <span class="pre">gradients',</span> <span class="pre">'dimensionality':</span> <span class="pre">'[n_atoms,</span> <span class="pre">3]',</span> <span class="pre">'property':</span> <span class="pre">'gradients#MBE#{model}',</span> <span class="pre">'type':</span> <span class="pre">'json',</span> <span class="pre">'units':</span> <span class="pre">'kJ/mol/Å'},</span> <span class="pre">'maximum</span> <span class="pre">force':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">largest</span> <span class="pre">Cartesian</span> <span class="pre">component</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">forces',</span> <span class="pre">'dimensionality':</span> <span class="pre">'scalar',</span> <span class="pre">'type':</span> <span class="pre">'float',</span> <span class="pre">'units':</span> <span class="pre">'kJ/mol/Å'},</span> <span class="pre">'maximum</span> <span class="pre">increment</span> <span class="pre">net</span> <span class="pre">force':</span> <span class="pre">{'description':</span> <span class="pre">&quot;The</span> <span class="pre">largest</span> <span class="pre">component</span> <span class="pre">of</span> <span class="pre">any</span> <span class="pre">increment's</span> <span class="pre">net</span> <span class="pre">force</span> <span class="pre">(ideally</span> <span class="pre">zero)&quot;,</span> <span class="pre">'dimensionality':</span> <span class="pre">'scalar',</span> <span class="pre">'type':</span> <span class="pre">'float',</span> <span class="pre">'units':</span> <span class="pre">'kJ/mol/Å'},</span> <span class="pre">'model</span> <span class="pre">chemistry':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">high</span> <span class="pre">level',</span> <span class="pre">'dimensionality':</span> <span class="pre">'scalar',</span> <span class="pre">'type':</span> <span class="pre">'string',</span> <span class="pre">'units':</span> <span class="pre">''},</span> <span class="pre">'molecular</span> <span class="pre">pressure':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">molecular</span> <span class="pre">configurational</span> <span class="pre">pressure',</span> <span class="pre">'dimensionality':</span> <span class="pre">'scalar',</span> <span class="pre">'format':</span> <span class="pre">'.1f',</span> <span class="pre">'type':</span> <span class="pre">'float',</span> <span class="pre">'units':</span> <span class="pre">'atm'},</span> <span class="pre">'per-body</span> <span class="pre">energies':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">correction</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">energy</span> <span class="pre">by</span> <span class="pre">order,</span> <span class="pre">in</span> <span class="pre">kJ/mol',</span> <span class="pre">'dimensionality':</span> <span class="pre">'json',</span> <span class="pre">'type':</span> <span class="pre">'json',</span> <span class="pre">'units':</span> <span class="pre">''},</span> <span class="pre">'per-body</span> <span class="pre">pressures':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">correction</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">pressure</span> <span class="pre">by</span> <span class="pre">order,</span> <span class="pre">in</span> <span class="pre">atm',</span> <span class="pre">'dimensionality':</span> <span class="pre">'json',</span> <span class="pre">'type':</span> <span class="pre">'json',</span> <span class="pre">'units':</span> <span class="pre">''},</span> <span class="pre">'pressure':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">atomic</span> <span class="pre">configurational</span> <span class="pre">pressure',</span> <span class="pre">'dimensionality':</span> <span class="pre">'scalar',</span> <span class="pre">'format':</span> <span class="pre">'.1f',</span> <span class="pre">'type':</span> <span class="pre">'float',</span> <span class="pre">'units':</span> <span class="pre">'atm'},</span> <span class="pre">'reference</span> <span class="pre">energy':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">energy</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">reference</span> <span class="pre">scale</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">labels</span> <span class="pre">(with</span> <span class="pre">the</span> <span class="pre">offsets)',</span> <span class="pre">'dimensionality':</span> <span class="pre">'scalar',</span> <span class="pre">'format':</span> <span class="pre">'.3f',</span> <span class="pre">'type':</span> <span class="pre">'float',</span> <span class="pre">'units':</span> <span class="pre">'kJ/mol'},</span> <span class="pre">'rms</span> <span class="pre">force':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">RMS</span> <span class="pre">force</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">atoms',</span> <span class="pre">'dimensionality':</span> <span class="pre">'scalar',</span> <span class="pre">'type':</span> <span class="pre">'float',</span> <span class="pre">'units':</span> <span class="pre">'kJ/mol/Å'},</span> <span class="pre">'stress':</span> <span class="pre">{'description':</span> <span class="pre">'The</span> <span class="pre">MBE-corrected</span> <span class="pre">stress,</span> <span class="pre">Voigt</span> <span class="pre">xx</span> <span class="pre">yy</span> <span class="pre">zz</span> <span class="pre">yz</span> <span class="pre">xz</span> <span class="pre">xy,</span> <span class="pre">sigma</span> <span class="pre">=</span> <span class="pre">-P',</span> <span class="pre">'dimensionality':</span> <span class="pre">'[6]',</span> <span class="pre">'format':</span> <span class="pre">'.4f',</span> <span class="pre">'property':</span> <span class="pre">'stress#MBE#{model}',</span> <span class="pre">'type':</span> <span class="pre">'json',</span> <span class="pre">'units':</span> <span class="pre">'GPa'}}}</span></span><a class="headerlink" href="#mbe_step.metadata.metadata" title="Link to this definition">#</a></dt>
+<dd><p>Description of the computational models for Mbe.</p>
+<p>Hamiltonians, approximations, and basis set or parameterizations,
+only if appropriate for this code. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span><span class="p">[</span><span class="s2">"computational models"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"Hartree-Fock"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"models"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"PM7"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">"parameterizations"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">"PM7"</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">"elements"</span><span class="p">:</span> <span class="s2">"1-60,62-83"</span><span class="p">,</span>
+                        <span class="s2">"periodic"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="s2">"reactions"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="s2">"optimization"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="s2">"code"</span><span class="p">:</span> <span class="s2">"mopac"</span><span class="p">,</span>
+                    <span class="p">},</span>
+                    <span class="s2">"PM7-TS"</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">"elements"</span><span class="p">:</span> <span class="s2">"1-60,62-83"</span><span class="p">,</span>
+                        <span class="s2">"periodic"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="s2">"reactions"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="s2">"optimization"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                        <span class="s2">"code"</span><span class="p">:</span> <span class="s2">"mopac"</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">},</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="module-mbe_step.tk_mbe">
+<span id="mbe-step-tk-mbe-module"></span><h2>mbe_step.tk_mbe module<a class="headerlink" href="#module-mbe_step.tk_mbe" title="Link to this heading">#</a></h2>
+<p>The graphical part of a MBE step</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="mbe_step.tk_mbe.DRIVERS">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.tk_mbe.</span></span><span class="sig-name descname"><span class="pre">DRIVERS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('maximum</span> <span class="pre">order',</span> <span class="pre">'cutoffs',</span> <span class="pre">'triple</span> <span class="pre">rule',</span> <span class="pre">'periodic</span> <span class="pre">low</span> <span class="pre">level')</span></span><a class="headerlink" href="#mbe_step.tk_mbe.DRIVERS" title="Link to this definition">#</a></dt>
+<dd><p>Parameters whose value changes the layout</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="mbe_step.tk_mbe.GROUPS">
+<span class="sig-prename descclassname"><span class="pre">mbe_step.tk_mbe.</span></span><span class="sig-name descname"><span class="pre">GROUPS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'assignment':</span> <span class="pre">('Periodic</span> <span class="pre">low</span> <span class="pre">level',</span> <span class="pre">('periodic</span> <span class="pre">monomers',</span> <span class="pre">'periodic</span> <span class="pre">pair</span> <span class="pre">cutoff',</span> <span class="pre">'grid</span> <span class="pre">spacing',</span> <span class="pre">'box</span> <span class="pre">padding')),</span> <span class="pre">'execution':</span> <span class="pre">('Execution',</span> <span class="pre">('molecular</span> <span class="pre">ranks',</span> <span class="pre">'molecular</span> <span class="pre">memory',</span> <span class="pre">'molecular</span> <span class="pre">bundle',</span> <span class="pre">'periodic</span> <span class="pre">ranks',</span> <span class="pre">'periodic</span> <span class="pre">memory',</span> <span class="pre">'periodic</span> <span class="pre">bundle',</span> <span class="pre">'cell</span> <span class="pre">ranks',</span> <span class="pre">'cell</span> <span class="pre">memory',</span> <span class="pre">'bundle</span> <span class="pre">walltime',</span> <span class="pre">'archive')),</span> <span class="pre">'fragments':</span> <span class="pre">('Fragments',</span> <span class="pre">('maximum</span> <span class="pre">order',</span> <span class="pre">'distance</span> <span class="pre">criterion',</span> <span class="pre">'cutoffs',</span> <span class="pre">'pair</span> <span class="pre">cutoff',</span> <span class="pre">'pair</span> <span class="pre">cutoff</span> <span class="pre">table',</span> <span class="pre">'triple</span> <span class="pre">rule',</span> <span class="pre">'triple</span> <span class="pre">cutoff',</span> <span class="pre">'triple</span> <span class="pre">cutoff</span> <span class="pre">table',</span> <span class="pre">'counterpoise')),</span> <span class="pre">'labels':</span> <span class="pre">('Labels',</span> <span class="pre">('energy</span> <span class="pre">offsets',</span> <span class="pre">'extxyz</span> <span class="pre">file')),</span> <span class="pre">'levels':</span> <span class="pre">('Levels</span> <span class="pre">of</span> <span class="pre">theory',</span> <span class="pre">('high</span> <span class="pre">level',</span> <span class="pre">'molecular</span> <span class="pre">low</span> <span class="pre">level',</span> <span class="pre">'periodic</span> <span class="pre">low</span> <span class="pre">level',</span> <span class="pre">'cell</span> <span class="pre">low</span> <span class="pre">level'))}</span></span><a class="headerlink" href="#mbe_step.tk_mbe.GROUPS" title="Link to this definition">#</a></dt>
+<dd><p>The parameters of each group, in order</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mbe_step.tk_mbe.TkMbe">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mbe_step.tk_mbe.</span></span><span class="sig-name descname"><span class="pre">TkMbe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tk_flowchart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">canvas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/tk_mbe.html#TkMbe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.tk_mbe.TkMbe" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TkNode</span></code></p>
+<p>The graphical part of a MBE step in a flowchart.</p>
+<p>The dialog shows only what applies (Paul’s rule: invalid combinations are
+not offered): the triple controls only for order 3, the pair controls only
+from order 2, single cutoffs or the type-pair tables but not both, and the
+periodic-assignment controls only with a periodic low level. The order is
+capped at 3 here; 4-body terms are designed for in seamm_mbe but not yet
+validated. The level fields offer the installed model chemistries and
+accept a typed one, or a $variable.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.tk_mbe.TkMbe.create_dialog">
+<span class="sig-name descname"><span class="pre">create_dialog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/tk_mbe.html#TkMbe.create_dialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.tk_mbe.TkMbe.create_dialog" title="Link to this definition">#</a></dt>
+<dd><p>Create the dialog: a Parameters tab and the standard Results tab.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.tk_mbe.TkMbe.reset_dialog">
+<span class="sig-name descname"><span class="pre">reset_dialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">widget</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/tk_mbe.html#TkMbe.reset_dialog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.tk_mbe.TkMbe.reset_dialog" title="Link to this definition">#</a></dt>
+<dd><p>Lay out the dialog for the current choices.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.tk_mbe.TkMbe.right_click">
+<span class="sig-name descname"><span class="pre">right_click</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/tk_mbe.html#TkMbe.right_click"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.tk_mbe.TkMbe.right_click" title="Link to this definition">#</a></dt>
+<dd><p>Handle a right-click: add the Edit… item and post the menu.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.tk_mbe.TkMbe.shown">
+<span class="sig-name descname"><span class="pre">shown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/tk_mbe.html#TkMbe.shown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.tk_mbe.TkMbe.shown" title="Link to this definition">#</a></dt>
+<dd><p>The parameters that apply to the current choices.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-mbe_step">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mbe_step" title="Link to this heading">#</a></h2>
+<p>mbe_step
+A SEAMM plug-in for many-body expansion (MBE) corrections of periodic cells and clusters</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="modules.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">mbe_step</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../authors.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Development Team</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-mbe_step.counterpoise">mbe_step.counterpoise module</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.counterpoise.correction"><code class="docutils literal notranslate"><span class="pre">correction()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.counterpoise.ghost_jobs"><code class="docutils literal notranslate"><span class="pre">ghost_jobs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.counterpoise.key"><code class="docutils literal notranslate"><span class="pre">key()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.counterpoise.specs"><code class="docutils literal notranslate"><span class="pre">specs()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-mbe_step.labels">mbe_step.labels module</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.labels.counts_text"><code class="docutils literal notranslate"><span class="pre">counts_text()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.labels.parse_offsets"><code class="docutils literal notranslate"><span class="pre">parse_offsets()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.labels.parse_table"><code class="docutils literal notranslate"><span class="pre">parse_table()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.labels.to_seamm"><code class="docutils literal notranslate"><span class="pre">to_seamm()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.labels.voigt"><code class="docutils literal notranslate"><span class="pre">voigt()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.labels.write_extxyz"><code class="docutils literal notranslate"><span class="pre">write_extxyz()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-mbe_step.levels">mbe_step.levels module</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.CURRENT"><code class="docutils literal notranslate"><span class="pre">CURRENT</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.Level"><code class="docutils literal notranslate"><span class="pre">Level</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.Level.evaluate"><code class="docutils literal notranslate"><span class="pre">Level.evaluate()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.Level.level"><code class="docutils literal notranslate"><span class="pre">Level.level</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.Level.resources"><code class="docutils literal notranslate"><span class="pre">Level.resources()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.geometry"><code class="docutils literal notranslate"><span class="pre">geometry()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.resolve"><code class="docutils literal notranslate"><span class="pre">resolve()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.stress_convention"><code class="docutils literal notranslate"><span class="pre">stress_convention()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.to_library"><code class="docutils literal notranslate"><span class="pre">to_library()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.whole"><code class="docutils literal notranslate"><span class="pre">whole()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-mbe_step.mbe">mbe_step.mbe module</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe.Mbe"><code class="docutils literal notranslate"><span class="pre">Mbe</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe.Mbe.parser"><code class="docutils literal notranslate"><span class="pre">Mbe.parser</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe.Mbe.options"><code class="docutils literal notranslate"><span class="pre">Mbe.options</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe.Mbe.parameters"><code class="docutils literal notranslate"><span class="pre">Mbe.parameters</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe.Mbe.analyze"><code class="docutils literal notranslate"><span class="pre">Mbe.analyze()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe.Mbe.description_text"><code class="docutils literal notranslate"><span class="pre">Mbe.description_text()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe.Mbe.git_revision"><code class="docutils literal notranslate"><span class="pre">Mbe.git_revision</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe.Mbe.run"><code class="docutils literal notranslate"><span class="pre">Mbe.run()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe.Mbe.version"><code class="docutils literal notranslate"><span class="pre">Mbe.version</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-mbe_step.mbe_parameters">mbe_step.mbe_parameters module</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe_parameters.CRITERIA"><code class="docutils literal notranslate"><span class="pre">CRITERIA</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe_parameters.MbeParameters"><code class="docutils literal notranslate"><span class="pre">MbeParameters</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe_parameters.MbeParameters.parameters"><code class="docutils literal notranslate"><span class="pre">MbeParameters.parameters</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-mbe_step.mbe_step">mbe_step.mbe_step module</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe_step.MbeStep"><code class="docutils literal notranslate"><span class="pre">MbeStep</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe_step.MbeStep.create_node"><code class="docutils literal notranslate"><span class="pre">MbeStep.create_node()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe_step.MbeStep.create_tk_node"><code class="docutils literal notranslate"><span class="pre">MbeStep.create_tk_node()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe_step.MbeStep.description"><code class="docutils literal notranslate"><span class="pre">MbeStep.description()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.mbe_step.MbeStep.my_description"><code class="docutils literal notranslate"><span class="pre">MbeStep.my_description</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-mbe_step.metadata">mbe_step.metadata module</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.metadata.metadata"><code class="docutils literal notranslate"><span class="pre">metadata</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-mbe_step.tk_mbe">mbe_step.tk_mbe module</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.tk_mbe.DRIVERS"><code class="docutils literal notranslate"><span class="pre">DRIVERS</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.tk_mbe.GROUPS"><code class="docutils literal notranslate"><span class="pre">GROUPS</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.tk_mbe.TkMbe"><code class="docutils literal notranslate"><span class="pre">TkMbe</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.tk_mbe.TkMbe.create_dialog"><code class="docutils literal notranslate"><span class="pre">TkMbe.create_dialog()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.tk_mbe.TkMbe.reset_dialog"><code class="docutils literal notranslate"><span class="pre">TkMbe.reset_dialog()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.tk_mbe.TkMbe.right_click"><code class="docutils literal notranslate"><span class="pre">TkMbe.right_click()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.tk_mbe.TkMbe.shown"><code class="docutils literal notranslate"><span class="pre">TkMbe.shown()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-mbe_step">Module contents</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/api/mbe_step.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.22.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

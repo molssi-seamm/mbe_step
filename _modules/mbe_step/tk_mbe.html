@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mbe_step.tk_mbe &#8212; SEAMM MBE Plug-in 2026.10.3 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=c224919a" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=64cc4de3f052d77215f0"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
+
+    <script src="../../_static/documentation_options.js?v=f64fa391"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/mbe_step/tk_mbe';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2026.10.3" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/SEAMM logo.png" class="logo__image only-light" alt=""/>
+    <img src="../../_static/SEAMM Inverted 288x181.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">MBE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    <no title>
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../developer_guide/index.html">
+    Developer Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Documentation
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../authors.html">
+    Development Team
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../history.html">
+    History
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi-seamm.github.io">
+    Main SEAMM documentation
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi-seamm.github.io">
+    SEAMM Documentation
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi.org">
+    MolSSI
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/molssi-seamm/geometry_analysis_step" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i><span class="visually-hidden">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    <no title>
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../developer_guide/index.html">
+    Developer Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../authors.html">
+    Development Team
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../history.html">
+    History
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi-seamm.github.io">
+    Main SEAMM documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi-seamm.github.io">
+    SEAMM Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi.org">
+    MolSSI
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/molssi-seamm/geometry_analysis_step" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i><span class="visually-hidden">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">mbe_step.tk_mbe</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for mbe_step.tk_mbe</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">"""The graphical part of a MBE step"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pprint</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tkinter</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tk</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tkinter.ttk</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ttk</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">seamm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">seamm_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">ureg</span><span class="p">,</span> <span class="n">Q_</span><span class="p">,</span> <span class="n">units_class</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seamm_widgets</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sw</span>
+
+<span class="c1">#: The parameters of each group, in order</span>
+<span class="n">GROUPS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"levels"</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">"Levels of theory"</span><span class="p">,</span>
+        <span class="p">(</span><span class="s2">"high level"</span><span class="p">,</span> <span class="s2">"molecular low level"</span><span class="p">,</span> <span class="s2">"periodic low level"</span><span class="p">,</span> <span class="s2">"cell low level"</span><span class="p">),</span>
+    <span class="p">),</span>
+    <span class="s2">"fragments"</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">"Fragments"</span><span class="p">,</span>
+        <span class="p">(</span>
+            <span class="s2">"maximum order"</span><span class="p">,</span>
+            <span class="s2">"distance criterion"</span><span class="p">,</span>
+            <span class="s2">"cutoffs"</span><span class="p">,</span>
+            <span class="s2">"pair cutoff"</span><span class="p">,</span>
+            <span class="s2">"pair cutoff table"</span><span class="p">,</span>
+            <span class="s2">"triple rule"</span><span class="p">,</span>
+            <span class="s2">"triple cutoff"</span><span class="p">,</span>
+            <span class="s2">"triple cutoff table"</span><span class="p">,</span>
+            <span class="s2">"counterpoise"</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+    <span class="s2">"assignment"</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">"Periodic low level"</span><span class="p">,</span>
+        <span class="p">(</span><span class="s2">"periodic monomers"</span><span class="p">,</span> <span class="s2">"periodic pair cutoff"</span><span class="p">,</span> <span class="s2">"grid spacing"</span><span class="p">,</span> <span class="s2">"box padding"</span><span class="p">),</span>
+    <span class="p">),</span>
+    <span class="s2">"labels"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"Labels"</span><span class="p">,</span> <span class="p">(</span><span class="s2">"energy offsets"</span><span class="p">,</span> <span class="s2">"extxyz file"</span><span class="p">)),</span>
+    <span class="s2">"execution"</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">"Execution"</span><span class="p">,</span>
+        <span class="p">(</span>
+            <span class="s2">"molecular ranks"</span><span class="p">,</span>
+            <span class="s2">"molecular memory"</span><span class="p">,</span>
+            <span class="s2">"molecular bundle"</span><span class="p">,</span>
+            <span class="s2">"periodic ranks"</span><span class="p">,</span>
+            <span class="s2">"periodic memory"</span><span class="p">,</span>
+            <span class="s2">"periodic bundle"</span><span class="p">,</span>
+            <span class="s2">"cell ranks"</span><span class="p">,</span>
+            <span class="s2">"cell memory"</span><span class="p">,</span>
+            <span class="s2">"bundle walltime"</span><span class="p">,</span>
+            <span class="s2">"archive"</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">}</span>
+
+<span class="c1">#: Parameters whose value changes the layout</span>
+<span class="n">DRIVERS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"maximum order"</span><span class="p">,</span> <span class="s2">"cutoffs"</span><span class="p">,</span> <span class="s2">"triple rule"</span><span class="p">,</span> <span class="s2">"periodic low level"</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TkMbe">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.tk_mbe.TkMbe">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TkMbe</span><span class="p">(</span><span class="n">seamm</span><span class="o">.</span><span class="n">TkNode</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The graphical part of a MBE step in a flowchart.</span>
+
+<span class="sd">    The dialog shows only what applies (Paul's rule: invalid combinations are</span>
+<span class="sd">    not offered): the triple controls only for order 3, the pair controls only</span>
+<span class="sd">    from order 2, single cutoffs or the type-pair tables but not both, and the</span>
+<span class="sd">    periodic-assignment controls only with a periodic low level. The order is</span>
+<span class="sd">    capped at 3 here; 4-body terms are designed for in seamm_mbe but not yet</span>
+<span class="sd">    validated. The level fields offer the installed model chemistries and</span>
+<span class="sd">    accept a typed one, or a $variable.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tk_flowchart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">node</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">canvas</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">w</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+        <span class="n">h</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Initialize a graphical node."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">tk_flowchart</span><span class="o">=</span><span class="n">tk_flowchart</span><span class="p">,</span>
+            <span class="n">node</span><span class="o">=</span><span class="n">node</span><span class="p">,</span>
+            <span class="n">canvas</span><span class="o">=</span><span class="n">canvas</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span>
+            <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="TkMbe.create_dialog">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.tk_mbe.TkMbe.create_dialog">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Create the dialog: a Parameters tab and the standard Results tab."""</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">create_dialog</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"MBE"</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="s2">"notebook"</span><span class="p">,</span> <span class="n">results_tab</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">parameters</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s2">"frame"</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="p">[</span><span class="s2">"structures frame"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">LabelFrame</span><span class="p">(</span>
+            <span class="n">frame</span><span class="p">,</span> <span class="n">borderwidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">relief</span><span class="o">=</span><span class="s2">"sunken"</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">"Structures"</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">10</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_structure_selection_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="s2">"structures frame"</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">keys</span><span class="p">)</span> <span class="ow">in</span> <span class="n">GROUPS</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">subframe</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2"> frame"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ttk</span><span class="o">.</span><span class="n">LabelFrame</span><span class="p">(</span>
+                <span class="n">frame</span><span class="p">,</span> <span class="n">borderwidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">relief</span><span class="o">=</span><span class="s2">"sunken"</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">10</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="p">(</span><span class="n">subframe</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">DRIVERS</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">"&lt;&lt;ComboboxSelected&gt;&gt;"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_dialog</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">"&lt;Return&gt;"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_dialog</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">"&lt;FocusOut&gt;"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_dialog</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"pair cutoff table"</span><span class="p">,</span> <span class="s2">"triple cutoff table"</span><span class="p">,</span> <span class="s2">"energy offsets"</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="s2">"entry"</span><span class="p">):</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">entry</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fill_levels</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_dialog</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fill_levels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Offer the installed model chemistries in the level fields."""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">model_chemistry_step.model_chemistry</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+                <span class="n">discover_model_chemistries</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">molecular</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">discover_model_chemistries</span><span class="p">())</span>
+            <span class="n">periodic</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">discover_model_chemistries</span><span class="p">(</span><span class="n">periodic_only</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">molecular</span> <span class="o">=</span> <span class="n">periodic</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"high level"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"current model chemistry"</span><span class="p">]</span> <span class="o">+</span> <span class="n">molecular</span><span class="p">,</span>
+            <span class="s2">"molecular low level"</span><span class="p">:</span> <span class="n">molecular</span><span class="p">,</span>
+            <span class="s2">"periodic low level"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"none"</span><span class="p">]</span> <span class="o">+</span> <span class="n">molecular</span><span class="p">,</span>
+            <span class="s2">"cell low level"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"automatic"</span><span class="p">]</span> <span class="o">+</span> <span class="n">periodic</span> <span class="o">+</span> <span class="n">molecular</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">choices</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="s2">"combobox"</span><span class="p">):</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">combobox</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="n">choices</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TkMbe.reset_dialog">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.tk_mbe.TkMbe.reset_dialog">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Lay out the dialog for the current choices."""</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s2">"frame"</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">slave</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">grid_slaves</span><span class="p">():</span>
+            <span class="n">slave</span><span class="o">.</span><span class="n">grid_forget</span><span class="p">()</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">"structures frame"</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">EW</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">sframe</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="s2">"structures frame"</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">slave</span> <span class="ow">in</span> <span class="n">sframe</span><span class="o">.</span><span class="n">grid_slaves</span><span class="p">():</span>
+            <span class="n">slave</span><span class="o">.</span><span class="n">grid_forget</span><span class="p">()</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">widgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">layout_structure_selection</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">sw</span><span class="o">.</span><span class="n">align_labels</span><span class="p">(</span><span class="n">widgets</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">E</span><span class="p">)</span>
+        <span class="n">row</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">shown</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shown</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">GROUPS</span><span class="p">:</span>
+            <span class="n">subframe</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2"> frame"</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">slave</span> <span class="ow">in</span> <span class="n">subframe</span><span class="o">.</span><span class="n">grid_slaves</span><span class="p">():</span>
+                <span class="n">slave</span><span class="o">.</span><span class="n">grid_forget</span><span class="p">()</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">GROUPS</span><span class="p">[</span><span class="n">group</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">shown</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">subframe</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">EW</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">row</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">keys</span><span class="p">):</span>
+                <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">EW</span><span class="p">)</span>
+            <span class="n">sw</span><span class="o">.</span><span class="n">align_labels</span><span class="p">([</span><span class="bp">self</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">],</span> <span class="n">sticky</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">E</span><span class="p">)</span>
+            <span class="n">subframe</span><span class="o">.</span><span class="n">columnconfigure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">columnconfigure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">row</span></div>
+
+
+<div class="viewcode-block" id="TkMbe.shown">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.tk_mbe.TkMbe.shown">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""The parameters that apply to the current choices."""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">(</span><span class="s2">"maximum order"</span><span class="p">))</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># e.g. a $variable: show everything that might apply</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">(</span><span class="s2">"cutoffs"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"single value"</span>
+        <span class="n">triples</span> <span class="o">=</span> <span class="n">order</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">(</span><span class="s2">"triple rule"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"none"</span>
+
+        <span class="n">periodic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">(</span><span class="s2">"periodic low level"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"none"</span>
+        <span class="n">shown</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">GROUPS</span><span class="p">[</span><span class="s2">"levels"</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">GROUPS</span><span class="p">[</span><span class="s2">"labels"</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">shown</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">"maximum order"</span><span class="p">,</span> <span class="s2">"distance criterion"</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">periodic</span><span class="p">:</span>
+            <span class="c1"># counterpoise is refused for periodic cells, which a periodic low</span>
+            <span class="c1"># level implies</span>
+            <span class="n">shown</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"counterpoise"</span><span class="p">)</span>
+        <span class="n">shown</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">"molecular ranks"</span><span class="p">,</span> <span class="s2">"molecular memory"</span><span class="p">,</span> <span class="s2">"molecular bundle"</span><span class="p">}</span>
+        <span class="n">shown</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">"cell ranks"</span><span class="p">,</span> <span class="s2">"cell memory"</span><span class="p">,</span> <span class="s2">"bundle walltime"</span><span class="p">,</span> <span class="s2">"archive"</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">shown</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"cutoffs"</span><span class="p">)</span>
+            <span class="n">shown</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"pair cutoff table"</span> <span class="k">if</span> <span class="n">table</span> <span class="k">else</span> <span class="s2">"pair cutoff"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">shown</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"triple rule"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">triples</span><span class="p">:</span>
+            <span class="n">shown</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"triple cutoff table"</span> <span class="k">if</span> <span class="n">table</span> <span class="k">else</span> <span class="s2">"triple cutoff"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">periodic</span><span class="p">:</span>
+            <span class="n">shown</span> <span class="o">|=</span> <span class="nb">set</span><span class="p">(</span><span class="n">GROUPS</span><span class="p">[</span><span class="s2">"assignment"</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">shown</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">"periodic ranks"</span><span class="p">,</span> <span class="s2">"periodic memory"</span><span class="p">,</span> <span class="s2">"periodic bundle"</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">shown</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""The current value of a widget, falling back to the parameter's."""</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+
+<div class="viewcode-block" id="TkMbe.right_click">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.tk_mbe.TkMbe.right_click">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">right_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Handle a right-click: add the Edit... item and post the menu."""</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">right_click</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">popup_menu</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">"Edit.."</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">edit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">popup_menu</span><span class="o">.</span><span class="n">tk_popup</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">x_root</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">y_root</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.22.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

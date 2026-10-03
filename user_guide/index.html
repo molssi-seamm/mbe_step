@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.3 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=c224919a" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=64cc4de3f052d77215f0"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
+
+    <script src="../_static/documentation_options.js?v=f64fa391"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/index';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Developer Documentation" href="../developer_guide/index.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="../getting_started/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2026.10.3" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/SEAMM logo.png" class="logo__image only-light" alt=""/>
+    <img src="../_static/SEAMM Inverted 288x181.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">MBE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    <no title>
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#" aria-current="page">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../developer_guide/index.html">
+    Developer Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Documentation
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../authors.html">
+    Development Team
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../history.html">
+    History
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi-seamm.github.io">
+    Main SEAMM documentation
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi-seamm.github.io">
+    SEAMM Documentation
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi.org">
+    MolSSI
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/molssi-seamm/geometry_analysis_step" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i><span class="visually-hidden">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started/index.html">
+    <no title>
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#" aria-current="page">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../developer_guide/index.html">
+    Developer Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../authors.html">
+    Development Team
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../history.html">
+    History
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi-seamm.github.io">
+    Main SEAMM documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi-seamm.github.io">
+    SEAMM Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi.org">
+    MolSSI
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/molssi-seamm/geometry_analysis_step" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i><span class="visually-hidden">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">User Guide</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="user-guide">
+<span id="id1"></span><h1>User Guide<a class="headerlink" href="#user-guide" title="Link to this heading">#</a></h1>
+<p>The MBE step estimates high-level energies, forces and stress for a periodic cell
+or a large cluster that the high-level method can’t treat directly. It corrects a
+cheap calculation of the whole system with many-body increments, each the
+difference [high − low] computed on a small isolated fragment:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>E(system) ≈ E_low(system) + Σ_F dE_F
+</pre></div>
+</div>
+<p>where dE_F is the F-body part of [high − low] for each selected fragment F:
+monomers, pairs and triples. Forces and the virial are assembled the same way. The
+bookkeeping is done by the <a class="reference external" href="https://molssi-seamm.github.io/seamm_mbe/">seamm_mbe</a>
+library.</p>
+<section id="the-levels-of-theory">
+<h2>The levels of theory<a class="headerlink" href="#the-levels-of-theory" title="Link to this heading">#</a></h2>
+<p>The step uses up to four Model Chemistries:</p>
+<dl class="simple">
+<dt><strong>High level</strong></dt><dd><p>The level the labels approximate, run on every fragment. By default it is
+the one chosen by the Model Chemistry step before this step.</p>
+</dd>
+<dt><strong>Molecular low level</strong></dt><dd><p>The cheap level run on the fragments referenced to a molecular code. It
+is required.</p>
+</dd>
+<dt><strong>Periodic low level</strong></dt><dd><p>Optional. A periodic code for the compact fragments: monomers, and pairs
+closer than a distance r1. It should be the code of the cell’s low level,
+since that cancels the cell’s own low-level error best. Extended
+fragments use the molecular low level, because they pick up interactions
+with their periodic images in affordable boxes. This is the “mixed” scheme.</p>
+</dd>
+<dt><strong>Whole-system low level</strong></dt><dd><p>The cheap level run on the whole cell or cluster. <em>automatic</em> uses the
+periodic low level for a cell and the molecular low level for a cluster.
+For a cell with a periodic low level it must be that same level, so that the
+compact fragments and the cell are the same calculation.</p>
+</dd>
+</dl>
+<p>Each field accepts any model chemistry the installed programs offer, typed or
+chosen, and <code class="docutils literal notranslate"><span class="pre">$variables</span></code> in its parts. A periodic level must come from a program
+that declares the sign convention of its stress: MOPAC does from mopac_step
+2026.10.3.2, VASP from vasp_step 2026.10.3. A periodic low level applies only to
+periodic cells; for a cluster set it to <em>none</em>.</p>
+<p>Each increment is built entirely from calculations at its own low level. A triple
+referenced to the molecular level subtracts the molecular-level increments of its
+pairs, even where those pairs are referenced to the periodic level in the sum.</p>
+</section>
+<section id="choosing-the-fragments">
+<h2>Choosing the fragments<a class="headerlink" href="#choosing-the-fragments" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt><strong>Maximum order</strong></dt><dd><p>1 (monomers), 2 (pairs) or 3 (triples).</p>
+</dd>
+<dt><strong>Distance between molecules</strong></dt><dd><p>Measured between the molecules’ designated atoms (water’s O, a
+carbonate’s carbonyl C, an ion), between their closest atoms or closest
+heavy atoms, or between their centres of mass or geometry.</p>
+</dd>
+<dt><strong>Cutoffs</strong></dt><dd><p>One value, or a table by molecule type for mixtures, e.g. <code class="docutils literal notranslate"><span class="pre">water</span> <span class="pre">water</span>
+<span class="pre">4.5;</span> <span class="pre">Li+</span> <span class="pre">*</span> <span class="pre">3.0;</span> <span class="pre">*</span> <span class="pre">*</span> <span class="pre">5.0</span></code>. <code class="docutils literal notranslate"><span class="pre">*</span></code> matches any type, and the most specific
+entry wins. Every pair of types present must be covered.</p>
+</dd>
+<dt><strong>Triples</strong></dt><dd><p><em>connected</em> selects a triple when at least two of its three pairs are
+within the triple cutoff (a hub bonded to both others). <em>compact</em>
+requires all three. A connected triple’s third pair is computed as well,
+since its increment needs it, even when it is longer than the pair cutoff.
+It does not enter the 2-body sum.</p>
+</dd>
+</dl>
+<p>The molecules are found from the bonds (they are perceived if the structure has
+none) and typed by formula and topology. Charges come from the structure’s formal
+charges, or from the type catalog: Li⁺, BF₄⁻, PF₆⁻ and the common monatomic ions.
+The whole system runs with the charge its molecules add up to. If the
+configuration’s own charge is set and disagrees, the step refuses to run.
+A configuration charge of 0 counts as not set (plain xyz input has no charge),
+so a structure holding a Li⁺ runs at +1 even if its charge field says 0. To make
+a molecule neutral, give the structure formal charges or give the charge of its
+type.</p>
+<p>A cell too small for the cutoffs is refused, because the same molecules could
+form two different fragments.</p>
+</section>
+<section id="the-labels">
+<h2>The labels<a class="headerlink" href="#the-labels" title="Link to this heading">#</a></h2>
+<p>For each configuration the step stores:</p>
+<ul class="simple">
+<li><p>the energy (kJ/mol), the gradients (kJ/mol/Å) and, for a cell, the stress (a
+Voigt [6] vector in GPa, σ = −P), as properties <code class="docutils literal notranslate"><span class="pre">energy#MBE#&lt;model&gt;</span></code> and so
+on, with the gradients also on the atoms;</p></li>
+<li><p>the atomic and molecular pressures, the correction and its breakdown by body
+order, the fragment counts and the largest increment net force, as results
+for variables and tables;</p></li>
+<li><p>an extended XYZ file (default <code class="docutils literal notranslate"><span class="pre">mbe_labels.extxyz</span></code> in the step’s directory;
+<code class="docutils literal notranslate"><span class="pre">job:NAME</span></code> puts it in the job’s directory) with <code class="docutils literal notranslate"><span class="pre">REF_energy</span></code>,
+<code class="docutils literal notranslate"><span class="pre">REF_forces</span></code> and, for a cell, the nine-value <code class="docutils literal notranslate"><span class="pre">REF_stress</span></code>. Rerunning
+replaces a configuration’s frame rather than adding a second copy.</p></li>
+</ul>
+<p><strong>Energy offsets</strong> (eV per molecule, by type) put the labels on the scale of
+other training data, e.g. <code class="docutils literal notranslate"><span class="pre">water</span> <span class="pre">2074.69325</span></code> for the water training sets’
+formation-energy scale. The default, <code class="docutils literal notranslate"><span class="pre">none</span></code>, gives absolute energies. Every
+molecule type present must have an offset when any is given.</p>
+<p>A configuration with a failed or missing calculation gets no labels. The step
+reports which calculations failed, stores the complete configurations, and
+stops with an error. Rerunning the job reuses every finished calculation and
+retries the failed ones.</p>
+</section>
+<section id="running-the-calculations">
+<h2>Running the calculations<a class="headerlink" href="#running-the-calculations" title="Link to this heading">#</a></h2>
+<p>Each level runs through SEAMM’s task layer: as batch tasks wherever the job’s
+target sends them (a local pool, or bundled jobs on a cluster), or on a warm MDI
+engine for cheap codes run locally. The <em>Execution</em> settings give the cores and
+memory of each calculation and how many share a batch job. Finished bundles are
+archived, keeping a configuration to a few files. In this version the levels run
+one after the other.</p>
+</section>
+<section id="periodic-fragments-on-the-cell-s-grid">
+<h2>Periodic fragments on the cell’s grid<a class="headerlink" href="#periodic-fragments-on-the-cell-s-grid" title="Link to this heading">#</a></h2>
+<p>A plane-wave code’s energy depends slightly on where each atom sits relative to
+its FFT grid. The increments subtract fragments from each other and from the
+cell, so this error cancels only if every atom keeps the same position relative to
+the grid. With a periodic low level the step therefore gives the cell an explicit
+grid, with a spacing no larger than <strong>Largest FFT grid spacing</strong> (default
+0.0829 Å), and puts each periodic fragment in a box that is a whole number of
+those grid steps, at least 12 Å and the fragment’s extent plus <strong>Box padding</strong>
+(default 7.5 Å), shifted by whole grid steps. The cell must be orthorhombic.
+These settings appear only when a periodic low level is chosen.</p>
+</section>
+<section id="counterpoise">
+<h2>Counterpoise<a class="headerlink" href="#counterpoise" title="Link to this heading">#</a></h2>
+<p><strong>Counterpoise</strong> <em>pairwise</em> corrects each selected pair for the basis-set
+superposition error (Boys–Bernardi), at the high level and, for pairs referenced
+to it, the molecular low level. Each pair adds two calculations per level: each
+monomer in the pair’s basis, with the other monomer’s atoms as ghosts. The
+correction enters the 2-body sum only; triples still subtract the uncorrected
+pairs, so the pairs’ error does not move into the 3-body terms. Where a pair’s
+ghost gradients are unphysical, the energy is corrected but the forces are left
+uncorrected, and the step counts these pairs. The total correction and that count
+are stored as results.</p>
+<p>Counterpoise needs a level that runs as batch calculations with ghost atoms, and
+is not available for periodic cells (it is hidden in the dialog when a periodic
+low level is chosen).</p>
+<p>4-body terms come in a later version.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../getting_started/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">&lt;no title&gt;</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../developer_guide/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Developer Documentation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-levels-of-theory">The levels of theory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#choosing-the-fragments">Choosing the fragments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-labels">The labels</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-calculations">Running the calculations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#periodic-fragments-on-the-cell-s-grid">Periodic fragments on the cell’s grid</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#counterpoise">Counterpoise</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/user_guide/index.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.22.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

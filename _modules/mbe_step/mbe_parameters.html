@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mbe_step.mbe_parameters &#8212; SEAMM MBE Plug-in 2026.10.3 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=64cc4de3f052d77215f0" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=c224919a" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=64cc4de3f052d77215f0"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
+
+    <script src="../../_static/documentation_options.js?v=f64fa391"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/mbe_step/mbe_parameters';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="2026.10.3" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/SEAMM logo.png" class="logo__image only-light" alt=""/>
+    <img src="../../_static/SEAMM Inverted 288x181.png" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">MBE</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    <no title>
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../developer_guide/index.html">
+    Developer Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Documentation
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../authors.html">
+    Development Team
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../history.html">
+    History
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi-seamm.github.io">
+    Main SEAMM documentation
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi-seamm.github.io">
+    SEAMM Documentation
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-external" href="https://molssi.org">
+    MolSSI
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/molssi-seamm/geometry_analysis_step" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i><span class="visually-hidden">Twitter</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../getting_started/index.html">
+    <no title>
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../developer_guide/index.html">
+    Developer Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api/index.html">
+    API Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../authors.html">
+    Development Team
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../history.html">
+    History
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi-seamm.github.io">
+    Main SEAMM documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi-seamm.github.io">
+    SEAMM Documentation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-external" href="https://molssi.org">
+    MolSSI
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/molssi-seamm/geometry_analysis_step" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://twitter.com/MolSSI_NSF" title="Twitter" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-twitter fa-lg" aria-hidden="true"></i><span class="visually-hidden">Twitter</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">mbe_step.mbe_parameters</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for mbe_step.mbe_parameters</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">"""</span>
+<span class="sd">Control parameters for the MBE step in a SEAMM flowchart</span>
+<span class="sd">"""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pprint</span>  <span class="c1"># noqa: F401</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">seamm</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1">#: The distance criteria, as shown, and their names in seamm_mbe</span>
+<span class="n">CRITERIA</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"designated atoms"</span><span class="p">:</span> <span class="s2">"designated"</span><span class="p">,</span>
+    <span class="s2">"closest contact"</span><span class="p">:</span> <span class="s2">"contact"</span><span class="p">,</span>
+    <span class="s2">"closest heavy-atom contact"</span><span class="p">:</span> <span class="s2">"heavy contact"</span><span class="p">,</span>
+    <span class="s2">"center of mass"</span><span class="p">:</span> <span class="s2">"com"</span><span class="p">,</span>
+    <span class="s2">"center of geometry"</span><span class="p">:</span> <span class="s2">"cog"</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="MbeParameters">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.mbe_parameters.MbeParameters">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MbeParameters</span><span class="p">(</span><span class="n">seamm</span><span class="o">.</span><span class="n">Parameters</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The control parameters for the MBE step.</span>
+
+<span class="sd">    The step corrects a cheap calculation of a whole periodic cell (or cluster)</span>
+<span class="sd">    with many-body increments of [high - low] computed on small isolated</span>
+<span class="sd">    fragments: monomers, selected pairs and triples. The bookkeeping is in the</span>
+<span class="sd">    ``seamm_mbe`` library; this step runs the calculations through each level's</span>
+<span class="sd">    Model Chemistry.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    Mbe, TkMbe, MbeStep</span>
+<span class="sd">    """</span>
+
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># Which structures: SEAMM's standard block</span>
+        <span class="o">**</span><span class="n">seamm</span><span class="o">.</span><span class="n">standard_parameters</span><span class="o">.</span><span class="n">structure_selection_parameters</span><span class="p">,</span>
+        <span class="c1"># ------------------------------------------------------------- levels</span>
+        <span class="s2">"high level"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"current model chemistry"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"current model chemistry"</span><span class="p">,),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"High level:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"The model chemistry the labels approximate, run on every "</span>
+                <span class="s2">"fragment, e.g. 'ORCA:DFT@revDSD-PBEP86-D4/2021/def2-TZVPPD'. By "</span>
+                <span class="s2">"default the one chosen by the Model Chemistry step before this "</span>
+                <span class="s2">"step."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"molecular low level"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Molecular low level:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"The cheap model chemistry run on the fragments whose increments "</span>
+                <span class="s2">"are referenced to a molecular code, e.g. "</span>
+                <span class="s2">"'ORCA:DFT@r2SCAN-D4/def2-TZVPPD'."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"periodic low level"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"none"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"none"</span><span class="p">,),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Periodic low level:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"The periodic code used for the compact fragments (monomers and "</span>
+                <span class="s2">"close pairs), the same code as the cell's low level, which "</span>
+                <span class="s2">"cancels its errors best. 'none' references every increment to "</span>
+                <span class="s2">"the molecular low level. For now the fragments are run as "</span>
+                <span class="s2">"isolated molecules, so any model chemistry is accepted here; "</span>
+                <span class="s2">"the registered periodic boxes for VASP come in a later "</span>
+                <span class="s2">"version."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"cell low level"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"automatic"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"automatic"</span><span class="p">,),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Whole-system low level:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"The cheap model chemistry run on the whole cell (or cluster). "</span>
+                <span class="s2">"'automatic' uses the periodic low level for a periodic system "</span>
+                <span class="s2">"and the molecular low level for a cluster."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># ---------------------------------------------------------- fragments</span>
+        <span class="s2">"maximum order"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"3"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"2"</span><span class="p">,</span> <span class="s2">"3"</span><span class="p">),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Highest order:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"The largest fragments: 1 = monomers, 2 = pairs, 3 = triples."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"distance criterion"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"designated atoms"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"enum"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">CRITERIA</span><span class="p">),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Distance between molecules:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"How the distance between two molecules is measured: between "</span>
+                <span class="s2">"their designated atoms (water's O, a carbonate's carbonyl C, an "</span>
+                <span class="s2">"ion), the closest contact of any atoms or of the heavy atoms, or "</span>
+                <span class="s2">"the centres of mass or geometry."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"cutoffs"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"single value"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"enum"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"single value"</span><span class="p">,</span> <span class="s2">"table by type pair"</span><span class="p">),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Cutoffs:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"One cutoff for every pair of molecules, or a table by the types "</span>
+                <span class="s2">"of the two molecules (needed for mixtures)."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"pair cutoff"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mf">4.5</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">"Å"</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">".2f"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Pair cutoff:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="s2">"Pairs of molecules closer than this are selected."</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"pair cutoff table"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"* * 4.5"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Pair cutoffs (Å):"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"The pair cutoff in Å by molecule types, as entries "</span>
+                <span class="s2">"'type type cutoff' separated by ';', e.g. 'water water 4.5; Li+ "</span>
+                <span class="s2">"* 3.0; * * 5.0'. '*' matches any type and the most specific "</span>
+                <span class="s2">"entry wins. Every pair of types present must be covered."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"triple rule"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"connected"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"enum"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"none"</span><span class="p">,</span> <span class="s2">"connected"</span><span class="p">,</span> <span class="s2">"compact"</span><span class="p">),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Triples:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"Which triples are selected: 'connected' if at least two of the "</span>
+                <span class="s2">"three pairs are within the triple cutoff (a hub bonded to both "</span>
+                <span class="s2">"others), 'compact' if all three are."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"triple cutoff"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">"Å"</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">".2f"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Triple cutoff:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"The distance within which two molecules of a triple count as "</span>
+                <span class="s2">"bonded, for the triple rule."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"triple cutoff table"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"* * 3.5"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Triple cutoffs (Å):"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"The triple cutoff in Å by molecule types, in the same form as "</span>
+                <span class="s2">"the pair cutoffs."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># ------------------------------------------------- low-level assignment</span>
+        <span class="s2">"periodic monomers"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"yes"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"boolean"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"yes"</span><span class="p">,</span> <span class="s2">"no"</span><span class="p">),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Periodic low level for monomers:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"Reference the monomer increments to the periodic low level."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"periodic pair cutoff"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mf">3.5</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">"Å"</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">".2f"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Periodic low level for pairs closer than:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"Reference the increments of pairs closer than this to the "</span>
+                <span class="s2">"periodic low level; extended fragments pick up interactions "</span>
+                <span class="s2">"with their images in affordable periodic boxes, so they use the "</span>
+                <span class="s2">"molecular low level. 0 for none."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"grid spacing"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mf">0.0829</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">"Å"</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">".4f"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Largest FFT grid spacing:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"The periodic code's FFT grid for the cell is set explicitly with "</span>
+                <span class="s2">"at most this spacing, and each periodic fragment is placed in a "</span>
+                <span class="s2">"box of whole grid steps, its atoms shifted by whole grid steps, "</span>
+                <span class="s2">"so that every atom keeps its offset from the grid and the "</span>
+                <span class="s2">"'egg-box' error cancels in the increments."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"box padding"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mf">7.5</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">"Å"</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">".1f"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Box padding:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"A periodic fragment's box is its largest extent plus this, at "</span>
+                <span class="s2">"least 12 Å. Larger boxes reduce the interaction with the "</span>
+                <span class="s2">"fragment's images at a steep cost."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># ---------------------------------------------------------- counterpoise</span>
+        <span class="s2">"counterpoise"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"none"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"enum"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"none"</span><span class="p">,</span> <span class="s2">"pairwise"</span><span class="p">),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Counterpoise:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"'pairwise' corrects each pair increment for the basis-set "</span>
+                <span class="s2">"superposition error (Boys-Bernardi, each monomer in the pair's "</span>
+                <span class="s2">"basis) at the molecular levels; the triples still subtract the "</span>
+                <span class="s2">"uncorrected pairs. Periodic (plane-wave) levels have no BSSE. Not "</span>
+                <span class="s2">"yet for periodic cells, whose stress would need it too."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># ------------------------------------------------------ energy scale</span>
+        <span class="s2">"energy offsets"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"none"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"none"</span><span class="p">,),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Energy offsets (eV per molecule):"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"Added to the energy per molecule of each type, to put the labels "</span>
+                <span class="s2">"on the scale of other training data, as entries 'type offset' "</span>
+                <span class="s2">"separated by ';', e.g. 'water 2074.69325' (the water training "</span>
+                <span class="s2">"sets' formation-energy scale). Every molecule type present needs "</span>
+                <span class="s2">"one. 'none' keeps the absolute energy."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># ------------------------------------------------------------ output</span>
+        <span class="s2">"extxyz file"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"mbe_labels.extxyz"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"none"</span><span class="p">,),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Labels file:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"The extended XYZ file the labels are appended to (energy, forces "</span>
+                <span class="s2">"and, for cells, the stress), in the step's directory; "</span>
+                <span class="s2">"'job:NAME' puts it in the job's directory, so a loop gathers "</span>
+                <span class="s2">"every configuration into one file. 'none' writes no file."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># --------------------------------------------------------- execution</span>
+        <span class="s2">"molecular ranks"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Cores per molecular calculation:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="s2">"MPI ranks for each molecular fragment calculation."</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"molecular memory"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mi">1500</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Memory per core (MB):"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="s2">"Memory per rank of a molecular calculation, in MB."</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"molecular bundle"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mi">240</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Molecular calculations per job:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"How many molecular fragment calculations share one batch job on "</span>
+                <span class="s2">"a queue."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"periodic ranks"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Cores per periodic calculation:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="s2">"MPI ranks for each periodic fragment calculation."</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"periodic memory"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Memory per core (MB):"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="s2">"Memory per rank of a periodic calculation, in MB."</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"periodic bundle"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Periodic calculations per job:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"How many periodic fragment calculations share one batch job on "</span>
+                <span class="s2">"a queue."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="s2">"cell ranks"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Cores for the whole system:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="s2">"MPI ranks for the low-level calculation of the cell."</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"cell memory"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"integer"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Memory per core (MB):"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="s2">"Memory per rank of the cell's calculation, in MB."</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"bundle walltime"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"float"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">"h"</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">".1f"</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Time limit per job:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="s2">"The walltime of each batch job on a queue."</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"archive"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"yes"</span><span class="p">,</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"boolean"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"yes"</span><span class="p">,</span> <span class="s2">"no"</span><span class="p">),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Archive the calculations:"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
+                <span class="s2">"Pack each finished batch of fragment calculations into a tar "</span>
+                <span class="s2">"file, keeping a frame to a few files instead of thousands."</span>
+            <span class="p">),</span>
+        <span class="p">},</span>
+        <span class="c1"># ------------------------------------------------------------ results</span>
+        <span class="s2">"results"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"dictionary"</span><span class="p">,</span>
+            <span class="s2">"default_units"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(),</span>
+            <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
+            <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"results"</span><span class="p">,</span>
+            <span class="s2">"help_text"</span><span class="p">:</span> <span class="s2">"The results to save to variables or in tables."</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{},</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Initialize the parameters, by default with the parameters defined above</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        defaults: dict</span>
+<span class="sd">            A dictionary of parameters to initialize. The parameters</span>
+<span class="sd">            above are used first and any given will override/add to them.</span>
+<span class="sd">        data: dict</span>
+<span class="sd">            A dictionary of keys and a subdictionary with value and units</span>
+<span class="sd">            for updating the current, default values.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">        """</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"MbeParameters.__init__"</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="o">**</span><span class="n">MbeParameters</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> <span class="o">**</span><span class="n">defaults</span><span class="p">},</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.22.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
