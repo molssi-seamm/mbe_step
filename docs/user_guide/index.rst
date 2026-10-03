@@ -36,11 +36,14 @@ The step uses up to four Model Chemistries:
 **Whole-system low level**
     The cheap level run on the whole cell or cluster. *automatic* uses the
     periodic low level for a cell and the molecular low level for a cluster.
+    For a cell with a periodic low level it must be that same level, so that the
+    compact fragments and the cell are the same calculation.
 
 Each field accepts any model chemistry the installed programs offer, typed or
 chosen, and ``$variables`` in its parts. A periodic level must come from a program
-that declares the sign convention of its stress. MOPAC does so from mopac_step
-2026.10.3.2.
+that declares the sign convention of its stress: MOPAC does from mopac_step
+2026.10.3.2, VASP from vasp_step 2026.10.3. A periodic low level applies only to
+periodic cells; for a cluster set it to *none*.
 
 Each increment is built entirely from calculations at its own low level. A triple
 referenced to the molecular level subtracts the molecular-level increments of its
@@ -96,8 +99,9 @@ For each configuration the step stores:
   replaces a configuration's frame rather than adding a second copy.
 
 **Energy offsets** (eV per molecule, by type) put the labels on the scale of
-other training data. The default, ``water 2074.69325``, is the water training
-sets' formation-energy scale. Use ``none`` for absolute energies.
+other training data, e.g. ``water 2074.69325`` for the water training sets'
+formation-energy scale. The default, ``none``, gives absolute energies. Every
+molecule type present must have an offset when any is given.
 
 A configuration with a failed or missing calculation gets no labels. The step
 reports which calculations failed, stores the complete configurations, and
@@ -114,5 +118,34 @@ memory of each calculation and how many share a batch job. Finished bundles are
 archived, keeping a configuration to a few files. In this version the levels run
 one after the other.
 
-Counterpoise corrections, the registered-box VASP fragments, and 4-body terms
-come in later versions.
+Periodic fragments on the cell's grid
+=====================================
+
+A plane-wave code's energy depends slightly on where each atom sits relative to
+its FFT grid. The increments subtract fragments from each other and from the
+cell, so this error cancels only if every atom keeps the same position relative to
+the grid. With a periodic low level the step therefore gives the cell an explicit
+grid, with a spacing no larger than **Largest FFT grid spacing** (default
+0.0829 Å), and puts each periodic fragment in a box that is a whole number of
+those grid steps, at least 12 Å and the fragment's extent plus **Box padding**
+(default 7.5 Å), shifted by whole grid steps. The cell must be orthorhombic.
+These settings appear only when a periodic low level is chosen.
+
+Counterpoise
+============
+
+**Counterpoise** *pairwise* corrects each selected pair for the basis-set
+superposition error (Boys–Bernardi), at the high level and, for pairs referenced
+to it, the molecular low level. Each pair adds two calculations per level: each
+monomer in the pair's basis, with the other monomer's atoms as ghosts. The
+correction enters the 2-body sum only; triples still subtract the uncorrected
+pairs, so the pairs' error does not move into the 3-body terms. Where a pair's
+ghost gradients are unphysical, the energy is corrected but the forces are left
+uncorrected, and the step counts these pairs. The total correction and that count
+are stored as results.
+
+Counterpoise needs a level that runs as batch calculations with ghost atoms, and
+is not available for periodic cells (it is hidden in the dialog when a periodic
+low level is chosen).
+
+4-body terms come in a later version.
