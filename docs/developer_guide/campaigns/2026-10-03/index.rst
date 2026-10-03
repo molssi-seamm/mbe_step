@@ -278,3 +278,37 @@ TinkerCliffs.
   - the 2-body term goes from −5.302 to −1.818 kJ/mol per molecule;
   - the 3-body term is unchanged at +0.308;
   - no gradient fallbacks; 20.5 s.
+
+C.1 on TinkerCliffs (2026-10-03)
+--------------------------------
+
+- **Fragments, TC job 7842967** (8 ranks, 49 min, ``/projects/seamm/psaxe/mbe_c1``):
+
+  - Inputs: vasp_step's ``get_task`` for m00-m03 and the close pairs d00_18,
+    d00_25, d00_27 and d00_30. Each task directory's ``run.sh`` is the resolved
+    task command: vasp_gam, then dftd4 on the fragment's xyz, then
+    ``rm POTCAR``.
+  - Analysed with ``analyze_task`` against the prototype's stored VASP + D4:
+    every energy equal to < 1e-4 meV, and the largest force difference
+    0.023-0.095 meV/Å (SCF noise at EDIFF 1e-7).
+- **Cell, TC job 7843387.** The first try (7842971) was cancelled at 33 min:
+  its 1 h limit came from the old, five-times-low estimate (the prototype's cell
+  took 4,822 s on 16 ranks).
+- **What that changed:** vasp-step PR #17 (2026.10.3.1).
+
+  - VASP time estimates are fitted to the VASP step's timing records on
+    TinkerCliffs (396,528 runs) and checked against the prototype's 64,656.
+  - A cell gets a time limit of 3× its estimate, at least 1 h.
+  - The per-node speed spread in those records, 0.68-1.40× the fit with tc103
+    the slowest (vasp_step's notes), is data for the design's slow-node
+    exclusion item.
+
+Follow-ups
+----------
+
+- **Estimates from earlier frames.** Not done: a job submits every frame's
+  fragments of a level to one TaskSet, so there is no earlier frame within a job
+  to learn from. It would need the elapsed times stored across jobs (e.g. per
+  fragment class in the installation). The calibrated estimate covers it for now.
+- **Slow nodes.** The node medians in the timing records could feed an exclusion
+  list for the target.
