@@ -1,1 +1,4 @@
 Property,Type,Units,Description,URL
+energy#MBE#{model},float,kJ/mol,The MBE-corrected total energy,
+gradients#MBE#{model},json,kJ/mol/Å,The MBE-corrected gradients,
+stress#MBE#{model},json,GPa,"The MBE-corrected stress, Voigt, sigma = -P",

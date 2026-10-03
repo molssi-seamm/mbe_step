@@ -1,0 +1,53 @@
+{
+ "frame": "pilot_opls0997",
+ "n_water": 64,
+ "box": 12.4297,
+ "density": 0.9969839063092376,
+ "debug": {
+  "P_vasp_atm": -61519.52938964,
+  "P_d4_atm": -2322.500241150409,
+  "Ec_eV": -1007.45522407,
+  "ed_eV": -2.6555391524686742,
+  "VASP_stress_kB": [
+   -68.89422,
+   -50.67888,
+   -67.43094,
+   -3.17459,
+   2.03728,
+   -0.51876
+  ],
+  "dE_per_body_kJmol": [
+   -198965.94432255917,
+   5.9610950588329406,
+   -1.1941121008173516
+  ],
+  "P_per_body_atm": [
+   -1595.818948736436,
+   3062.4361604939754,
+   -634.2362191903069
+  ],
+  "n_incr": 1282
+ },
+ "status": "ok",
+ "max_increment_net_force_meV_A": 1.2186338171991244,
+ "net_force_total_meV_A": 17.37326463142718,
+ "F_rms_eV_A": 2.1100254386492323,
+ "P_atom_conf_atm": -63009.64863822318,
+ "P_mol_conf_atm": 1795.9490712595773,
+ "P_correction_atm": 832.3809925672309,
+ "REF_energy_eV": -203.32968868871103,
+ "REF_energy_per_water_kJmol": -306.53644560292076,
+ "oracle": "assemble_frame.py (TinkerCliffs /projects/seamm/psaxe/periodic/tools, 2026-09-29) on the pilot frame outputs frames/pilot_opls0997/{vasp,orca}.tar.gz, rerun 2026-10-03; identical to the pilot qc.json except the last digits of P_mol/P_atom/net force (summation order)",
+ "route_b_d4_energy_eV": -5.238789661512453,
+ "route_b_d4_P_atm": -4889.797853103593,
+ "route_b_note": "From the pilot qc.json (subtract_d4.py, xnn D4). NOT a seamm_mbe target: it belongs to the Dispersion step.",
+ "counts": {
+  "monomers": 64,
+  "pairs": 391,
+  "outer_pairs": 268,
+  "triples": 559,
+  "periodic_fragments": 218,
+  "periodic_calculations_with_cell": 219,
+  "molecular_calculations": 2564
+ }
+}
