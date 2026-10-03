@@ -130,16 +130,68 @@ type : str
 units : str
     Optional units for the result. If present, the value should be in these units.
 """
-# metadata["results"] = {
-#     "total_energy": {
-#         "calculation": [
-#             "energy",
-#             "optimization",
-#         ],
-#         "description": "The total energy",
-#         "dimensionality": "scalar",
-#         "property": "total energy#Mbe#{model}",
-#         "type": "float",
-#         "units": "E_h",
-#     },
-# }
+
+
+def _result(description, units="", dimensionality="scalar", _type="float", **kw):
+    return {
+        "description": description,
+        "dimensionality": dimensionality,
+        "type": _type,
+        "units": units,
+        **kw,
+    }
+
+
+metadata["results"] = {
+    "energy": _result(
+        "The MBE-corrected total energy",
+        "kJ/mol",
+        property="energy#MBE#{model}",
+        format=".3f",
+    ),
+    "reference energy": _result(
+        "The energy on the reference scale of the labels (with the offsets)",
+        "kJ/mol",
+        format=".3f",
+    ),
+    "gradients": _result(
+        "The MBE-corrected gradients",
+        "kJ/mol/Å",
+        "[n_atoms, 3]",
+        "json",
+        property="gradients#MBE#{model}",
+    ),
+    "stress": _result(
+        "The MBE-corrected stress, Voigt xx yy zz yz xz xy, sigma = -P",
+        "GPa",
+        "[6]",
+        "json",
+        property="stress#MBE#{model}",
+        format=".4f",
+    ),
+    "pressure": _result("The atomic configurational pressure", "atm", format=".1f"),
+    "molecular pressure": _result(
+        "The molecular configurational pressure", "atm", format=".1f"
+    ),
+    "MBE pressure": _result(
+        "The many-body correction's contribution to the pressure", "atm", format=".1f"
+    ),
+    "MBE energy": _result("The many-body correction to the energy", "kJ/mol"),
+    "per-body energies": _result(
+        "The correction to the energy by order", "kJ/mol", "{order}", "json"
+    ),
+    "per-body pressures": _result(
+        "The correction to the pressure by order", "atm", "{order}", "json"
+    ),
+    "fragment counts": _result(
+        "The selected and auxiliary fragments by order", "", "{order}", "json"
+    ),
+    "maximum increment net force": _result(
+        "The largest component of any increment's net force (ideally zero)",
+        "kJ/mol/Å",
+    ),
+    "maximum force": _result("The largest force on an atom", "kJ/mol/Å"),
+    "rms force": _result("The RMS force on the atoms", "kJ/mol/Å"),
+    "configuration name": _result("The configuration", "", _type="string"),
+    "model chemistry": _result("The high level", "", _type="string"),
+}

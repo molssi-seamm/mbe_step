@@ -3,48 +3,69 @@
 """The graphical part of a MBE step"""
 
 import pprint  # noqa: F401
-import tkinter as tk  # noqa: F401
+import tkinter as tk
+import tkinter.ttk as ttk
 
-import mbe_step  # noqa: F401
 import seamm
 from seamm_util import ureg, Q_, units_class  # noqa: F401
 import seamm_widgets as sw
+
+#: The parameters of each group, in order
+GROUPS = {
+    "levels": (
+        "Levels of theory",
+        ("high level", "molecular low level", "periodic low level", "cell low level"),
+    ),
+    "fragments": (
+        "Fragments",
+        (
+            "maximum order",
+            "distance criterion",
+            "cutoffs",
+            "pair cutoff",
+            "pair cutoff table",
+            "triple rule",
+            "triple cutoff",
+            "triple cutoff table",
+        ),
+    ),
+    "assignment": (
+        "Periodic low level",
+        ("periodic monomers", "periodic pair cutoff"),
+    ),
+    "labels": ("Labels", ("energy offsets", "extxyz file")),
+    "execution": (
+        "Execution",
+        (
+            "molecular ranks",
+            "molecular memory",
+            "molecular bundle",
+            "periodic ranks",
+            "periodic memory",
+            "periodic bundle",
+            "cell ranks",
+            "cell memory",
+            "bundle walltime",
+            "archive",
+        ),
+    ),
+}
+
+#: Parameters whose value changes the layout
+DRIVERS = ("maximum order", "cutoffs", "triple rule", "periodic low level")
 
 
 class TkMbe(seamm.TkNode):
     """
     The graphical part of a MBE step in a flowchart.
 
-    Attributes
-    ----------
-    tk_flowchart : TkFlowchart = None
-        The flowchart that we belong to.
-    node : Node = None
-        The corresponding node of the non-graphical flowchart
-    namespace : str
-        The namespace of the current step.
-    tk_subflowchart : TkFlowchart
-        A graphical Flowchart representing a subflowchart
-    canvas: tkCanvas = None
-        The Tk Canvas to draw on
-    dialog : Dialog
-        The Pmw dialog object
-    x : int = None
-        The x-coordinate of the center of the picture of the node
-    y : int = None
-        The y-coordinate of the center of the picture of the node
-    w : int = 200
-        The width in pixels of the picture of the node
-    h : int = 50
-        The height in pixels of the picture of the node
-    self[widget] : dict
-        A dictionary of tk widgets built using the information
-        contained in MBE_parameters.py
-
-    See Also
-    --------
-    Mbe, TkMbe,
-    MbeParameters,
+    The dialog shows only what applies (Paul's rule: invalid combinations are
+    not offered): the triple controls only for order 3, the pair controls only
+    from order 2, single cutoffs or the type-pair tables but not both, and the
+    periodic-assignment controls only with a periodic low level. The order is
+    capped at 3 here; 4-body terms are designed for in seamm_mbe but not yet
+    validated. The level fields offer the installed model chemistries and
+    accept a typed one, or a $variable.
     """
 
     def __init__(
@@ -57,34 +78,8 @@ class TkMbe(seamm.TkNode):
         w=200,
         h=50,
     ):
-        """
-        Initialize a graphical node.
-
-        Parameters
-        ----------
-        tk_flowchart: Tk_Flowchart
-            The graphical flowchart that we are in.
-        node: Node
-            The non-graphical node for this step.
-        namespace: str
-            The stevedore namespace for finding sub-nodes.
-        canvas: Canvas
-           The Tk canvas to draw on.
-        x: float
-            The x position of the nodes center on the canvas.
-        y: float
-            The y position of the nodes cetner on the canvas.
-        w: float
-            The nodes graphical width, in pixels.
-        h: float
-            The nodes graphical height, in pixels.
-
-        Returns
-        -------
-        None
-        """
+        """Initialize a graphical node."""
         self.dialog = None
-
         super().__init__(
             tk_flowchart=tk_flowchart,
             node=node,
@@ -96,114 +91,118 @@ class TkMbe(seamm.TkNode):
         )
 
     def create_dialog(self):
-        """
-        Create the dialog. A set of widgets will be chosen by default
-        based on what is specified in the MBE_parameters
-        module.
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        None
-
-        See Also
-        --------
-        TkMbe.reset_dialog
-        """
-
-        frame = super().create_dialog(title="MBE")
-        # Shortcut for parameters
+        """Create the dialog: a Parameters tab and the standard Results tab."""
+        super().create_dialog(title="MBE", widget="notebook", results_tab=True)
         P = self.node.parameters
+        frame = self["frame"]
 
-        # Then create the widgets
-        for key in P:
-            if key[0] != "_" and key not in (
-                "results",
-                "extra keywords",
-                "create tables",
-            ):
-                self[key] = P[key].widget(frame)
+        self["structures frame"] = ttk.LabelFrame(
+            frame, borderwidth=4, relief="sunken", text="Structures", padding=10
+        )
+        self.create_structure_selection_widgets(self["structures frame"])
 
-        # and lay them out
+        for group, (title, keys) in GROUPS.items():
+            subframe = self[f"{group} frame"] = ttk.LabelFrame(
+                frame, borderwidth=4, relief="sunken", text=title, padding=10
+            )
+            for key in keys:
+                self[key] = P[key].widget(subframe)
+        for key in DRIVERS:
+            self[key].bind("<<ComboboxSelected>>", self.reset_dialog)
+            self[key].bind("<Return>", self.reset_dialog)
+            self[key].bind("<FocusOut>", self.reset_dialog)
+        for key in ("pair cutoff table", "triple cutoff table", "energy offsets"):
+            if hasattr(self[key], "entry"):
+                self[key].entry.configure(width=40)
+
+        self._fill_levels()
         self.reset_dialog()
 
+    def _fill_levels(self):
+        """Offer the installed model chemistries in the level fields."""
+        try:
+            from model_chemistry_step.model_chemistry import (
+                discover_model_chemistries,
+            )
+
+            molecular = sorted(discover_model_chemistries())
+            periodic = sorted(discover_model_chemistries(periodic_only=True))
+        except Exception:
+            molecular = periodic = []
+        values = {
+            "high level": ["current model chemistry"] + molecular,
+            "molecular low level": molecular,
+            "periodic low level": ["none"] + molecular,
+            "cell low level": ["automatic"] + periodic + molecular,
+        }
+        for key, choices in values.items():
+            if hasattr(self[key], "combobox"):
+                self[key].combobox.configure(values=choices, width=50)
+
     def reset_dialog(self, widget=None):
-        """Layout the widgets in the dialog.
-
-        The widgets are chosen by default from the information in
-        MBE_parameter.
-
-        This function simply lays them out row by row with
-        aligned labels. You may wish a more complicated layout that
-        is controlled by values of some of the control parameters.
-        If so, edit or override this method
-
-        Parameters
-        ----------
-        widget : Tk Widget = None
-
-        Returns
-        -------
-        None
-
-        See Also
-        --------
-        TkMbe.create_dialog
-        """
-
-        # Remove any widgets previously packed
+        """Lay out the dialog for the current choices."""
         frame = self["frame"]
         for slave in frame.grid_slaves():
             slave.grid_forget()
 
-        # Shortcut for parameters
-        P = self.node.parameters
-
-        # keep track of the row in a variable, so that the layout is flexible
-        # if e.g. rows are skipped to control such as "method" here
         row = 0
-        widgets = []
-        for key in P:
-            if key[0] != "_" and key not in (
-                "results",
-                "extra keywords",
-                "create tables",
-            ):
-                self[key].grid(row=row, column=0, sticky=tk.EW)
-                widgets.append(self[key])
-                row += 1
-
-        # Align the labels
+        self["structures frame"].grid(row=row, column=0, sticky=tk.EW, pady=5)
+        sframe = self["structures frame"]
+        for slave in sframe.grid_slaves():
+            slave.grid_forget()
+        _, widgets = self.layout_structure_selection(row=0)
         sw.align_labels(widgets, sticky=tk.E)
+        row += 1
 
-        # Setup the results if there are any
-        have_results = (
-            "results" in self.node.metadata and len(self.node.metadata["results"]) > 0
-        )
-        if have_results and "results" in P:
-            self.setup_results()
+        shown = self.shown()
+        for group in GROUPS:
+            subframe = self[f"{group} frame"]
+            for slave in subframe.grid_slaves():
+                slave.grid_forget()
+            keys = [k for k in GROUPS[group][1] if k in shown]
+            if not keys:
+                continue
+            subframe.grid(row=row, column=0, sticky=tk.EW, pady=5)
+            row += 1
+            for r, key in enumerate(keys):
+                self[key].grid(row=r, column=0, sticky=tk.EW)
+            sw.align_labels([self[k] for k in keys], sticky=tk.E)
+            subframe.columnconfigure(0, weight=1)
+        frame.columnconfigure(0, weight=1)
+        return row
+
+    def shown(self):
+        """The parameters that apply to the current choices."""
+        order = int(self._value("maximum order"))
+        table = self._value("cutoffs") != "single value"
+        triples = order >= 3 and self._value("triple rule") != "none"
+        periodic = self._value("periodic low level") != "none"
+
+        shown = set(GROUPS["levels"][1]) | set(GROUPS["labels"][1])
+        shown |= {"maximum order", "distance criterion"}
+        shown |= {"molecular ranks", "molecular memory", "molecular bundle"}
+        shown |= {"cell ranks", "cell memory", "bundle walltime", "archive"}
+        if order >= 2:
+            shown.add("cutoffs")
+            shown.add("pair cutoff table" if table else "pair cutoff")
+        if order >= 3:
+            shown.add("triple rule")
+        if triples:
+            shown.add("triple cutoff table" if table else "triple cutoff")
+        if periodic:
+            shown |= set(GROUPS["assignment"][1])
+            shown |= {"periodic ranks", "periodic memory", "periodic bundle"}
+        return shown
+
+    def _value(self, key):
+        """The current value of a widget, falling back to the parameter's."""
+        try:
+            return self[key].get()
+        except Exception:
+            return self.node.parameters[key].value
 
     def right_click(self, event):
-        """
-        Handles the right click event on the node.
-
-        Parameters
-        ----------
-        event : Tk Event
-
-        Returns
-        -------
-        None
-
-        See Also
-        --------
-        TkMbe.edit
-        """
-
+        """Handle a right-click: add the Edit... item and post the menu."""
         super().right_click(event)
         self.popup_menu.add_command(label="Edit..", command=self.edit)
-
         self.popup_menu.tk_popup(event.x_root, event.y_root, 0)

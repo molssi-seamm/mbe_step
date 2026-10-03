@@ -32,7 +32,9 @@ class MbeStep(object):
     """
 
     my_description = {
-        "description": "An interface for MBE",
+        "description": (
+            "Many-body expansion (MBE) corrections of periodic cells and clusters"
+        ),
         "group": "Simulations",
         "name": "MBE",
     }
