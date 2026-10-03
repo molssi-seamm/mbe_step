@@ -291,9 +291,15 @@ C.1 on TinkerCliffs (2026-10-03)
   - Analysed with ``analyze_task`` against the prototype's stored VASP + D4:
     every energy equal to < 1e-4 meV, and the largest force difference
     0.023-0.095 meV/Å (SCF noise at EDIFF 1e-7).
-- **Cell, TC job 7843387.** The first try (7842971) was cancelled at 33 min:
-  its 1 h limit came from the old, five-times-low estimate (the prototype's cell
-  took 4,822 s on 16 ranks).
+- **Cell, TC job 7843387** (16 ranks, 53 min).
+
+  - The first try (7842971) was cancelled at 33 min: its 1 h limit came from the
+    old, five-times-low estimate (the prototype's cell took 4,822 s on 16 ranks).
+  - Energy equal to the prototype's to 1e-4 meV; forces to 0.106 meV/Å.
+  - The stress gives P = −63,842.59 atm, against the prototype's
+    P_VASP + P_D4 = −63,842.05 atm (sign and units right; tensor within
+    6e-5 GPa).
+  - The POTCAR was removed after the run.
 - **What that changed:** vasp-step PR #17 (2026.10.3.1).
 
   - VASP time estimates are fitted to the VASP step's timing records on
