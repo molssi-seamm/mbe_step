@@ -95,6 +95,58 @@ def test_pairwise_counterpoise(db, monkeypatch):
     # The ghost gradients were zero: no change of the forces, no fallback
     assert np.allclose(labels.forces, plain.forces, atol=1e-10)
     assert frame["counterpoise fallbacks"] == 0
+    assert frame["counterpoise correction"] == pytest.approx(expected, abs=1e-12)
+
+
+def test_counterpoise_failure_is_reported(db, monkeypatch):
+    """seamm_bsse refusing a pair (ValueError) fails the frame cleanly, naming
+    the pair, rather than escaping as an exception."""
+    import seamm_mbe
+
+    from mbe_step import counterpoise
+
+    def refuse(system, fragments, pair, results, prefix):
+        raise ValueError("the fragments' charges do not add up")
+
+    monkeypatch.setattr(levels.Level, "evaluate", evaluate_with_bsse)
+    monkeypatch.setattr(counterpoise, "correction", refuse)
+    node, P = parameters(
+        **{"pair cutoff": 100.0, "maximum order": "2"}, counterpoise="pairwise"
+    )
+    node._counterpoise = True
+    frame = node._frame(cluster(db), node._rules(P), P)
+    levels_ = {
+        "high": level("high"),
+        "molecular": level("molecular"),
+        "cluster": level("cluster"),
+    }
+    results = node._evaluate(levels_, [frame])
+    with pytest.raises(seamm_mbe.MissingFragmentsError) as info:
+        node._corrections(frame, results)
+    text = node._failure_text(frame, info.value, results)
+    assert "counterpoise of d" in text
+    assert "charges do not add up" in text
+    assert "not run" not in text
+
+
+def test_mbe_correction_takes_corrections(db, monkeypatch):
+    """The installed seamm_mbe has the corrections hook (>= 2026.10.3.1): the
+    step always passes corrections, {} without counterpoise."""
+    import inspect
+
+    import seamm_mbe
+
+    assert "corrections" in inspect.signature(seamm_mbe.mbe_correction).parameters
+    monkeypatch.setattr(levels.Level, "evaluate", evaluate_with_bsse)
+    node, P = parameters(**{"maximum order": "2", "pair cutoff": 100.0})
+    frame = node._frame(cluster(db), node._rules(P), P)
+    levels_ = {
+        "high": level("high"),
+        "molecular": level("molecular"),
+        "cluster": level("cluster"),
+    }
+    _, labels = run(node, P, frame, levels_)
+    assert np.isfinite(labels.energy)
 
 
 def test_periodic_levels_get_the_grid(db, monkeypatch):
@@ -179,6 +231,13 @@ def test_level_checks(db, monkeypatch):
 
     node, P = parameters(**base, counterpoise="pairwise")
     with pytest.raises(ValueError, match="not available for periodic cells"):
+        node._levels(P, {}, [frame])
+
+    # A cluster with a periodic low level is refused up front
+    node, P = parameters(**base)
+    water = cluster(db)
+    frame = node._frame(water, node._rules(P), P)
+    with pytest.raises(ValueError, match="selection includes a cluster"):
         node._levels(P, {}, [frame])
 
     water = cluster(db)

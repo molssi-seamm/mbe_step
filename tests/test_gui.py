@@ -98,6 +98,11 @@ def test_counterpoise_only_with_pairs(tk_node):
     tk_node["maximum order"].set("1")
     tk_node.reset_dialog()
     assert not mapped(tk_node, "counterpoise")
+    # refused for periodic cells, which a periodic low level implies
+    tk_node["maximum order"].set("2")
+    tk_node["periodic low level"].set("VASP:DFT@r2SCAN-D4/PAW-hard@1200")
+    tk_node.reset_dialog()
+    assert not mapped(tk_node, "counterpoise")
 
 
 def test_grid_only_with_a_periodic_level(tk_node):

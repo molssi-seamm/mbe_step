@@ -190,6 +190,14 @@ metadata["results"] = {
         "The largest component of any increment's net force (ideally zero)",
         "kJ/mol/Å",
     ),
+    "counterpoise correction": _result(
+        "The pairwise counterpoise correction to the energy", "kJ/mol", format=".3f"
+    ),
+    "counterpoise fallbacks": _result(
+        "Pairs whose counterpoise gradient was unphysical (forces left uncorrected)",
+        "",
+        _type="integer",
+    ),
     "maximum force": _result(
         "The largest Cartesian component of the forces", "kJ/mol/Å"
     ),

@@ -165,6 +165,11 @@ class Mbe(seamm.Node):
             if order >= 3 and P["triple rule"] != "none":
                 text += f", and {P['triple rule']} triples"
             text += f" ({P['distance criterion']})."
+            if P["counterpoise"] == "pairwise":
+                text += (
+                    " Each pair is corrected for the basis-set superposition error "
+                    "(pairwise counterpoise) at the molecular levels."
+                )
         return self.header + "\n" + __(text, indent=4 * " ").__str__()
 
     # ------------------------------------------------------------------ #
@@ -364,6 +369,12 @@ class Mbe(seamm.Node):
             result["cell"] = make("cell", text, True, "cell")
             result["cell"].convention = levels.stress_convention(result["cell"].mc)
         if cluster_frames:
+            if "periodic" in result:
+                raise ValueError(
+                    "A periodic low level applies to the fragments of periodic "
+                    "cells, but the selection includes a cluster: set the periodic "
+                    "low level to 'none' for clusters."
+                )
             text = P["molecular low level"] if cell == "automatic" else cell
             result["cluster"] = make("cluster", text, False, "cell")
 
@@ -514,13 +525,15 @@ class Mbe(seamm.Node):
                     d_e, d_f, fallback = counterpoise.correction(
                         system, frame["fragments"], pair, results[name], prefix
                     )
-                except KeyError as e:
-                    missing.append((f"{pair.name} counterpoise ({e})", name))
+                except (KeyError, ValueError) as e:
+                    reason = e.args[0] if e.args else str(e)
+                    missing.append((f"counterpoise of {pair.name}: {reason}", name))
                     continue
                 frame["counterpoise fallbacks"] += int(fallback)
                 total_e += sign * d_e
                 total_f += sign * d_f
             corrections[pair.name] = (total_e, total_f)
+        frame["counterpoise correction"] = sum(e for e, _ in corrections.values())
         if missing:
             raise seamm_mbe.MissingFragmentsError(missing)
         return corrections
@@ -531,6 +544,9 @@ class Mbe(seamm.Node):
         prefix = frame["prefix"]
         parts = []
         for name, level in error.missing[:5]:
+            if name.startswith("counterpoise of "):
+                parts.append(f"{name} ({level})")
+                continue
             key = prefix + ("cell" if name == "whole system" else name)
             result = results.get(level, {}).get(key)
             reason = result.reason if result is not None else "not run"
@@ -550,6 +566,11 @@ class Mbe(seamm.Node):
         data["fragment counts"] = {
             str(k): v for k, v in frame["fragments"].counts().items()
         }
+        if self._counterpoise:
+            data["counterpoise correction"] = float(
+                seamm_mbe.units.ev_to_kj_per_mol(frame["counterpoise correction"])
+            )
+            data["counterpoise fallbacks"] = frame.get("counterpoise fallbacks", 0)
 
         configuration.atoms.set_gradients(
             np.asarray(data["gradients"]), fractionals=False
@@ -624,6 +645,12 @@ class Mbe(seamm.Node):
             data = frame["labels data"]
             fragments = frame["fragments"]
             calcs = frame["calculations"]
+            ghosts = {"high": 0, "molecular": 0}
+            if self._counterpoise:
+                for pair in fragments.by_order(2, in_sum=True):
+                    ghosts["high"] += 2
+                    if pair.level == "molecular":
+                        ghosts["molecular"] += 2
             n = len(frame["system"].molecules)
             types = ", ".join(
                 f"{c} {t}" for t, c in frame["system"].type_counts().items()
@@ -631,8 +658,8 @@ class Mbe(seamm.Node):
             text = [
                 f"{configuration.name}: {n} molecules ({types})",
                 f"    fragments: {labels_.counts_text(fragments)}",
-                f"    calculations: {len(calcs['high'])} high, "
-                f"{len(calcs['molecular'])} molecular, "
+                f"    calculations: {len(calcs['high']) + ghosts['high']} high, "
+                f"{len(calcs['molecular']) + ghosts['molecular']} molecular, "
                 f"{len(calcs['periodic'])} periodic, plus the whole system",
                 f"    E = {data['energy']:.3f} kJ/mol, correction "
                 f"{data['MBE energy']:.3f} kJ/mol",
@@ -664,7 +691,8 @@ class Mbe(seamm.Node):
             if self._counterpoise:
                 n_pairs = len(frame["fragments"].by_order(2, in_sum=True))
                 text.append(
-                    f"    counterpoise: {n_pairs} pairs corrected (pairwise)"
+                    f"    counterpoise: {n_pairs} pairs corrected (pairwise), "
+                    f"{data['counterpoise correction']:+.3f} kJ/mol in all"
                     + (
                         f"; {frame['counterpoise fallbacks']} kept the uncorrected "
                         "gradient (unphysical ghost gradients)"

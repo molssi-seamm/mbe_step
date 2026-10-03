@@ -180,11 +180,13 @@ class TkMbe(seamm.TkNode):
             order = 3  # e.g. a $variable: show everything that might apply
         table = self._value("cutoffs") != "single value"
         triples = order >= 3 and self._value("triple rule") != "none"
-        periodic = self._value("periodic low level") != "none"
 
+        periodic = self._value("periodic low level") != "none"
         shown = set(GROUPS["levels"][1]) | set(GROUPS["labels"][1])
         shown |= {"maximum order", "distance criterion"}
-        if order >= 2:
+        if order >= 2 and not periodic:
+            # counterpoise is refused for periodic cells, which a periodic low
+            # level implies
             shown.add("counterpoise")
         shown |= {"molecular ranks", "molecular memory", "molecular bundle"}
         shown |= {"cell ranks", "cell memory", "bundle walltime", "archive"}
