@@ -113,6 +113,33 @@ copies of ``orca.ini`` and ``mopac.ini``:
 - **MOPAC, MDI path:** the same cluster, PM6 high and AM1 low. It ran in
   18 s on warm engines.
 
+**Periodic, real code (MOPAC over MDI):**
+
+- Setup: the 64-water pilot geometry (L = 12.4297 Å), default selection
+  (pairs < 4.5 Å, connected triples < 3.5 Å). PM7 high, PM6 molecular and
+  periodic low, the cell PM6 periodic with its stress. mopac_step declares
+  ``stress_convention = "pressure"`` (2026.10.3.2).
+- In the same flowchart, the Energy step ran PM7 on the cell directly.
+- MBE ran 2,783 calculations in 22 s on warm engines (1282 high, 1282
+  molecular, 218 periodic, the cell). Largest increment net force 0.19 meV/Å.
+- MBE (PM7 on PM6) vs direct periodic PM7:
+
+  - P_atom −60,507 vs −66,491 atm;
+  - energy +10.7 kJ/mol per molecule;
+  - forces rms difference 72 meV/Å on an rms of 1,510 meV/Å.
+
+  The signs agree. With a wrong stress sign MBE would give about +40,000
+  atm.
+- The gap is the truncation of a long-range difference. PM7 has built-in
+  dispersion and PM6 has none, so [PM7 − PM6] carries an attractive tail
+  beyond the 4.5 Å pairs and the connected triples. Missing it raises the
+  energy and makes the pressure less negative, as seen. It is a property of
+  this toy pair of levels, not of the step: the production levels (revDSD on
+  r2SCAN-D4) both include D4.
+- Read Structure needed two workarounds for the frame file (an ASE-style
+  extxyz). It needs a ``Properties=`` key, and ``indices = 1:end`` became an
+  empty range when it found no frames.
+
 Bugs found on the way
 =====================
 
@@ -132,10 +159,9 @@ Phase-2 limitations (open items)
 ================================
 
 - The levels run one after the other (see Q1).
-- No real periodic run yet. No installed provider declares
-  ``stress_convention``, and VASP has no ``get_task`` until phase 3. The cell
-  path is covered by the pilot regression. A MOPAC-periodic toy needs mopac_step
-  to declare "pressure".
+- The only real-code periodic check is the MOPAC toy above. VASP has no
+  ``get_task`` until phase 3; the pilot regression covers the production
+  numbers.
 - Periodic fragments are submitted as isolated molecules. The registered-box
   options (n·h boxes, explicit NG, hard PAW, the dipole correction) are the
   phase-3 vasp_step adapter.
