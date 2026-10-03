@@ -89,9 +89,24 @@ def test_dialog_layouts(tk_node):
     assert mapped(tk_node, "source configuration name")
 
 
-def test_counterpoise_is_not_offered(tk_node):
-    """Counterpoise arrives in phase 3; it must not appear at all yet."""
-    assert not any("counterpoise" in key for key in tk_node.node.parameters)
+def test_counterpoise_only_with_pairs(tk_node):
+    """Counterpoise corrects pairs: hidden for monomers only."""
+    tk_node.create_dialog()
+    tk_node["maximum order"].set("2")
+    tk_node.reset_dialog()
+    assert mapped(tk_node, "counterpoise")
+    tk_node["maximum order"].set("1")
+    tk_node.reset_dialog()
+    assert not mapped(tk_node, "counterpoise")
+
+
+def test_grid_only_with_a_periodic_level(tk_node):
+    tk_node.create_dialog()
+    tk_node.reset_dialog()
+    assert not mapped(tk_node, "grid spacing") and not mapped(tk_node, "box padding")
+    tk_node["periodic low level"].set("VASP:DFT@r2SCAN-D4/PAW-hard@1200")
+    tk_node.reset_dialog()
+    assert mapped(tk_node, "grid spacing") and mapped(tk_node, "box padding")
 
 
 def test_variable_order_does_not_break_the_layout(tk_node):

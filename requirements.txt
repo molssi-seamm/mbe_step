@@ -3,6 +3,7 @@ model-chemistry-step>=2026.10.3
 numpy
 seamm
 seamm-exec>=2026.10.3
+seamm-bsse>=2026.8.7.1
 seamm-mbe>=2026.10.3
 seamm-util
 seamm-widgets

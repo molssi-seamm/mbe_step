@@ -159,7 +159,10 @@ class Level:
             name=f"MBE_{self.name}",  # no spaces: it goes into MDI_Init
         ) as evaluator:
             for key, structure in structures.items():
-                evaluator.submit(structure, key=key)
+                options = None
+                if isinstance(structure, tuple):
+                    structure, options = structure
+                evaluator.submit(structure, key=key, options=options)
             for result in evaluator.results():
                 results[result.key] = result
         return results

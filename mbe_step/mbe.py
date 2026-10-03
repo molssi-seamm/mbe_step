@@ -18,6 +18,7 @@ from seamm_util import ureg, Q_  # noqa: F401
 import seamm_util.printing as printing
 from seamm_util.printing import FormattedText as __
 
+from . import counterpoise
 from . import labels as labels_
 from . import levels
 from .mbe_parameters import CRITERIA
@@ -102,6 +103,8 @@ class Mbe(seamm.Node):
         self._metadata = mbe_step.metadata
         self.parameters = mbe_step.MbeParameters()
         self.model = None
+        self._grid = {"max_spacing": 0.0829, "padding": 7.5}
+        self._counterpoise = False
 
     @property
     def version(self):
@@ -193,6 +196,11 @@ class Mbe(seamm.Node):
         offsets = labels_.parse_offsets(P["energy offsets"])
         frames = [self._frame(c, rules, P) for c in configurations]
         levels_ = self._levels(P, context, frames)
+        self._grid = {
+            "max_spacing": P["grid spacing"].m_as("Å"),
+            "padding": P["box padding"].m_as("Å"),
+        }
+        self._counterpoise = P["counterpoise"] == "pairwise"
         self.model = levels_["high"].level
 
         t0 = time.perf_counter()
@@ -358,6 +366,32 @@ class Mbe(seamm.Node):
         if cluster_frames:
             text = P["molecular low level"] if cell == "automatic" else cell
             result["cluster"] = make("cluster", text, False, "cell")
+
+        # The periodic fragments and the cell must be the same calculation
+        # (code, potentials, cutoff, grid) for their errors to cancel.
+        if periodic_frames and "periodic" in result:
+            if result["cell"].level != result["periodic"].level:
+                raise ValueError(
+                    f"The cell's low level ({result['cell'].level}) must be the "
+                    f"periodic fragments' ({result['periodic'].level}): their "
+                    "errors cancel only if they are the same calculation."
+                )
+
+        if P["counterpoise"] == "pairwise":
+            if periodic_frames:
+                raise ValueError(
+                    "Counterpoise is not available for periodic cells yet: their "
+                    "stress would need the counterpoise correction too."
+                )
+            for name in ("high", "molecular"):
+                options = result[name].mc.get("options") or {}
+                if options.get("mdi_capable") and not options.get("prefers_batch"):
+                    raise ValueError(
+                        f"Counterpoise needs ghost atoms, which "
+                        f"{result[name].level} cannot have here (it runs through "
+                        "an MDI engine). Use a program that runs calculations as "
+                        "tasks, such as ORCA."
+                    )
         return result
 
     # ------------------------------------------------------------ evaluation
@@ -371,15 +405,30 @@ class Mbe(seamm.Node):
             structures = {}
             for frame in frames:
                 system = frame["system"]
+                prefix = frame["prefix"]
                 if name in ("cell", "cluster"):
                     if (name == "cell") == system.periodic:
-                        structures[frame["prefix"] + "cell"] = levels.whole(system)
+                        whole = levels.whole(system)
+                        if name == "cell" and "periodic" in levels_:
+                            grid = {"max_spacing": self._grid["max_spacing"]}
+                            whole = (whole, {"grid": grid})
+                        structures[prefix + "cell"] = whole
                     continue
                 fragments = frame["fragments"]
+                options = None
+                if name == "periodic" and system.periodic:
+                    options = {"grid": {**self._grid, "reference_cell": system.cell}}
                 for fname in frame["calculations"][name]:
-                    structures[frame["prefix"] + fname] = levels.geometry(
-                        system, fragments[fname]
-                    )
+                    geometry = levels.geometry(system, fragments[fname])
+                    if options is not None:
+                        geometry = (geometry, options)
+                    structures[prefix + fname] = geometry
+                if self._counterpoise and name in ("high", "molecular"):
+                    for pair in fragments.by_order(2, in_sum=True):
+                        if name == "molecular" and pair.level != "molecular":
+                            continue
+                        for label, job in counterpoise.ghost_jobs(system, pair).items():
+                            structures[counterpoise.key(prefix, pair.name, label)] = job
             if not structures:
                 continue
             printer.important(
@@ -416,7 +465,7 @@ class Mbe(seamm.Node):
         def library(name):
             out = {}
             for key, result in results.get(name, {}).items():
-                if key.startswith(prefix) and result.ok:
+                if key.startswith(prefix) and result.ok and "-cp-" not in key:
                     out[key[n:]] = levels.to_library(result)
             return out
 
@@ -432,16 +481,49 @@ class Mbe(seamm.Node):
             )
         else:
             cell = levels.to_library(cell_result)
+        corrections = self._corrections(frame, results) if self._counterpoise else {}
         correction = seamm_mbe.mbe_correction(
             frame["fragments"],
             library("high"),
             periodic=library("periodic"),
             molecular=library("molecular"),
+            corrections=corrections,
         )
         term = seamm_mbe.CellTerm(
             levels_[cell_name].level, cell["energy"], cell["forces"], cell.get("virial")
         )
         return seamm_mbe.assemble(system, correction, [term], offsets=offsets)
+
+    def _corrections(self, frame, results):
+        """The pairwise counterpoise corrections of a frame's selected pairs:
+        {pair name: (eV, eV/Å)}, at the high level and, for pairs referenced to
+        it, the molecular low level. A missing calculation makes the frame
+        incomplete."""
+        system = frame["system"]
+        prefix = frame["prefix"]
+        corrections = {}
+        missing = []
+        frame["counterpoise fallbacks"] = 0
+        for pair in frame["fragments"].by_order(2, in_sum=True):
+            total_e = 0.0
+            total_f = np.zeros((pair.n_atoms, 3))
+            for name, sign in (("high", 1.0), ("molecular", -1.0)):
+                if name == "molecular" and pair.level != "molecular":
+                    continue
+                try:
+                    d_e, d_f, fallback = counterpoise.correction(
+                        system, frame["fragments"], pair, results[name], prefix
+                    )
+                except KeyError as e:
+                    missing.append((f"{pair.name} counterpoise ({e})", name))
+                    continue
+                frame["counterpoise fallbacks"] += int(fallback)
+                total_e += sign * d_e
+                total_f += sign * d_f
+            corrections[pair.name] = (total_e, total_f)
+        if missing:
+            raise seamm_mbe.MissingFragmentsError(missing)
+        return corrections
 
     @staticmethod
     def _failure_text(frame, error, results):
@@ -490,6 +572,7 @@ class Mbe(seamm.Node):
                 labels,
                 name=configuration.name,
                 identifier=configuration.id,
+                counterpoise=self._counterpoise,
                 model=f"{self.model} MBE on {cell}",
             )
         frame["labels data"] = data
@@ -578,6 +661,17 @@ class Mbe(seamm.Node):
                 "    largest increment net force "
                 f"{labels.max_increment_net_force * 1000:.2f} meV/Å"
             )
+            if self._counterpoise:
+                n_pairs = len(frame["fragments"].by_order(2, in_sum=True))
+                text.append(
+                    f"    counterpoise: {n_pairs} pairs corrected (pairwise)"
+                    + (
+                        f"; {frame['counterpoise fallbacks']} kept the uncorrected "
+                        "gradient (unphysical ghost gradients)"
+                        if frame.get("counterpoise fallbacks")
+                        else ""
+                    )
+                )
             printer.important(__("\n".join(text), indent=4 * " ", wrap=False))
             printer.important("")
         if rows:

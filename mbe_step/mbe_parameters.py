@@ -220,6 +220,50 @@ class MbeParameters(seamm.Parameters):
                 "molecular low level. 0 for none."
             ),
         },
+        "grid spacing": {
+            "default": 0.0829,
+            "kind": "float",
+            "default_units": "Å",
+            "enumeration": tuple(),
+            "format_string": ".4f",
+            "description": "Largest FFT grid spacing:",
+            "help_text": (
+                "The periodic code's FFT grid for the cell is set explicitly with "
+                "at most this spacing, and each periodic fragment is placed in a "
+                "box of whole grid steps, its atoms shifted by whole grid steps, "
+                "so that every atom keeps its offset from the grid and the "
+                "'egg-box' error cancels in the increments."
+            ),
+        },
+        "box padding": {
+            "default": 7.5,
+            "kind": "float",
+            "default_units": "Å",
+            "enumeration": tuple(),
+            "format_string": ".1f",
+            "description": "Box padding:",
+            "help_text": (
+                "A periodic fragment's box is its largest extent plus this, at "
+                "least 12 Å. Larger boxes reduce the interaction with the "
+                "fragment's images at a steep cost."
+            ),
+        },
+        # ---------------------------------------------------------- counterpoise
+        "counterpoise": {
+            "default": "none",
+            "kind": "enum",
+            "default_units": "",
+            "enumeration": ("none", "pairwise"),
+            "format_string": "",
+            "description": "Counterpoise:",
+            "help_text": (
+                "'pairwise' corrects each pair increment for the basis-set "
+                "superposition error (Boys-Bernardi, each monomer in the pair's "
+                "basis) at the molecular levels; the triples still subtract the "
+                "uncorrected pairs. Periodic (plane-wave) levels have no BSSE. Not "
+                "yet for periodic cells, whose stress would need it too."
+            ),
+        },
         # ------------------------------------------------------ energy scale
         "energy offsets": {
             "default": "none",

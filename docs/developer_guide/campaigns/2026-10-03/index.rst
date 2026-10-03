@@ -227,3 +227,54 @@ Phase-2 limitations (open items)
 - Code citations wait for the provider hook (Q4).
 - The Energy step stores its stress as a nested 3×3, which the Write Structure
   extxyz writer (a flat list) would mangle. MBE stores Voigt [6], which works.
+
+
+Phase 3 (2026-10-03, approved by Paul)
+======================================
+
+Order: vasp_step (the batch contract, its own notes), then seamm_mbe (the
+``corrections`` hook, local dev 07dd78d), then this step, then the C.1 check on
+TinkerCliffs.
+
+- **Grid options.**
+
+  - With a periodic low level, the periodic fragments get
+    ``options = {"grid": {"max_spacing", "padding", "reference_cell": cell}}``.
+  - The cell gets ``{"grid": {"max_spacing"}}``, so vasp_step registers every
+    fragment on the cell's explicit FFT grid.
+  - New parameters: *grid spacing* (0.0829 Å) and *box padding* (7.5 Å). The
+    dialog shows them only with a periodic level.
+
+- **Consistency.** The cell's low level must be the periodic fragments' (the same
+  level string, so the same code, potentials and cutoff, and through the shared
+  grid options the same grid). The step refuses otherwise.
+- **Pairwise counterpoise** (``counterpoise.py``, the new *counterpoise*
+  parameter, shown from order 2):
+
+  - For each selected pair, the two monomers in the pair's basis run as ghost-atom
+    tasks at the high level, and at the molecular low level when the pair is
+    referenced to it.
+  - ``seamm_bsse.combine`` makes the corrected pair; the correction
+    (E_high^CP − E_high) − (E_low^CP − E_low), with its forces, enters the sum
+    only, through seamm_mbe's ``corrections``.
+  - Refused for periodic cells, since the pressure would need the
+    energy-scaling virial.
+  - Refused for a molecular level that runs through MDI (no ghost atoms there).
+  - ``seamm_bsse.combine``'s ghost-gradient fallback is counted and reported.
+    ``counterpoise=T`` is written in the extxyz.
+
+- **Tests (22).**
+
+  - A planted BSSE: E^CP = E + 2b per level, so the 2-body sum shifts by exactly
+    2(b_high − b_low) per pair, the triples are unchanged, and the forces are
+    unchanged with zero ghost gradients.
+  - The grid options reach the periodic and cell levels.
+  - The three refusals.
+  - The dialog's new rules.
+
+- **Real ORCA run** (3 waters, B3LYP high and HF low, def2-SVP, every subset):
+
+  - 13 calculations per molecular level (7 fragments plus 6 ghost jobs);
+  - the 2-body term goes from −5.302 to −1.818 kJ/mol per molecule;
+  - the 3-body term is unchanged at +0.308;
+  - no gradient fallbacks; 20.5 s.

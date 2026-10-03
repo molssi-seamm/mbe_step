@@ -27,11 +27,12 @@ GROUPS = {
             "triple rule",
             "triple cutoff",
             "triple cutoff table",
+            "counterpoise",
         ),
     ),
     "assignment": (
         "Periodic low level",
-        ("periodic monomers", "periodic pair cutoff"),
+        ("periodic monomers", "periodic pair cutoff", "grid spacing", "box padding"),
     ),
     "labels": ("Labels", ("energy offsets", "extxyz file")),
     "execution": (
@@ -183,6 +184,8 @@ class TkMbe(seamm.TkNode):
 
         shown = set(GROUPS["levels"][1]) | set(GROUPS["labels"][1])
         shown |= {"maximum order", "distance criterion"}
+        if order >= 2:
+            shown.add("counterpoise")
         shown |= {"molecular ranks", "molecular memory", "molecular bundle"}
         shown |= {"cell ranks", "cell memory", "bundle walltime", "archive"}
         if order >= 2:
