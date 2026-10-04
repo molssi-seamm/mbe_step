@@ -2,6 +2,16 @@
 History
 =======
 
+2026.10.4 -- Requires seamm-exec 2026.10.3.2 for running on a cluster
+    * Requires seamm-exec 2026.10.3.2: each bundle of calculations sent to a cluster's
+      queue now runs on one node, a calculation runs inside the job itself only when it
+      fits there, and bundles get a time limit from their calculations' estimated cost.
+      Before, a VASP or ORCA calculation could be spread over several nodes and fail, or
+      be cut off by the queue's default time limit.
+    * Checked end to end on TinkerCliffs: the 64-water pilot frame reproduces the
+      prototype's labels (energy to 0.001 meV, forces to 0.2 meV/Å RMS, pressures to
+      about 1 atm).
+
 2026.10.3 -- Initial release: many-body expansion (MBE) corrections
     * A step that estimates high-level energies, forces and, for periodic cells, the
       stress of a cell or a large cluster: a low-level calculation of the whole system

@@ -131,6 +131,10 @@ those grid steps, at least 12 Å and the fragment's extent plus **Box padding**
 (default 7.5 Å), shifted by whole grid steps. The cell must be orthorhombic.
 These settings appear only when a periodic low level is chosen.
 
+The step runs the cell at the Γ point alone, so with VASP the cell must be at least
+10 Å across; VASP refuses a smaller cell, and the step reports it as a failed
+calculation.
+
 Counterpoise
 ============
 
