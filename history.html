@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>History &#8212; SEAMM MBE Plug-in 2026.10.3 documentation</title>
+    <title>History &#8212; SEAMM MBE Plug-in 2026.10.4 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="_static/documentation_options.js?v=f64fa391"></script>
+    <script src="_static/documentation_options.js?v=3dc6335c"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -53,7 +53,7 @@
     <link rel="prev" title="Development Team" href="authors.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.3" />
+  <meta name="docsearch:version" content="2026.10.4" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -510,6 +510,17 @@
   <section id="history">
 <h1>History<a class="headerlink" href="#history" title="Link to this heading">#</a></h1>
 <dl class="simple">
+<dt>2026.10.4 – Requires seamm-exec 2026.10.3.2 for running on a cluster</dt><dd><ul class="simple">
+<li><p>Requires seamm-exec 2026.10.3.2: each bundle of calculations sent to a cluster’s
+queue now runs on one node, a calculation runs inside the job itself only when it
+fits there, and bundles get a time limit from their calculations’ estimated cost.
+Before, a VASP or ORCA calculation could be spread over several nodes and fail, or
+be cut off by the queue’s default time limit.</p></li>
+<li><p>Checked end to end on TinkerCliffs: the 64-water pilot frame reproduces the
+prototype’s labels (energy to 0.001 meV, forces to 0.2 meV/Å RMS, pressures to
+about 1 atm).</p></li>
+</ul>
+</dd>
 <dt>2026.10.3 – Initial release: many-body expansion (MBE) corrections</dt><dd><ul class="simple">
 <li><p>A step that estimates high-level energies, forces and, for periodic cells, the
 stress of a cell or a large cluster: a low-level calculation of the whole system
