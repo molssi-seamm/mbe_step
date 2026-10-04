@@ -253,15 +253,17 @@ class MbeParameters(seamm.Parameters):
             "default": "none",
             "kind": "enum",
             "default_units": "",
-            "enumeration": ("none", "pairwise"),
+            "enumeration": ("none", "pairwise", "pairwise, both levels"),
             "format_string": "",
             "description": "Counterpoise:",
             "help_text": (
                 "'pairwise' corrects each pair increment for the basis-set "
                 "superposition error (Boys-Bernardi, each monomer in the pair's "
-                "basis) at the molecular levels; the triples still subtract the "
-                "uncorrected pairs. Periodic (plane-wave) levels have no BSSE. Not "
-                "yet for periodic cells, whose stress would need it too."
+                "basis) at the high level; 'pairwise, both levels' corrects the "
+                "molecular low level too, for a low level whose BSSE matters. The "
+                "triples still subtract the uncorrected pairs. Periodic "
+                "(plane-wave) levels have no BSSE. Not yet for periodic cells, "
+                "whose stress would need it too."
             ),
         },
         # ------------------------------------------------------ energy scale
