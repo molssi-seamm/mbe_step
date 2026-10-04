@@ -105,6 +105,7 @@ class Mbe(seamm.Node):
         self.model = None
         self._grid = {"max_spacing": 0.0829, "padding": 7.5}
         self._counterpoise = False
+        self._counterpoise_low = False
 
     @property
     def version(self):
@@ -168,7 +169,13 @@ class Mbe(seamm.Node):
             if P["counterpoise"] == "pairwise":
                 text += (
                     " Each pair is corrected for the basis-set superposition error "
-                    "(pairwise counterpoise) at the molecular levels."
+                    "(pairwise counterpoise) at the high level."
+                )
+            elif P["counterpoise"] == "pairwise, both levels":
+                text += (
+                    " Each pair is corrected for the basis-set superposition error "
+                    "(pairwise counterpoise) at the high level and the molecular low "
+                    "level."
                 )
         return self.header + "\n" + __(text, indent=4 * " ").__str__()
 
@@ -205,7 +212,8 @@ class Mbe(seamm.Node):
             "max_spacing": P["grid spacing"].m_as("Å"),
             "padding": P["box padding"].m_as("Å"),
         }
-        self._counterpoise = P["counterpoise"] == "pairwise"
+        self._counterpoise = P["counterpoise"] != "none"
+        self._counterpoise_low = P["counterpoise"] == "pairwise, both levels"
         self.model = levels_["high"].level
 
         t0 = time.perf_counter()
@@ -388,13 +396,16 @@ class Mbe(seamm.Node):
                     "errors cancel only if they are the same calculation."
                 )
 
-        if P["counterpoise"] == "pairwise":
+        if P["counterpoise"] != "none":
             if periodic_frames:
                 raise ValueError(
                     "Counterpoise is not available for periodic cells yet: their "
                     "stress would need the counterpoise correction too."
                 )
-            for name in ("high", "molecular"):
+            corrected = ["high"]
+            if P["counterpoise"] == "pairwise, both levels":
+                corrected.append("molecular")
+            for name in corrected:
                 options = result[name].mc.get("options") or {}
                 if options.get("mdi_capable") and not options.get("prefers_batch"):
                     raise ValueError(
@@ -434,7 +445,9 @@ class Mbe(seamm.Node):
                     if options is not None:
                         geometry = (geometry, options)
                     structures[prefix + fname] = geometry
-                if self._counterpoise and name in ("high", "molecular"):
+                if self._counterpoise and (
+                    name == "high" or (name == "molecular" and self._counterpoise_low)
+                ):
                     for pair in fragments.by_order(2, in_sum=True):
                         if name == "molecular" and pair.level != "molecular":
                             continue
@@ -507,9 +520,9 @@ class Mbe(seamm.Node):
 
     def _corrections(self, frame, results):
         """The pairwise counterpoise corrections of a frame's selected pairs:
-        {pair name: (eV, eV/Å)}, at the high level and, for pairs referenced to
-        it, the molecular low level. A missing calculation makes the frame
-        incomplete."""
+        {pair name: (eV, eV/Å)}, at the high level and, with "pairwise, both
+        levels" for pairs referenced to it, the molecular low level. A missing
+        calculation makes the frame incomplete."""
         system = frame["system"]
         prefix = frame["prefix"]
         corrections = {}
@@ -519,7 +532,9 @@ class Mbe(seamm.Node):
             total_e = 0.0
             total_f = np.zeros((pair.n_atoms, 3))
             for name, sign in (("high", 1.0), ("molecular", -1.0)):
-                if name == "molecular" and pair.level != "molecular":
+                if name == "molecular" and (
+                    not self._counterpoise_low or pair.level != "molecular"
+                ):
                     continue
                 try:
                     d_e, d_f, fallback = counterpoise.correction(
@@ -649,7 +664,7 @@ class Mbe(seamm.Node):
             if self._counterpoise:
                 for pair in fragments.by_order(2, in_sum=True):
                     ghosts["high"] += 2
-                    if pair.level == "molecular":
+                    if self._counterpoise_low and pair.level == "molecular":
                         ghosts["molecular"] += 2
             n = len(frame["system"].molecules)
             types = ", ".join(
@@ -691,7 +706,8 @@ class Mbe(seamm.Node):
             if self._counterpoise:
                 n_pairs = len(frame["fragments"].by_order(2, in_sum=True))
                 text.append(
-                    f"    counterpoise: {n_pairs} pairs corrected (pairwise), "
+                    f"    counterpoise: {n_pairs} pairs corrected "
+                    f"({'both levels' if self._counterpoise_low else 'high level'}), "
                     f"{data['counterpoise correction']:+.3f} kJ/mol in all"
                     + (
                         f"; {frame['counterpoise fallbacks']} kept the uncorrected "

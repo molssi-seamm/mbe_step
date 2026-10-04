@@ -60,7 +60,7 @@ def run(node, P, frame, levels_):
     return results, node._assemble(frame, levels_, results, None)
 
 
-def test_pairwise_counterpoise(db, monkeypatch):
+def _cp_run(db, monkeypatch, both_levels):
     monkeypatch.setattr(levels.Level, "evaluate", evaluate_with_bsse)
     settings = {"pair cutoff": 100.0, "triple cutoff": 100.0, "triple rule": "compact"}
     conf = cluster(db)
@@ -74,17 +74,28 @@ def test_pairwise_counterpoise(db, monkeypatch):
     frame = node._frame(conf, node._rules(P), P)
     _, plain = run(node, P, frame, levels_)
 
-    node, P = parameters(**settings, counterpoise="pairwise")
+    choice = "pairwise, both levels" if both_levels else "pairwise"
+    node, P = parameters(**settings, counterpoise=choice)
     node._counterpoise = True
+    node._counterpoise_low = both_levels
     frame = node._frame(conf, node._rules(P), P)
     results, labels = run(node, P, frame, levels_)
+    return frame, results, plain, labels
 
+
+def _ghosts(results, level):
+    return [k for k in results[level] if "-cp-" in k]
+
+
+def test_pairwise_counterpoise_high_level_only(db, monkeypatch):
+    """The default corrects the high level only (C.3b: the low level's BSSE is
+    tiny and its ghost SCFs unreliable)."""
+    frame, results, plain, labels = _cp_run(db, monkeypatch, both_levels=False)
     pairs = frame["fragments"].by_order(2, in_sum=True)
-    ghost_keys = [k for k in results["high"] if "-cp-" in k]
-    assert len(ghost_keys) == 2 * len(pairs) == 12
-    assert len([k for k in results["molecular"] if "-cp-" in k]) == 12
-    # E^CP = E - sum(E_in - E_alone) = E + 2 b at each level; [high - low]
-    expected = 2 * (BSSE["high"] - BSSE["molecular"]) * len(pairs)
+    assert len(_ghosts(results, "high")) == 2 * len(pairs) == 12
+    assert _ghosts(results, "molecular") == []
+    # E^CP = E - sum(E_in - E_alone) = E + 2 b at the high level only
+    expected = 2 * BSSE["high"] * len(pairs)
     assert labels.energy - plain.energy == pytest.approx(expected, abs=1e-12)
     assert labels.per_body[2]["energy"] - plain.per_body[2]["energy"] == (
         pytest.approx(expected, abs=1e-12)
@@ -95,6 +106,17 @@ def test_pairwise_counterpoise(db, monkeypatch):
     # The ghost gradients were zero: no change of the forces, no fallback
     assert np.allclose(labels.forces, plain.forces, atol=1e-10)
     assert frame["counterpoise fallbacks"] == 0
+    assert frame["counterpoise correction"] == pytest.approx(expected, abs=1e-12)
+
+
+def test_pairwise_counterpoise_both_levels(db, monkeypatch):
+    frame, results, plain, labels = _cp_run(db, monkeypatch, both_levels=True)
+    pairs = frame["fragments"].by_order(2, in_sum=True)
+    assert len(_ghosts(results, "high")) == 12
+    assert len(_ghosts(results, "molecular")) == 12
+    # [high - low]: E + 2 (b_high - b_low) per pair
+    expected = 2 * (BSSE["high"] - BSSE["molecular"]) * len(pairs)
+    assert labels.energy - plain.energy == pytest.approx(expected, abs=1e-12)
     assert frame["counterpoise correction"] == pytest.approx(expected, abs=1e-12)
 
 
@@ -114,6 +136,7 @@ def test_counterpoise_failure_is_reported(db, monkeypatch):
         **{"pair cutoff": 100.0, "maximum order": "2"}, counterpoise="pairwise"
     )
     node._counterpoise = True
+    node._counterpoise_low = True
     frame = node._frame(cluster(db), node._rules(P), P)
     levels_ = {
         "high": level("high"),

@@ -11,11 +11,14 @@ corrected pair energy and gradient, guarded against unphysical ghost gradients.
 The correction enters the sum only (seamm_mbe's ``corrections``): with
 [high - low] for the pair,
 
-    correction = (E_high^CP - E_high) - (E_low^CP - E_low)
+    correction = (E_high^CP - E_high) [- (E_low^CP - E_low)]
 
-the second term only when the pair is referenced to the molecular low level (a
-plane-wave periodic level has no basis-set superposition error). Triples still
-subtract the uncorrected pairs.
+By default only the high level is corrected; the low-level term is an option
+("pairwise, both levels") for a pair referenced to the molecular low level. In the
+MBE campaign's C.3b check the r2SCAN-D4 correction was tiny where it could be
+computed (median -0.02 kJ/mol per ghost run) and its ghost SCFs collapsed in 5% of
+runs. A plane-wave periodic level has no basis-set superposition error. Triples
+still subtract the uncorrected pairs.
 """
 
 import numpy as np
