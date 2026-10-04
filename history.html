@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>History &#8212; SEAMM MBE Plug-in 2026.10.4 documentation</title>
+    <title>History &#8212; SEAMM MBE Plug-in 2026.10.4.1 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="_static/documentation_options.js?v=3dc6335c"></script>
+    <script src="_static/documentation_options.js?v=883ce3b3"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -53,7 +53,7 @@
     <link rel="prev" title="Development Team" href="authors.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.4" />
+  <meta name="docsearch:version" content="2026.10.4.1" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -510,6 +510,18 @@
   <section id="history">
 <h1>History<a class="headerlink" href="#history" title="Link to this heading">#</a></h1>
 <dl class="simple">
+<dt>2026.10.4.1 – Pairwise counterpoise corrects the high level only by default</dt><dd><ul class="simple">
+<li><p>‘pairwise’ counterpoise now corrects each pair at the high level only. The new
+choice ‘pairwise, both levels’ also corrects the molecular low level, as
+‘pairwise’ did before. In tests on Li⁺/BF₄⁻/water/EC clusters the r2SCAN-D4
+correction was tiny where it could be computed, and its ghost calculations
+sometimes ended at spurious energies, while the revDSD correction was 3–4
+kJ/mol per molecule.</p></li>
+<li><p>The user guide notes that ORCA’s ghost-atom gradients are unreliable for
+double hybrids such as revDSD, so counterpoise-corrected forces from them need
+caution.</p></li>
+</ul>
+</dd>
 <dt>2026.10.4 – Requires seamm-exec 2026.10.3.2 for running on a cluster</dt><dd><ul class="simple">
 <li><p>Requires seamm-exec 2026.10.3.2: each bundle of calculations sent to a cluster’s
 queue now runs on one node, a calculation runs inside the job itself only when it

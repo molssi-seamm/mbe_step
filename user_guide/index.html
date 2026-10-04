@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.4 documentation</title>
+    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.4.1 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../_static/documentation_options.js?v=3dc6335c"></script>
+    <script src="../_static/documentation_options.js?v=883ce3b3"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -54,7 +54,7 @@
     <link rel="prev" title="&lt;no title&gt;" href="../getting_started/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.4" />
+  <meta name="docsearch:version" content="2026.10.4.1" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -635,14 +635,29 @@ calculation.</p>
 <section id="counterpoise">
 <h2>Counterpoise<a class="headerlink" href="#counterpoise" title="Link to this heading">#</a></h2>
 <p><strong>Counterpoise</strong> <em>pairwise</em> corrects each selected pair for the basis-set
-superposition error (Boys–Bernardi), at the high level and, for pairs referenced
-to it, the molecular low level. Each pair adds two calculations per level: each
-monomer in the pair’s basis, with the other monomer’s atoms as ghosts. The
-correction enters the 2-body sum only; triples still subtract the uncorrected
-pairs, so the pairs’ error does not move into the 3-body terms. Where a pair’s
-ghost gradients are unphysical, the energy is corrected but the forces are left
-uncorrected, and the step counts these pairs. The total correction and that count
-are stored as results.</p>
+superposition error (Boys–Bernardi) at the high level. <em>pairwise, both levels</em>
+also corrects the molecular low level, for the pairs referenced to it.</p>
+<ul class="simple">
+<li><p><strong>Cost:</strong> two calculations per pair at each corrected level, each monomer in the
+pair’s basis with the other monomer’s atoms as ghosts.</p></li>
+<li><p><strong>Where it enters:</strong> the 2-body sum only. Triples still subtract the uncorrected
+pairs, so the pairs’ error does not move into the 3-body terms.</p></li>
+<li><p><strong>Unphysical ghost gradients:</strong> where they occur, the energy is still corrected
+but the forces are left uncorrected, and the step counts these pairs. The total
+correction and that count are stored as results.</p></li>
+</ul>
+<p>The high level alone is usually right. In tests on Li⁺/BF₄⁻/water/EC clusters in
+def2-TZVPPD:</p>
+<ul class="simple">
+<li><p>at revDSD the corrections were 3–4 kJ/mol per molecule;</p></li>
+<li><p>at r2SCAN-D4 they were tiny (about −0.02 kJ/mol per pair), and about 5% of its
+ghost calculations ended at spurious energies.</p></li>
+</ul>
+<p><strong>Forces with a double-hybrid high level:</strong> ORCA’s gradients on ghost atoms are
+unreliable for double hybrids such as revDSD-PBEP86-D4 (orca_step#42). The step
+then keeps the uncorrected forces only for pairs whose corrected gradient fails the
+net-force check, so treat counterpoise-corrected forces from a double hybrid with
+caution.</p>
 <p>Counterpoise needs a level that runs as batch calculations with ghost atoms, and
 is not available for periodic cells (it is hidden in the dialog when a periodic
 low level is chosen).</p>

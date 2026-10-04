@@ -139,14 +139,29 @@ Counterpoise
 ============
 
 **Counterpoise** *pairwise* corrects each selected pair for the basis-set
-superposition error (Boys–Bernardi), at the high level and, for pairs referenced
-to it, the molecular low level. Each pair adds two calculations per level: each
-monomer in the pair's basis, with the other monomer's atoms as ghosts. The
-correction enters the 2-body sum only; triples still subtract the uncorrected
-pairs, so the pairs' error does not move into the 3-body terms. Where a pair's
-ghost gradients are unphysical, the energy is corrected but the forces are left
-uncorrected, and the step counts these pairs. The total correction and that count
-are stored as results.
+superposition error (Boys–Bernardi) at the high level. *pairwise, both levels*
+also corrects the molecular low level, for the pairs referenced to it.
+
+- **Cost:** two calculations per pair at each corrected level, each monomer in the
+  pair's basis with the other monomer's atoms as ghosts.
+- **Where it enters:** the 2-body sum only. Triples still subtract the uncorrected
+  pairs, so the pairs' error does not move into the 3-body terms.
+- **Unphysical ghost gradients:** where they occur, the energy is still corrected
+  but the forces are left uncorrected, and the step counts these pairs. The total
+  correction and that count are stored as results.
+
+The high level alone is usually right. In tests on Li⁺/BF₄⁻/water/EC clusters in
+def2-TZVPPD:
+
+- at revDSD the corrections were 3–4 kJ/mol per molecule;
+- at r2SCAN-D4 they were tiny (about −0.02 kJ/mol per pair), and about 5% of its
+  ghost calculations ended at spurious energies.
+
+**Forces with a double-hybrid high level:** ORCA's gradients on ghost atoms are
+unreliable for double hybrids such as revDSD-PBEP86-D4 (orca_step#42). The step
+then keeps the uncorrected forces only for pairs whose corrected gradient fails the
+net-force check, so treat counterpoise-corrected forces from a double hybrid with
+caution.
 
 Counterpoise needs a level that runs as batch calculations with ghost atoms, and
 is not available for periodic cells (it is hidden in the dialog when a periodic

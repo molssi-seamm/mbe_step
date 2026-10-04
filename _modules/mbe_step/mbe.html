@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mbe_step.mbe &#8212; SEAMM MBE Plug-in 2026.10.4 documentation</title>
+    <title>mbe_step.mbe &#8212; SEAMM MBE Plug-in 2026.10.4.1 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../_static/documentation_options.js?v=3dc6335c"></script>
+    <script src="../../_static/documentation_options.js?v=883ce3b3"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -51,7 +51,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.4" />
+  <meta name="docsearch:version" content="2026.10.4.1" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -599,6 +599,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_grid</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"max_spacing"</span><span class="p">:</span> <span class="mf">0.0829</span><span class="p">,</span> <span class="s2">"padding"</span><span class="p">:</span> <span class="mf">7.5</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise_low</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -664,7 +665,13 @@
             <span class="k">if</span> <span class="n">P</span><span class="p">[</span><span class="s2">"counterpoise"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"pairwise"</span><span class="p">:</span>
                 <span class="n">text</span> <span class="o">+=</span> <span class="p">(</span>
                     <span class="s2">" Each pair is corrected for the basis-set superposition error "</span>
-                    <span class="s2">"(pairwise counterpoise) at the molecular levels."</span>
+                    <span class="s2">"(pairwise counterpoise) at the high level."</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">P</span><span class="p">[</span><span class="s2">"counterpoise"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"pairwise, both levels"</span><span class="p">:</span>
+                <span class="n">text</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="s2">" Each pair is corrected for the basis-set superposition error "</span>
+                    <span class="s2">"(pairwise counterpoise) at the high level and the molecular low "</span>
+                    <span class="s2">"level."</span>
                 <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">__</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">" "</span><span class="p">)</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
 
@@ -704,7 +711,8 @@
             <span class="s2">"max_spacing"</span><span class="p">:</span> <span class="n">P</span><span class="p">[</span><span class="s2">"grid spacing"</span><span class="p">]</span><span class="o">.</span><span class="n">m_as</span><span class="p">(</span><span class="s2">"Å"</span><span class="p">),</span>
             <span class="s2">"padding"</span><span class="p">:</span> <span class="n">P</span><span class="p">[</span><span class="s2">"box padding"</span><span class="p">]</span><span class="o">.</span><span class="n">m_as</span><span class="p">(</span><span class="s2">"Å"</span><span class="p">),</span>
         <span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"counterpoise"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"pairwise"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"counterpoise"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"none"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise_low</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"counterpoise"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"pairwise, both levels"</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">levels_</span><span class="p">[</span><span class="s2">"high"</span><span class="p">]</span><span class="o">.</span><span class="n">level</span>
 
         <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
@@ -888,13 +896,16 @@
                     <span class="s2">"errors cancel only if they are the same calculation."</span>
                 <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">P</span><span class="p">[</span><span class="s2">"counterpoise"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"pairwise"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">P</span><span class="p">[</span><span class="s2">"counterpoise"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"none"</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">periodic_frames</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">"Counterpoise is not available for periodic cells yet: their "</span>
                     <span class="s2">"stress would need the counterpoise correction too."</span>
                 <span class="p">)</span>
-            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"high"</span><span class="p">,</span> <span class="s2">"molecular"</span><span class="p">):</span>
+            <span class="n">corrected</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"high"</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">P</span><span class="p">[</span><span class="s2">"counterpoise"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"pairwise, both levels"</span><span class="p">:</span>
+                <span class="n">corrected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"molecular"</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">corrected</span><span class="p">:</span>
                 <span class="n">options</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">mc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"options"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
                 <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mdi_capable"</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"prefers_batch"</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -934,7 +945,9 @@
                     <span class="k">if</span> <span class="n">options</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">geometry</span> <span class="o">=</span> <span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span>
                     <span class="n">structures</span><span class="p">[</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">fname</span><span class="p">]</span> <span class="o">=</span> <span class="n">geometry</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"high"</span><span class="p">,</span> <span class="s2">"molecular"</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise</span> <span class="ow">and</span> <span class="p">(</span>
+                    <span class="n">name</span> <span class="o">==</span> <span class="s2">"high"</span> <span class="ow">or</span> <span class="p">(</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"molecular"</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise_low</span><span class="p">)</span>
+                <span class="p">):</span>
                     <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">fragments</span><span class="o">.</span><span class="n">by_order</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">in_sum</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                         <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"molecular"</span> <span class="ow">and</span> <span class="n">pair</span><span class="o">.</span><span class="n">level</span> <span class="o">!=</span> <span class="s2">"molecular"</span><span class="p">:</span>
                             <span class="k">continue</span>
@@ -1007,9 +1020,9 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_corrections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">results</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""The pairwise counterpoise corrections of a frame's selected pairs:</span>
-<span class="sd">        {pair name: (eV, eV/Å)}, at the high level and, for pairs referenced to</span>
-<span class="sd">        it, the molecular low level. A missing calculation makes the frame</span>
-<span class="sd">        incomplete."""</span>
+<span class="sd">        {pair name: (eV, eV/Å)}, at the high level and, with "pairwise, both</span>
+<span class="sd">        levels" for pairs referenced to it, the molecular low level. A missing</span>
+<span class="sd">        calculation makes the frame incomplete."""</span>
         <span class="n">system</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="s2">"system"</span><span class="p">]</span>
         <span class="n">prefix</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="s2">"prefix"</span><span class="p">]</span>
         <span class="n">corrections</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1019,7 +1032,9 @@
             <span class="n">total_e</span> <span class="o">=</span> <span class="mf">0.0</span>
             <span class="n">total_f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">pair</span><span class="o">.</span><span class="n">n_atoms</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">sign</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"high"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="s2">"molecular"</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)):</span>
-                <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"molecular"</span> <span class="ow">and</span> <span class="n">pair</span><span class="o">.</span><span class="n">level</span> <span class="o">!=</span> <span class="s2">"molecular"</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"molecular"</span> <span class="ow">and</span> <span class="p">(</span>
+                    <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise_low</span> <span class="ow">or</span> <span class="n">pair</span><span class="o">.</span><span class="n">level</span> <span class="o">!=</span> <span class="s2">"molecular"</span>
+                <span class="p">):</span>
                     <span class="k">continue</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">d_e</span><span class="p">,</span> <span class="n">d_f</span><span class="p">,</span> <span class="n">fallback</span> <span class="o">=</span> <span class="n">counterpoise</span><span class="o">.</span><span class="n">correction</span><span class="p">(</span>
@@ -1151,7 +1166,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">fragments</span><span class="o">.</span><span class="n">by_order</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">in_sum</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                     <span class="n">ghosts</span><span class="p">[</span><span class="s2">"high"</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">2</span>
-                    <span class="k">if</span> <span class="n">pair</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="s2">"molecular"</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise_low</span> <span class="ow">and</span> <span class="n">pair</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="s2">"molecular"</span><span class="p">:</span>
                         <span class="n">ghosts</span><span class="p">[</span><span class="s2">"molecular"</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">2</span>
             <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="s2">"system"</span><span class="p">]</span><span class="o">.</span><span class="n">molecules</span><span class="p">)</span>
             <span class="n">types</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -1193,7 +1208,8 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise</span><span class="p">:</span>
                 <span class="n">n_pairs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="s2">"fragments"</span><span class="p">]</span><span class="o">.</span><span class="n">by_order</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">in_sum</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
                 <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">"    counterpoise: </span><span class="si">{</span><span class="n">n_pairs</span><span class="si">}</span><span class="s2"> pairs corrected (pairwise), "</span>
+                    <span class="sa">f</span><span class="s2">"    counterpoise: </span><span class="si">{</span><span class="n">n_pairs</span><span class="si">}</span><span class="s2"> pairs corrected "</span>
+                    <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="s1">'both levels'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise_low</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'high level'</span><span class="si">}</span><span class="s2">), "</span>
                     <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'counterpoise correction'</span><span class="p">]</span><span class="si">:</span><span class="s2">+.3f</span><span class="si">}</span><span class="s2"> kJ/mol in all"</span>
                     <span class="o">+</span> <span class="p">(</span>
                         <span class="sa">f</span><span class="s2">"; </span><span class="si">{</span><span class="n">frame</span><span class="p">[</span><span class="s1">'counterpoise fallbacks'</span><span class="p">]</span><span class="si">}</span><span class="s2"> kept the uncorrected "</span>
