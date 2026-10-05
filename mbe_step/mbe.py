@@ -2,6 +2,7 @@
 
 """Non-graphical part of the MBE step in a SEAMM flowchart"""
 
+import json
 import logging
 from pathlib import Path
 import importlib.resources
@@ -44,6 +45,18 @@ if path.exists():
 
 def _truthy(value):
     return value is True or (isinstance(value, str) and value.lower() == "yes")
+
+
+def _triples_level(P):
+    """The triples' own high level, or None when it is the high level's."""
+    text = (P["triples high level"] or "").strip()
+    if text in ("", "same as the high level") or text == P["high level"]:
+        return None
+    try:
+        order = int(P["maximum order"])
+    except (TypeError, ValueError):
+        order = 3
+    return text if order >= 3 else None
 
 
 class Mbe(seamm.Node):
@@ -158,6 +171,12 @@ class Mbe(seamm.Node):
         if P["periodic low level"] != "none":
             text += f", and {P['periodic low level']} for the compact fragments"
         text += "."
+        triples = (P["triples high level"] or "").strip()
+        if order >= 3 and triples not in ("", "same as the high level"):
+            text += (
+                f" The triples' increments use {triples} as their high level, with "
+                "their pairs and monomers at that level too."
+            )
         if order >= 2:
             if P["cutoffs"] == "single value":
                 text += f" Pairs closer than {P['pair cutoff']} are selected"
@@ -291,11 +310,12 @@ class Mbe(seamm.Node):
                 periodic[2] = r1
         seamm_mbe.assign_levels(fragments, periodic)
         self._check_frame(configuration, system, rules, P)
+        high_levels = {3: "high:3"} if _triples_level(P) else None
         return {
             "configuration": configuration,
             "system": system,
             "fragments": fragments,
-            "calculations": fragments.calculations(),
+            "calculations": fragments.calculations(high_levels=high_levels),
             "prefix": f"c{configuration.id}-",
         }
 
@@ -352,6 +372,10 @@ class Mbe(seamm.Node):
             )
 
         result = {"high": make("high", P["high level"], False, "molecular")}
+        triples = _triples_level(P)
+        if triples:
+            # Its own Evaluator (and directory): the triples' high level
+            result["high:3"] = make("high_triples", triples, False, "molecular")
         if not P["molecular low level"]:
             raise ValueError("The MBE step needs a molecular low level.")
         result["molecular"] = make(
@@ -506,13 +530,16 @@ class Mbe(seamm.Node):
         else:
             cell = levels.to_library(cell_result)
         corrections = self._corrections(frame, results) if self._counterpoise else {}
+        high_by_order = {3: library("high:3")} if "high:3" in levels_ else None
         correction = seamm_mbe.mbe_correction(
             frame["fragments"],
             library("high"),
             periodic=library("periodic"),
             molecular=library("molecular"),
             corrections=corrections,
+            high_by_order=high_by_order,
         )
+        frame["correction"] = correction
         term = seamm_mbe.CellTerm(
             levels_[cell_name].level, cell["energy"], cell["forces"], cell.get("virial")
         )
@@ -611,7 +638,53 @@ class Mbe(seamm.Node):
                 counterpoise=self._counterpoise,
                 model=f"{self.model} MBE on {cell}",
             )
+        self._write_increments(frame, P)
         frame["labels data"] = data
+
+    def _write_increments(self, frame, P):
+        """Each selected fragment's increment, for later analysis (e.g. a
+        correction by triple topology): ``increments_c<configuration id>.json`` in
+        the step's directory, replaced on a rerun. Energies in eV, forces in
+        eV/Å in the fragment's atom order."""
+        correction = frame.get("correction")
+        if correction is None:
+            return
+        fragments = frame["fragments"]
+        triple_cutoff = None
+        if P["cutoffs"] == "single value" and P["triple rule"] != "none":
+            triple_cutoff = P["triple cutoff"].m_as("Å")
+        records = []
+        for name, inc in correction.increments.items():
+            f = fragments[name]
+            record = {
+                "name": name,
+                "order": inc.order,
+                "molecules": [int(m) for m in f.molecules],
+                "images": [[int(x) for x in image] for image in f.images],
+                "distances": {
+                    f"{i},{j}": float(d) for (i, j), d in f.distances.items()
+                },
+                "low level": inc.level,
+                "high level": inc.high_level,
+                "energy": float(inc.energy),
+                "forces": np.asarray(inc.forces).tolist(),
+            }
+            if inc.order == 3 and triple_cutoff is not None:
+                n = sum(1 for d in f.distances.values() if d < triple_cutoff)
+                record["topology"] = "closed" if n == 3 else "chain"
+            records.append(record)
+        path = Path(self.directory) / f"increments_c{frame['configuration'].id}.json"
+        path.write_text(
+            json.dumps(
+                {
+                    "configuration": frame["configuration"].name,
+                    "distance criterion": P["distance criterion"],
+                    "triple cutoff (Å)": triple_cutoff,
+                    "increments": records,
+                },
+                indent=1,
+            )
+        )
 
     def _put_property(self, configuration, key, value, units, _type="float"):
         """Store a ``<key>#MBE#<model>`` property, defining it if needed."""
@@ -674,7 +747,12 @@ class Mbe(seamm.Node):
                 f"{configuration.name}: {n} molecules ({types})",
                 f"    fragments: {labels_.counts_text(fragments)}",
                 f"    calculations: {len(calcs['high']) + ghosts['high']} high, "
-                f"{len(calcs['molecular']) + ghosts['molecular']} molecular, "
+                + (
+                    f"{len(calcs['high:3'])} high (triples), "
+                    if "high:3" in calcs
+                    else ""
+                )
+                + f"{len(calcs['molecular']) + ghosts['molecular']} molecular, "
                 f"{len(calcs['periodic'])} periodic, plus the whole system",
                 f"    E = {data['energy']:.3f} kJ/mol, correction "
                 f"{data['MBE energy']:.3f} kJ/mol",

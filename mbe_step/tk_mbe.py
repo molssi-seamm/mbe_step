@@ -14,7 +14,13 @@ import seamm_widgets as sw
 GROUPS = {
     "levels": (
         "Levels of theory",
-        ("high level", "molecular low level", "periodic low level", "cell low level"),
+        (
+            "high level",
+            "triples high level",
+            "molecular low level",
+            "periodic low level",
+            "cell low level",
+        ),
     ),
     "fragments": (
         "Fragments",
@@ -183,6 +189,9 @@ class TkMbe(seamm.TkNode):
 
         periodic = self._value("periodic low level") != "none"
         shown = set(GROUPS["levels"][1]) | set(GROUPS["labels"][1])
+        if not triples:
+            # A triples' high level only applies when there are triples
+            shown.discard("triples high level")
         shown |= {"maximum order", "distance criterion"}
         if order >= 2 and not periodic:
             # counterpoise is refused for periodic cells, which a periodic low
