@@ -2,6 +2,20 @@
 History
 =======
 
+2026.10.5 -- A high level of their own for the triples; the increments in a file
+    * The new 'triples high level' gives the triples' increments their own high
+      level, e.g. revDSD at def2-TZVPPD with the high level at def2-QZVPPD for the
+      monomers and pairs. Each triple's increment is built entirely at that level, so
+      the triples' monomers and pairs are computed at both levels. It is shown only
+      when there are triples; by default it is the high level. A triples' level that
+      is the high level under another name is refused, since every monomer and pair
+      would be computed twice.
+    * Each configuration's increments are written to
+      increments_c<configuration id>.json in the step's directory, for later
+      analysis: each fragment's molecules, images, pair distances, levels, energy and
+      forces, with triples marked "chain" or "closed".
+    * Requires seamm-mbe 2026.10.5.
+
 2026.10.4.1 -- Pairwise counterpoise corrects the high level only by default
     * 'pairwise' counterpoise now corrects each pair at the high level only. The new
       choice 'pairwise, both levels' also corrects the molecular low level, as

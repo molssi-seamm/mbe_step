@@ -53,6 +53,22 @@ class MbeParameters(seamm.Parameters):
                 "step."
             ),
         },
+        "triples high level": {
+            "default": "same as the high level",
+            "kind": "string",
+            "default_units": "",
+            "enumeration": ("same as the high level",),
+            "format_string": "",
+            "description": "Triples' high level:",
+            "help_text": (
+                "The high level for the triples' increments, if it differs from the "
+                "pairs', e.g. 'ORCA:DFT@REVDSD-PBEP86-D4_2021/def2-TZVPPD' with the "
+                "high level at def2-QZVPPD. Each triple's increment is built "
+                "entirely at this level (the triple, its pairs and its monomers), "
+                "so the monomers and sub-pairs of the triples are computed at both "
+                "levels."
+            ),
+        },
         "molecular low level": {
             "default": "",
             "kind": "string",

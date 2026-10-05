@@ -24,6 +24,13 @@ The step uses up to four Model Chemistries:
 **High level**
     The level the labels approximate, run on every fragment. By default it is
     the one chosen by the Model Chemistry step before this step.
+**Triples' high level**
+    Optional: a high level for the triples' increments when it differs from the
+    pairs', e.g. revDSD at def2-QZVPPD for the monomers and pairs and at
+    def2-TZVPPD for the triples. Each triple's increment is built entirely at its
+    own level (the triple, its three pairs and its three monomers), so those
+    monomers and pairs are computed at both levels. Shown only when there are
+    triples; by default it is the high level.
 **Molecular low level**
     The cheap level run on the fragments referenced to a molecular code. It
     is required.
@@ -97,6 +104,13 @@ For each configuration the step stores:
   ``job:NAME`` puts it in the job's directory) with ``REF_energy``,
   ``REF_forces`` and, for a cell, the nine-value ``REF_stress``. Rerunning
   replaces a configuration's frame rather than adding a second copy.
+
+Each selected fragment's increment is also written to
+``increments_c<configuration id>.json`` in the step's directory, for later
+analysis such as a correction by triple topology. Each record holds the
+fragment's molecules, periodic images and pair distances; its low and high
+levels; and its energy (eV) and forces (eV/Å). Triples are marked "chain" or
+"closed" by how many of their pairs are within the triple cutoff.
 
 **Energy offsets** (eV per molecule, by type) put the labels on the scale of
 other training data, e.g. ``water 2074.69325`` for the water training sets'
