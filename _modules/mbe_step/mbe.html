@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mbe_step.mbe &#8212; SEAMM MBE Plug-in 2026.10.4.1 documentation</title>
+    <title>mbe_step.mbe &#8212; SEAMM MBE Plug-in 2026.10.5 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../_static/documentation_options.js?v=883ce3b3"></script>
+    <script src="../../_static/documentation_options.js?v=99beb745"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -51,7 +51,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.4.1" />
+  <meta name="docsearch:version" content="2026.10.5" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -494,6 +494,7 @@
 
 <span class="sd">"""Non-graphical part of the MBE step in a SEAMM flowchart"""</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">importlib.resources</span>
@@ -536,6 +537,21 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_truthy</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"yes"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_triples_level</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The triples' own high level, or None when it is the high level's or there</span>
+<span class="sd">    are no triples."""</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"triples high level"</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">text</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"same as the high level"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">text</span> <span class="o">==</span> <span class="n">P</span><span class="p">[</span><span class="s2">"high level"</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">P</span><span class="p">[</span><span class="s2">"triple rule"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"none"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="s2">"maximum order"</span><span class="p">])</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="k">return</span> <span class="n">text</span> <span class="k">if</span> <span class="n">order</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="k">else</span> <span class="kc">None</span>
 
 
 <div class="viewcode-block" id="Mbe">
@@ -654,6 +670,12 @@
         <span class="k">if</span> <span class="n">P</span><span class="p">[</span><span class="s2">"periodic low level"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"none"</span><span class="p">:</span>
             <span class="n">text</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">", and </span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'periodic low level'</span><span class="p">]</span><span class="si">}</span><span class="s2"> for the compact fragments"</span>
         <span class="n">text</span> <span class="o">+=</span> <span class="s2">"."</span>
+        <span class="n">triples</span> <span class="o">=</span> <span class="n">_triples_level</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">triples</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">" The triples' increments use </span><span class="si">{</span><span class="n">triples</span><span class="si">}</span><span class="s2"> as their high level, with "</span>
+                <span class="s2">"their pairs and monomers at that level too."</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="n">order</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">P</span><span class="p">[</span><span class="s2">"cutoffs"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"single value"</span><span class="p">:</span>
                 <span class="n">text</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">" Pairs closer than </span><span class="si">{</span><span class="n">P</span><span class="p">[</span><span class="s1">'pair cutoff'</span><span class="p">]</span><span class="si">}</span><span class="s2"> are selected"</span>
@@ -791,11 +813,12 @@
                 <span class="n">periodic</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">r1</span>
         <span class="n">seamm_mbe</span><span class="o">.</span><span class="n">assign_levels</span><span class="p">(</span><span class="n">fragments</span><span class="p">,</span> <span class="n">periodic</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_frame</span><span class="p">(</span><span class="n">configuration</span><span class="p">,</span> <span class="n">system</span><span class="p">,</span> <span class="n">rules</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+        <span class="n">high_levels</span> <span class="o">=</span> <span class="p">{</span><span class="mi">3</span><span class="p">:</span> <span class="s2">"high:3"</span><span class="p">}</span> <span class="k">if</span> <span class="n">_triples_level</span><span class="p">(</span><span class="n">P</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">"configuration"</span><span class="p">:</span> <span class="n">configuration</span><span class="p">,</span>
             <span class="s2">"system"</span><span class="p">:</span> <span class="n">system</span><span class="p">,</span>
             <span class="s2">"fragments"</span><span class="p">:</span> <span class="n">fragments</span><span class="p">,</span>
-            <span class="s2">"calculations"</span><span class="p">:</span> <span class="n">fragments</span><span class="o">.</span><span class="n">calculations</span><span class="p">(),</span>
+            <span class="s2">"calculations"</span><span class="p">:</span> <span class="n">fragments</span><span class="o">.</span><span class="n">calculations</span><span class="p">(</span><span class="n">high_levels</span><span class="o">=</span><span class="n">high_levels</span><span class="p">),</span>
             <span class="s2">"prefix"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"c</span><span class="si">{</span><span class="n">configuration</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">-"</span><span class="p">,</span>
         <span class="p">}</span>
 
@@ -852,6 +875,16 @@
             <span class="p">)</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"high"</span><span class="p">:</span> <span class="n">make</span><span class="p">(</span><span class="s2">"high"</span><span class="p">,</span> <span class="n">P</span><span class="p">[</span><span class="s2">"high level"</span><span class="p">],</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"molecular"</span><span class="p">)}</span>
+        <span class="n">triples</span> <span class="o">=</span> <span class="n">_triples_level</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">triples</span><span class="p">:</span>
+            <span class="c1"># Its own Evaluator (and directory): the triples' high level</span>
+            <span class="n">result</span><span class="p">[</span><span class="s2">"high:3"</span><span class="p">]</span> <span class="o">=</span> <span class="n">make</span><span class="p">(</span><span class="s2">"high_triples"</span><span class="p">,</span> <span class="n">triples</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">"molecular"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s2">"high:3"</span><span class="p">]</span><span class="o">.</span><span class="n">level</span> <span class="o">==</span> <span class="n">result</span><span class="p">[</span><span class="s2">"high"</span><span class="p">]</span><span class="o">.</span><span class="n">level</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"The triples' high level (</span><span class="si">{</span><span class="n">triples</span><span class="si">}</span><span class="s2">) is the high level "</span>
+                    <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">'high'</span><span class="p">]</span><span class="o">.</span><span class="n">level</span><span class="si">}</span><span class="s2">): set it to 'same as the high level', "</span>
+                    <span class="s2">"or every monomer and pair would be computed twice."</span>
+                <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">P</span><span class="p">[</span><span class="s2">"molecular low level"</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The MBE step needs a molecular low level."</span><span class="p">)</span>
         <span class="n">result</span><span class="p">[</span><span class="s2">"molecular"</span><span class="p">]</span> <span class="o">=</span> <span class="n">make</span><span class="p">(</span>
@@ -1006,13 +1039,16 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">cell</span> <span class="o">=</span> <span class="n">levels</span><span class="o">.</span><span class="n">to_library</span><span class="p">(</span><span class="n">cell_result</span><span class="p">)</span>
         <span class="n">corrections</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_corrections</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="n">high_by_order</span> <span class="o">=</span> <span class="p">{</span><span class="mi">3</span><span class="p">:</span> <span class="n">library</span><span class="p">(</span><span class="s2">"high:3"</span><span class="p">)}</span> <span class="k">if</span> <span class="s2">"high:3"</span> <span class="ow">in</span> <span class="n">levels_</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="n">correction</span> <span class="o">=</span> <span class="n">seamm_mbe</span><span class="o">.</span><span class="n">mbe_correction</span><span class="p">(</span>
             <span class="n">frame</span><span class="p">[</span><span class="s2">"fragments"</span><span class="p">],</span>
             <span class="n">library</span><span class="p">(</span><span class="s2">"high"</span><span class="p">),</span>
             <span class="n">periodic</span><span class="o">=</span><span class="n">library</span><span class="p">(</span><span class="s2">"periodic"</span><span class="p">),</span>
             <span class="n">molecular</span><span class="o">=</span><span class="n">library</span><span class="p">(</span><span class="s2">"molecular"</span><span class="p">),</span>
             <span class="n">corrections</span><span class="o">=</span><span class="n">corrections</span><span class="p">,</span>
+            <span class="n">high_by_order</span><span class="o">=</span><span class="n">high_by_order</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="n">frame</span><span class="p">[</span><span class="s2">"correction"</span><span class="p">]</span> <span class="o">=</span> <span class="n">correction</span>
         <span class="n">term</span> <span class="o">=</span> <span class="n">seamm_mbe</span><span class="o">.</span><span class="n">CellTerm</span><span class="p">(</span>
             <span class="n">levels_</span><span class="p">[</span><span class="n">cell_name</span><span class="p">]</span><span class="o">.</span><span class="n">level</span><span class="p">,</span> <span class="n">cell</span><span class="p">[</span><span class="s2">"energy"</span><span class="p">],</span> <span class="n">cell</span><span class="p">[</span><span class="s2">"forces"</span><span class="p">],</span> <span class="n">cell</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"virial"</span><span class="p">)</span>
         <span class="p">)</span>
@@ -1111,7 +1147,61 @@
                 <span class="n">counterpoise</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_counterpoise</span><span class="p">,</span>
                 <span class="n">model</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2"> MBE on </span><span class="si">{</span><span class="n">cell</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
             <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_increments</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
         <span class="n">frame</span><span class="p">[</span><span class="s2">"labels data"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_increments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">P</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Each selected fragment's increment, for later analysis (e.g. a</span>
+<span class="sd">        correction by triple topology): ``increments_c&lt;configuration id&gt;.json`` in</span>
+<span class="sd">        the step's directory, replaced on a rerun. Energies in eV, forces in</span>
+<span class="sd">        eV/Å in the fragment's atom order."""</span>
+        <span class="n">correction</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"correction"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">correction</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">fragments</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="s2">"fragments"</span><span class="p">]</span>
+        <span class="n">molecules</span> <span class="o">=</span> <span class="n">fragments</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">molecules</span>
+        <span class="n">triple_cutoff</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">P</span><span class="p">[</span><span class="s2">"cutoffs"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"single value"</span> <span class="ow">and</span> <span class="n">P</span><span class="p">[</span><span class="s2">"triple rule"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"none"</span><span class="p">:</span>
+            <span class="n">triple_cutoff</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"triple cutoff"</span><span class="p">]</span><span class="o">.</span><span class="n">m_as</span><span class="p">(</span><span class="s2">"Å"</span><span class="p">)</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">inc</span> <span class="ow">in</span> <span class="n">correction</span><span class="o">.</span><span class="n">increments</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">fragments</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="n">record</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                <span class="s2">"order"</span><span class="p">:</span> <span class="n">inc</span><span class="o">.</span><span class="n">order</span><span class="p">,</span>
+                <span class="s2">"molecules"</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">molecules</span><span class="p">],</span>
+                <span class="s2">"images"</span><span class="p">:</span> <span class="p">[[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">image</span><span class="p">]</span> <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">images</span><span class="p">],</span>
+                <span class="s2">"distances"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">},</span>
+                <span class="s2">"low level"</span><span class="p">:</span> <span class="n">inc</span><span class="o">.</span><span class="n">level</span><span class="p">,</span>
+                <span class="s2">"high level"</span><span class="p">:</span> <span class="n">inc</span><span class="o">.</span><span class="n">high_level</span><span class="p">,</span>
+                <span class="s2">"energy"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">inc</span><span class="o">.</span><span class="n">energy</span><span class="p">),</span>
+                <span class="s2">"forces"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">inc</span><span class="o">.</span><span class="n">forces</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="n">inc</span><span class="o">.</span><span class="n">order</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="c1"># The cutoffs the enumerator used, per slot pair (tables too)</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">distances</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">a</span> <span class="o">=</span> <span class="n">molecules</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">type</span>
+                    <span class="n">b</span> <span class="o">=</span> <span class="n">molecules</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span><span class="o">.</span><span class="n">type</span>
+                    <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">fragments</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">cutoff</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+                        <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">record</span><span class="p">[</span><span class="s2">"topology"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"closed"</span> <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="s2">"chain"</span>
+            <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"increments_c</span><span class="si">{</span><span class="n">frame</span><span class="p">[</span><span class="s1">'configuration'</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">.json"</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">"configuration"</span><span class="p">:</span> <span class="n">frame</span><span class="p">[</span><span class="s2">"configuration"</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="s2">"distance criterion"</span><span class="p">:</span> <span class="n">P</span><span class="p">[</span><span class="s2">"distance criterion"</span><span class="p">],</span>
+                    <span class="s2">"triple cutoff (Å)"</span><span class="p">:</span> <span class="n">triple_cutoff</span><span class="p">,</span>
+                    <span class="s2">"units"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"energy"</span><span class="p">:</span> <span class="s2">"eV"</span><span class="p">,</span> <span class="s2">"forces"</span><span class="p">:</span> <span class="s2">"eV/Å"</span><span class="p">,</span> <span class="s2">"distances"</span><span class="p">:</span> <span class="s2">"Å"</span><span class="p">},</span>
+                    <span class="s2">"increments"</span><span class="p">:</span> <span class="n">records</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="n">indent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_put_property</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configuration</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">_type</span><span class="o">=</span><span class="s2">"float"</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Store a ``&lt;key&gt;#MBE#&lt;model&gt;`` property, defining it if needed."""</span>
@@ -1176,7 +1266,12 @@
                 <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">configuration</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> molecules (</span><span class="si">{</span><span class="n">types</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span>
                 <span class="sa">f</span><span class="s2">"    fragments: </span><span class="si">{</span><span class="n">labels_</span><span class="o">.</span><span class="n">counts_text</span><span class="p">(</span><span class="n">fragments</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
                 <span class="sa">f</span><span class="s2">"    calculations: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">calcs</span><span class="p">[</span><span class="s1">'high'</span><span class="p">])</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ghosts</span><span class="p">[</span><span class="s1">'high'</span><span class="p">]</span><span class="si">}</span><span class="s2"> high, "</span>
-                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">calcs</span><span class="p">[</span><span class="s1">'molecular'</span><span class="p">])</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ghosts</span><span class="p">[</span><span class="s1">'molecular'</span><span class="p">]</span><span class="si">}</span><span class="s2"> molecular, "</span>
+                <span class="o">+</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">calcs</span><span class="p">[</span><span class="s1">'high:3'</span><span class="p">])</span><span class="si">}</span><span class="s2"> high (triples), "</span>
+                    <span class="k">if</span> <span class="s2">"high:3"</span> <span class="ow">in</span> <span class="n">calcs</span>
+                    <span class="k">else</span> <span class="s2">""</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">calcs</span><span class="p">[</span><span class="s1">'molecular'</span><span class="p">])</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ghosts</span><span class="p">[</span><span class="s1">'molecular'</span><span class="p">]</span><span class="si">}</span><span class="s2"> molecular, "</span>
                 <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">calcs</span><span class="p">[</span><span class="s1">'periodic'</span><span class="p">])</span><span class="si">}</span><span class="s2"> periodic, plus the whole system"</span><span class="p">,</span>
                 <span class="sa">f</span><span class="s2">"    E = </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'energy'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> kJ/mol, correction "</span>
                 <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">'MBE energy'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> kJ/mol"</span><span class="p">,</span>

@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.4.1 documentation</title>
+    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.5 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../_static/documentation_options.js?v=883ce3b3"></script>
+    <script src="../_static/documentation_options.js?v=99beb745"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -54,7 +54,7 @@
     <link rel="prev" title="&lt;no title&gt;" href="../getting_started/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.4.1" />
+  <meta name="docsearch:version" content="2026.10.5" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -528,6 +528,13 @@ library.</p>
 <dt><strong>High level</strong></dt><dd><p>The level the labels approximate, run on every fragment. By default it is
 the one chosen by the Model Chemistry step before this step.</p>
 </dd>
+<dt><strong>Triples’ high level</strong></dt><dd><p>Optional: a high level for the triples’ increments when it differs from the
+pairs’, e.g. revDSD at def2-QZVPPD for the monomers and pairs and at
+def2-TZVPPD for the triples. Each triple’s increment is built entirely at its
+own level (the triple, its three pairs and its three monomers), so those
+monomers and pairs are computed at both levels. Shown only when there are
+triples; by default it is the high level.</p>
+</dd>
 <dt><strong>Molecular low level</strong></dt><dd><p>The cheap level run on the fragments referenced to a molecular code. It
 is required.</p>
 </dd>
@@ -599,6 +606,12 @@ for variables and tables;</p></li>
 <code class="docutils literal notranslate"><span class="pre">REF_forces</span></code> and, for a cell, the nine-value <code class="docutils literal notranslate"><span class="pre">REF_stress</span></code>. Rerunning
 replaces a configuration’s frame rather than adding a second copy.</p></li>
 </ul>
+<p>Each selected fragment’s increment is also written to
+<code class="docutils literal notranslate"><span class="pre">increments_c&lt;configuration</span> <span class="pre">id&gt;.json</span></code> in the step’s directory, for later
+analysis such as a correction by triple topology. Each record holds the
+fragment’s molecules, periodic images and pair distances; its low and high
+levels; and its energy (eV) and forces (eV/Å). Triples are marked “chain” or
+“closed” by how many of their pairs are within the triple cutoff.</p>
 <p><strong>Energy offsets</strong> (eV per molecule, by type) put the labels on the scale of
 other training data, e.g. <code class="docutils literal notranslate"><span class="pre">water</span> <span class="pre">2074.69325</span></code> for the water training sets’
 formation-energy scale. The default, <code class="docutils literal notranslate"><span class="pre">none</span></code>, gives absolute energies. Every
