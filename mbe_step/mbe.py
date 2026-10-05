@@ -48,9 +48,12 @@ def _truthy(value):
 
 
 def _triples_level(P):
-    """The triples' own high level, or None when it is the high level's."""
+    """The triples' own high level, or None when it is the high level's or there
+    are no triples."""
     text = (P["triples high level"] or "").strip()
     if text in ("", "same as the high level") or text == P["high level"]:
+        return None
+    if P["triple rule"] == "none":
         return None
     try:
         order = int(P["maximum order"])
@@ -171,8 +174,8 @@ class Mbe(seamm.Node):
         if P["periodic low level"] != "none":
             text += f", and {P['periodic low level']} for the compact fragments"
         text += "."
-        triples = (P["triples high level"] or "").strip()
-        if order >= 3 and triples not in ("", "same as the high level"):
+        triples = _triples_level(P)
+        if triples:
             text += (
                 f" The triples' increments use {triples} as their high level, with "
                 "their pairs and monomers at that level too."
@@ -376,6 +379,12 @@ class Mbe(seamm.Node):
         if triples:
             # Its own Evaluator (and directory): the triples' high level
             result["high:3"] = make("high_triples", triples, False, "molecular")
+            if result["high:3"].level == result["high"].level:
+                raise ValueError(
+                    f"The triples' high level ({triples}) is the high level "
+                    f"({result['high'].level}): set it to 'same as the high level', "
+                    "or every monomer and pair would be computed twice."
+                )
         if not P["molecular low level"]:
             raise ValueError("The MBE step needs a molecular low level.")
         result["molecular"] = make(
@@ -650,6 +659,7 @@ class Mbe(seamm.Node):
         if correction is None:
             return
         fragments = frame["fragments"]
+        molecules = fragments.system.molecules
         triple_cutoff = None
         if P["cutoffs"] == "single value" and P["triple rule"] != "none":
             triple_cutoff = P["triple cutoff"].m_as("Å")
@@ -669,8 +679,14 @@ class Mbe(seamm.Node):
                 "energy": float(inc.energy),
                 "forces": np.asarray(inc.forces).tolist(),
             }
-            if inc.order == 3 and triple_cutoff is not None:
-                n = sum(1 for d in f.distances.values() if d < triple_cutoff)
+            if inc.order == 3:
+                # The cutoffs the enumerator used, per slot pair (tables too)
+                n = 0
+                for (i, j), d in f.distances.items():
+                    a = molecules[f.molecules[i]].type
+                    b = molecules[f.molecules[j]].type
+                    if d < fragments.rules.cutoff(3, a, b):
+                        n += 1
                 record["topology"] = "closed" if n == 3 else "chain"
             records.append(record)
         path = Path(self.directory) / f"increments_c{frame['configuration'].id}.json"
@@ -680,6 +696,7 @@ class Mbe(seamm.Node):
                     "configuration": frame["configuration"].name,
                     "distance criterion": P["distance criterion"],
                     "triple cutoff (Å)": triple_cutoff,
+                    "units": {"energy": "eV", "forces": "eV/Å", "distances": "Å"},
                     "increments": records,
                 },
                 indent=1,

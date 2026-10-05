@@ -7,7 +7,9 @@ History
       level, e.g. revDSD at def2-TZVPPD with the high level at def2-QZVPPD for the
       monomers and pairs. Each triple's increment is built entirely at that level, so
       the triples' monomers and pairs are computed at both levels. It is shown only
-      when there are triples; by default it is the high level.
+      when there are triples; by default it is the high level. A triples' level that
+      is the high level under another name is refused, since every monomer and pair
+      would be computed twice.
     * Each configuration's increments are written to
       increments_c<configuration id>.json in the step's directory, for later
       analysis: each fragment's molecules, images, pair distances, levels, energy and

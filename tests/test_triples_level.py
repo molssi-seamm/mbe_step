@@ -114,6 +114,69 @@ def test_the_increments_file(db, monkeypatch, tmp_path):
         if r["order"] == 3:
             n = sum(1 for d in r["distances"].values() if d < 3.2)
             assert r["topology"] == ("closed" if n == 3 else "chain")
-            assert len(r["forces"]) == sum(1 for _ in r["forces"])
+            assert len(r["forces"]) == frame["fragments"][r["name"]].n_atoms
+    assert data["units"] == {"energy": "eV", "forces": "eV/Å", "distances": "Å"}
     total = sum(r["energy"] for r in records)
     assert total == pytest.approx(frame["correction"].energy, abs=1e-10)
+
+
+def test_no_triples_level_without_triples():
+    """Order 3 with triple rule 'none' (e.g. a hand-edited flowchart) has no
+    triples, so a triples' level set anyway is ignored."""
+    node, P = parameters(
+        **{"triple rule": "none", "maximum order": "3"},
+        **{"triples high level": "TRIPLES"},
+    )
+    assert mbe_step.mbe._triples_level(P) is None
+    node._id = (1,)  # the header needs a step id, as in a flowchart
+    assert "TRIPLES" not in node.description_text(P)
+    node, P = parameters(
+        **{"triple rule": "connected"}, **{"triples high level": "TRIPLES"}
+    )
+    assert mbe_step.mbe._triples_level(P) == "TRIPLES"
+    node._id = (1,)
+    assert "TRIPLES" in node.description_text(P)
+
+
+def test_a_triples_level_that_is_the_high_level_is_refused(db, monkeypatch):
+    """Two spellings of one level would compute every monomer and pair twice."""
+
+    def resolve(text, context, current=None, periodic=False):
+        return {"level": text.upper(), "step": "fake", "options": {}}
+
+    monkeypatch.setattr(levels, "resolve", resolve)
+    monkeypatch.setattr(mbe_step.Mbe, "variable_exists", lambda self, name: False)
+    conf = cluster(db)
+    node, P = parameters(
+        **SETTINGS,
+        **{"high level": "orca:x", "triples high level": "ORCA:X"},
+        **{"molecular low level": "LOW"},
+    )
+    frame = node._frame(conf, node._rules(P), P)
+    with pytest.raises(ValueError, match="is the high level"):
+        node._levels(P, {}, [frame])
+
+
+def test_topology_with_a_cutoff_table(db, monkeypatch, tmp_path):
+    """Chains and closed triples are classified with the cutoffs the enumerator
+    used, by type pair, so table mode gets the topology too."""
+    monkeypatch.setattr(levels.Level, "evaluate", evaluate_with_triples_shift)
+    monkeypatch.setattr(mbe_step.Mbe, "directory", str(tmp_path), raising=False)
+    conf = cluster(db)
+    node, P = parameters(
+        **{
+            "cutoffs": "table by type pair",
+            "pair cutoff table": "* * 100.0",
+            "triple cutoff table": "* * 3.2",
+            "triple rule": "connected",
+        }
+    )
+    frame = node._frame(conf, node._rules(P), P)
+    run(node, P, frame, _levels(False))
+    node._write_increments(frame, P)
+    data = json.loads((tmp_path / f"increments_c{conf.id}.json").read_text())
+    triples = [r for r in data["increments"] if r["order"] == 3]
+    assert triples
+    for r in triples:
+        n = sum(1 for d in r["distances"].values() if d < 3.2)
+        assert r["topology"] == ("closed" if n == 3 else "chain")
