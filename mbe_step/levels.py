@@ -116,6 +116,8 @@ class Level:
         self.bundle = int(bundle)
         self.walltime = float(walltime)
         self.archive = bool(archive)
+        self._evaluator = None  # while evaluate() runs, so cancel() can reach it
+        self._cancel_requested = False
 
     @property
     def level(self):
@@ -125,6 +127,16 @@ class Level:
         from seamm_exec import Resources
 
         return Resources(ntasks=self.ranks, mem_per_cpu=int(self.memory * 1e6))
+
+    def cancel(self):
+        """Stop this level's calculations, from another thread: those in flight
+        are killed and the rest dropped, all coming back as failed with the
+        reason "cancelled" (a rerun submits them afresh). Results already
+        produced stand."""
+        self._cancel_requested = True
+        evaluator = self._evaluator
+        if evaluator is not None:
+            evaluator.cancel()
 
     def runs_as_tasks(self, node):
         """Whether this level runs its calculations as queued tasks (the batch
@@ -176,13 +188,19 @@ class Level:
             resources=self.resources(),
             name=f"MBE_{self.name}",  # no spaces: it goes into MDI_Init
         ) as evaluator:
-            for key, structure in structures.items():
-                options = None
-                if isinstance(structure, tuple):
-                    structure, options = structure
-                evaluator.submit(structure, key=key, options=options)
-            for result in evaluator.results():
-                results[result.key] = result
+            self._evaluator = evaluator
+            if self._cancel_requested:
+                evaluator.cancel()
+            try:
+                for key, structure in structures.items():
+                    options = None
+                    if isinstance(structure, tuple):
+                        structure, options = structure
+                    evaluator.submit(structure, key=key, options=options)
+                for result in evaluator.results():
+                    results[result.key] = result
+            finally:
+                self._evaluator = None
         return results
 
 

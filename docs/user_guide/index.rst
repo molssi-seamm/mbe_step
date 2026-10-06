@@ -157,6 +157,12 @@ they overlap the many molecular calculations instead of following them. For the
 32-molecule ethylene carbonate pilot this roughly halves the time to the labels.
 Levels that use an MDI engine run one at a time.
 
+If a level fails outright (an error, or every one of its calculations failing),
+no configuration can be labelled, so the other levels are stopped at once rather
+than left to run for hours: their calculations in the queue are cancelled. A
+rerun of the job keeps every result already finished and submits the rest
+afresh.
+
 Periodic fragments on the cell's grid
 =====================================
 

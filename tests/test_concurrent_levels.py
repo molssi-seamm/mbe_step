@@ -97,3 +97,82 @@ def levels_order(levels_):
     import mbe_step
 
     return mbe_step.Mbe._evaluation_order(levels_)
+
+
+# ------------------------------------------------------------- fail fast
+def _waiting_evaluate(failing):
+    """An evaluate that returns at once for the ``failing`` level (raising or
+    with every result failed) and otherwise waits until it is cancelled, as a
+    long VASP level would."""
+    import time
+    from types import SimpleNamespace
+
+    def evaluate(self, node, structures, stress=False):
+        if self.name == failing[0]:
+            if failing[1] == "raise":
+                raise RuntimeError("bad input for this level")
+            return {
+                key: SimpleNamespace(key=key, ok=False, reason="no task")
+                for key in structures
+            }
+        deadline = time.time() + 20
+        while not self._cancel_requested:
+            if time.time() > deadline:
+                raise AssertionError(f"{self.name} was never cancelled")
+            time.sleep(0.01)
+        return {
+            key: SimpleNamespace(key=key, ok=False, reason="cancelled")
+            for key in structures
+        }
+
+    return evaluate
+
+
+@pytest.mark.parametrize("how", ["raise", "all failed"])
+def test_a_failed_level_stops_the_others(db, monkeypatch, how):
+    monkeypatch.setattr(levels.Level, "evaluate", _waiting_evaluate(("molecular", how)))
+    monkeypatch.setattr(levels.Level, "runs_as_tasks", lambda self, node: True)
+    conf = cluster(db)
+    node, P = parameters(**SETTINGS)
+    frame = node._frame(conf, node._rules(P), P)
+    levels_ = _levels()
+    if how == "raise":
+        with pytest.raises(RuntimeError, match="bad input"):
+            node._evaluate(levels_, [frame])
+    else:
+        results = node._evaluate(levels_, [frame])
+        assert {r.reason for r in results["high"].values()} == {"cancelled"}
+        assert {r.reason for r in results["cluster"].values()} == {"cancelled"}
+    assert levels_["high"]._cancel_requested
+    assert levels_["cluster"]._cancel_requested
+    assert not levels_["molecular"]._cancel_requested
+
+
+def test_a_serial_failure_skips_the_remaining_levels(db, monkeypatch):
+    calls = []
+
+    def evaluate(self, node, structures, stress=False):
+        calls.append(self.name)
+        if self.name == "cluster":
+            raise RuntimeError("bad input for this level")
+        return evaluate_with_bsse(self, node, structures, stress)
+
+    monkeypatch.setattr(levels.Level, "evaluate", evaluate)
+    monkeypatch.setattr(levels.Level, "runs_as_tasks", lambda self, node: False)
+    conf = cluster(db)
+    node, P = parameters(**SETTINGS)
+    frame = node._frame(conf, node._rules(P), P)
+    with pytest.raises(RuntimeError, match="bad input"):
+        node._evaluate(_levels(), [frame])
+    # The cluster runs first; the molecular levels never start
+    assert calls == ["cluster"]
+
+
+def test_cancel_reaches_a_running_evaluator():
+    from types import SimpleNamespace
+
+    cancelled = []
+    lv = level("high")
+    lv._evaluator = SimpleNamespace(cancel=lambda: cancelled.append(True))
+    lv.cancel()
+    assert cancelled == [True] and lv._cancel_requested

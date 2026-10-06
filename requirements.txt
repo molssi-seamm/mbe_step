@@ -2,7 +2,7 @@ molsystem>=2026.9.20
 model-chemistry-step>=2026.10.3
 numpy
 seamm>=2026.10.3
-seamm-exec>=2026.10.3.2
+seamm-exec>=2026.10.6.2
 seamm-bsse>=2026.8.7.1
 seamm-mbe>=2026.10.6
 seamm-util
