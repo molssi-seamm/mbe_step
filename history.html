@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>History &#8212; SEAMM MBE Plug-in 2026.10.5 documentation</title>
+    <title>History &#8212; SEAMM MBE Plug-in 2026.10.6 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="_static/documentation_options.js?v=99beb745"></script>
+    <script src="_static/documentation_options.js?v=ae463d2f"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -53,7 +53,7 @@
     <link rel="prev" title="Development Team" href="authors.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.5" />
+  <meta name="docsearch:version" content="2026.10.6" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -510,6 +510,18 @@
   <section id="history">
 <h1>History<a class="headerlink" href="#history" title="Link to this heading">#</a></h1>
 <dl class="simple">
+<dt>2026.10.6 – A low level of their own for the triples</dt><dd><ul class="simple">
+<li><p>The new ‘triples low level’ gives the triples’ increments their own molecular low
+level, e.g. r2SCAN-D4 at def2-TZVPPD with the molecular low level at def2-QZVPPD
+for the pairs. Each triple’s increment is built entirely at that level, so the
+triples’ monomers and pairs are computed at both levels. It is shown only when
+there are triples; by default it is the molecular low level. A triples’ low level
+that is the molecular low level under another name is refused.</p></li>
+<li><p>The increments file records each increment’s low level.</p></li>
+<li><p>The user guide explains when to use the periodic low level for the monomers only.</p></li>
+<li><p>Requires seamm-mbe 2026.10.6.</p></li>
+</ul>
+</dd>
 <dt>2026.10.5 – A high level of their own for the triples; the increments in a file</dt><dd><ul class="simple">
 <li><p>The new ‘triples high level’ gives the triples’ increments their own high
 level, e.g. revDSD at def2-TZVPPD with the high level at def2-QZVPPD for the

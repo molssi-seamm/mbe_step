@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mbe_step.tk_mbe &#8212; SEAMM MBE Plug-in 2026.10.5 documentation</title>
+    <title>mbe_step.tk_mbe &#8212; SEAMM MBE Plug-in 2026.10.6 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../_static/documentation_options.js?v=99beb745"></script>
+    <script src="../../_static/documentation_options.js?v=ae463d2f"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -51,7 +51,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.5" />
+  <meta name="docsearch:version" content="2026.10.6" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -510,6 +510,7 @@
             <span class="s2">"high level"</span><span class="p">,</span>
             <span class="s2">"triples high level"</span><span class="p">,</span>
             <span class="s2">"molecular low level"</span><span class="p">,</span>
+            <span class="s2">"triples low level"</span><span class="p">,</span>
             <span class="s2">"periodic low level"</span><span class="p">,</span>
             <span class="s2">"cell low level"</span><span class="p">,</span>
         <span class="p">),</span>
@@ -635,7 +636,9 @@
             <span class="n">molecular</span> <span class="o">=</span> <span class="n">periodic</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">"high level"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"current model chemistry"</span><span class="p">]</span> <span class="o">+</span> <span class="n">molecular</span><span class="p">,</span>
+            <span class="s2">"triples high level"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"same as the high level"</span><span class="p">]</span> <span class="o">+</span> <span class="n">molecular</span><span class="p">,</span>
             <span class="s2">"molecular low level"</span><span class="p">:</span> <span class="n">molecular</span><span class="p">,</span>
+            <span class="s2">"triples low level"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"same as the molecular low level"</span><span class="p">]</span> <span class="o">+</span> <span class="n">molecular</span><span class="p">,</span>
             <span class="s2">"periodic low level"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"none"</span><span class="p">]</span> <span class="o">+</span> <span class="n">molecular</span><span class="p">,</span>
             <span class="s2">"cell low level"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"automatic"</span><span class="p">]</span> <span class="o">+</span> <span class="n">periodic</span> <span class="o">+</span> <span class="n">molecular</span><span class="p">,</span>
         <span class="p">}</span>
@@ -692,8 +695,9 @@
         <span class="n">periodic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">(</span><span class="s2">"periodic low level"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"none"</span>
         <span class="n">shown</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">GROUPS</span><span class="p">[</span><span class="s2">"levels"</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">GROUPS</span><span class="p">[</span><span class="s2">"labels"</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">triples</span><span class="p">:</span>
-            <span class="c1"># A triples' high level only applies when there are triples</span>
+            <span class="c1"># The triples' own levels only apply when there are triples</span>
             <span class="n">shown</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="s2">"triples high level"</span><span class="p">)</span>
+            <span class="n">shown</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="s2">"triples low level"</span><span class="p">)</span>
         <span class="n">shown</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">"maximum order"</span><span class="p">,</span> <span class="s2">"distance criterion"</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">order</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">periodic</span><span class="p">:</span>
             <span class="c1"># counterpoise is refused for periodic cells, which a periodic low</span>

@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.5 documentation</title>
+    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.6 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../_static/documentation_options.js?v=99beb745"></script>
+    <script src="../_static/documentation_options.js?v=ae463d2f"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -54,7 +54,7 @@
     <link rel="prev" title="&lt;no title&gt;" href="../getting_started/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.5" />
+  <meta name="docsearch:version" content="2026.10.6" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -523,8 +523,8 @@ bookkeeping is done by the <a class="reference external" href="https://molssi-se
 library.</p>
 <section id="the-levels-of-theory">
 <h2>The levels of theory<a class="headerlink" href="#the-levels-of-theory" title="Link to this heading">#</a></h2>
-<p>The step uses up to four Model Chemistries:</p>
-<dl class="simple">
+<p>The step uses up to six Model Chemistries:</p>
+<dl>
 <dt><strong>High level</strong></dt><dd><p>The level the labels approximate, run on every fragment. By default it is
 the one chosen by the Model Chemistry step before this step.</p>
 </dd>
@@ -538,11 +538,29 @@ triples; by default it is the high level.</p>
 <dt><strong>Molecular low level</strong></dt><dd><p>The cheap level run on the fragments referenced to a molecular code. It
 is required.</p>
 </dd>
+<dt><strong>Triples’ low level</strong></dt><dd><p>Optional: a molecular low level for the triples’ increments when it differs
+from the pairs’, e.g. r2SCAN-D4 at def2-QZVPPD for the pairs and at
+def2-TZVPPD for the triples. As with the triples’ high level, each triple’s
+increment is built entirely at its own levels, so its monomers and pairs are
+computed at both. Shown only when there are triples; by default it is the
+molecular low level.</p>
+<p>Different levels for different orders are not a shortcut: an order’s
+increment is a difference within its own ladder (a triple minus its pairs
+plus its monomers, all at the same levels), so its levels only need to be
+consistent within that ladder, never across orders.</p>
+</dd>
 <dt><strong>Periodic low level</strong></dt><dd><p>Optional. A periodic code for the compact fragments: monomers, and pairs
 closer than a distance r1. It should be the code of the cell’s low level,
 since that cancels the cell’s own low-level error best. Extended
 fragments use the molecular low level, because they pick up interactions
 with their periodic images in affordable boxes. This is the “mixed” scheme.</p>
+<p>Pairs are more sensitive to their images than this suggests. In boxes the
+size of a 32-molecule cell of ethylene carbonate (15.2 Å), VASP pair
+increments differed from ORCA’s by 15 meV/Å rms, and by 6.6 meV/Å even for
+pairs 8 Å or more from their images, while the monomers were converged to
+1 meV/Å. Extrapolated to an infinite box, VASP and ORCA agreed to about
+1 meV/Å. So for polar molecules in small cells, use the periodic low level
+for the monomers only: set <strong>periodic pair cutoff</strong> to 0.</p>
 </dd>
 <dt><strong>Whole-system low level</strong></dt><dd><p>The cheap level run on the whole cell or cluster. <em>automatic</em> uses the
 periodic low level for a cell and the molecular low level for a cluster.
