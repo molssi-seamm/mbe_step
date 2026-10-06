@@ -2,6 +2,13 @@
 History
 =======
 
+2026.10.6.2 -- A failed level stops the others
+    * If a level fails outright (an error, or every one of its calculations failing),
+      the other levels are stopped at once instead of being left to run for hours:
+      their queued and running calculations are cancelled. A rerun keeps everything
+      already finished and submits the rest afresh.
+    * Requires seamm-exec 2026.10.6.2.
+
 2026.10.6.1 -- The levels run at the same time
     * The levels that run as batch tasks now run at the same time, with the whole cell
       and the periodic fragments started first. Their long calculations overlap the

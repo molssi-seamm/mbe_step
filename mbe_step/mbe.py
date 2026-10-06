@@ -572,9 +572,15 @@ class Mbe(seamm.Node):
         """Evaluate each level: those that run as queued tasks concurrently, in
         threads, and those that use an MDI engine one after the other here.
 
+        A level that raises, or whose every calculation failed, means no
+        configuration can be labelled, so the other levels are cancelled at
+        once rather than left to run for hours: their calculations come back as
+        failed ("cancelled"), and a rerun of the job submits them afresh. An
+        exception is raised again once the levels have stopped.
+
         Returns {level name: {key: EvaluatorResult}}.
         """
-        from concurrent.futures import ThreadPoolExecutor
+        from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 
         results = {}
         batch = [w for w in work if w[1].runs_as_tasks(self)]
@@ -582,19 +588,71 @@ class Mbe(seamm.Node):
         if len(batch) < 2:
             serial = work
             batch = []
+        failure = []  # (level name, exception or None)
+
+        def failed(name, error=None):
+            if not failure:
+                failure.append((name, error))
+                for other, level, _ in work:
+                    if other != name:
+                        level.cancel()
+
+        def hopeless(level_results):
+            return bool(level_results) and not any(r.ok for r in level_results.values())
+
         with ThreadPoolExecutor(max_workers=max(1, len(batch))) as pool:
             futures = {
-                name: pool.submit(
+                pool.submit(
                     level.evaluate, self, structures, stress=(name == "cell")
-                )
+                ): name
                 for name, level, structures in batch
             }
-            for name, level, structures in serial:
-                results[name] = level.evaluate(
-                    self, structures, stress=(name == "cell")
-                )
-            for name, future in futures.items():
+            collected = set()
+
+            def collect(future):
+                """Take a finished batch level's results, noting a failure."""
+                collected.add(future)
+                name = futures[future]
+                error = future.exception()
+                if error is not None:
+                    failed(name, error)
+                    return
                 results[name] = future.result()
+                if hopeless(results[name]):
+                    failed(name)
+
+            for name, level, structures in serial:
+                # A batch level that has already failed stops the rest here too
+                for future in [f for f in futures if f.done() and f not in collected]:
+                    collect(future)
+                if failure:
+                    break
+                try:
+                    results[name] = level.evaluate(
+                        self, structures, stress=(name == "cell")
+                    )
+                except Exception as error:
+                    failed(name, error)
+                    break
+                if hopeless(results[name]):
+                    failed(name)
+            pending = set(futures) - collected
+            while pending:
+                done, pending = wait(pending, return_when=FIRST_COMPLETED)
+                for future in done:
+                    collect(future)
+        if failure:
+            name, error = failure[0]
+            if error is not None:
+                raise error
+            if len(work) > 1:
+                printer.important(
+                    __(
+                        f"Every calculation at the {name} level failed, so the other "
+                        "levels were stopped early.",
+                        indent=4 * " ",
+                    )
+                )
         return results
 
     def _assemble(self, frame, levels_, results, offsets):
