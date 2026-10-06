@@ -4,6 +4,6 @@ numpy
 seamm>=2026.10.3
 seamm-exec>=2026.10.3.2
 seamm-bsse>=2026.8.7.1
-seamm-mbe>=2026.10.5
+seamm-mbe>=2026.10.6
 seamm-util
 seamm-widgets

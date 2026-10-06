@@ -19,7 +19,7 @@ library.
 The levels of theory
 ====================
 
-The step uses up to four Model Chemistries:
+The step uses up to six Model Chemistries:
 
 **High level**
     The level the labels approximate, run on every fragment. By default it is
@@ -34,12 +34,32 @@ The step uses up to four Model Chemistries:
 **Molecular low level**
     The cheap level run on the fragments referenced to a molecular code. It
     is required.
+**Triples' low level**
+    Optional: a molecular low level for the triples' increments when it differs
+    from the pairs', e.g. r2SCAN-D4 at def2-QZVPPD for the pairs and at
+    def2-TZVPPD for the triples. As with the triples' high level, each triple's
+    increment is built entirely at its own levels, so its monomers and pairs are
+    computed at both. Shown only when there are triples; by default it is the
+    molecular low level.
+
+    Different levels for different orders are not a shortcut: an order's
+    increment is a difference within its own ladder (a triple minus its pairs
+    plus its monomers, all at the same levels), so its levels only need to be
+    consistent within that ladder, never across orders.
 **Periodic low level**
     Optional. A periodic code for the compact fragments: monomers, and pairs
     closer than a distance r1. It should be the code of the cell's low level,
     since that cancels the cell's own low-level error best. Extended
     fragments use the molecular low level, because they pick up interactions
     with their periodic images in affordable boxes. This is the "mixed" scheme.
+
+    Pairs are more sensitive to their images than this suggests. In boxes the
+    size of a 32-molecule cell of ethylene carbonate (15.2 Å), VASP pair
+    increments differed from ORCA's by 15 meV/Å rms, and by 6.6 meV/Å even for
+    pairs 8 Å or more from their images, while the monomers were converged to
+    1 meV/Å. Extrapolated to an infinite box, VASP and ORCA agreed to about
+    1 meV/Å. So for polar molecules in small cells, use the periodic low level
+    for the monomers only: set **periodic pair cutoff** to 0.
 **Whole-system low level**
     The cheap level run on the whole cell or cluster. *automatic* uses the
     periodic low level for a cell and the molecular low level for a cluster.

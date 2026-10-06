@@ -180,3 +180,98 @@ def test_topology_with_a_cutoff_table(db, monkeypatch, tmp_path):
     for r in triples:
         n = sum(1 for d in r["distances"].values() if d < 3.2)
         assert r["topology"] == ("closed" if n == 3 else "chain")
+
+
+# ------------------------------------------------- the triples' own low level
+def evaluate_with_low_triples_shift(self, node, structures, stress=False):
+    """The analytic levels; the triples' low level is the molecular low level
+    plus SHIFT."""
+    if self.name == "molecular_triples":
+        as_low = types.SimpleNamespace(name="molecular")
+        out = evaluate_with_bsse(as_low, node, structures, stress)
+        for result in out.values():
+            result.energy += SHIFT * 96.48533212331002  # kJ/mol
+        return out
+    return evaluate_with_bsse(self, node, structures, stress)
+
+
+def _low_levels(triples):
+    out = _levels(False)
+    if triples:
+        out["molecular:3"] = level("molecular_triples")
+    return out
+
+
+def test_a_triples_low_level_moves_only_the_triples(db, monkeypatch):
+    monkeypatch.setattr(levels.Level, "evaluate", evaluate_with_low_triples_shift)
+    conf = cluster(db)
+    node, P = parameters(**SETTINGS)
+    frame = node._frame(conf, node._rules(P), P)
+    _, plain = run(node, P, frame, _low_levels(False))
+
+    node, P = parameters(**SETTINGS, **{"triples low level": "TRIPLES"})
+    assert mbe_step.mbe._triples_low_level(P) == "TRIPLES"
+    frame = node._frame(conf, node._rules(P), P)
+    calcs = frame["calculations"]
+    assert "molecular:3" in calcs
+    triples = [f for f in frame["fragments"].selected() if f.order == 3]
+    assert set(calcs["molecular:3"]) == set(frame["fragments"].closure(triples))
+    assert all(frame["fragments"][n].order <= 2 for n in calcs["molecular"])
+    _, labels = run(node, P, frame, _low_levels(True))
+    # The low level is subtracted: each triple's increment moves by -SHIFT
+    assert labels.energy - plain.energy == pytest.approx(
+        -len(triples) * SHIFT, abs=1e-9
+    )
+    assert labels.per_body[2]["energy"] == pytest.approx(
+        plain.per_body[2]["energy"], abs=1e-12
+    )
+    assert np.allclose(labels.forces, plain.forces, atol=1e-10)
+
+
+def test_same_triples_low_level_is_the_single_low_level(db, monkeypatch):
+    monkeypatch.setattr(levels.Level, "evaluate", evaluate_with_low_triples_shift)
+    conf = cluster(db)
+    node, P = parameters(**SETTINGS)
+    frame = node._frame(conf, node._rules(P), P)
+    _, plain = run(node, P, frame, _low_levels(False))
+    node, P = parameters(
+        **SETTINGS, **{"triples low level": "same as the molecular low level"}
+    )
+    assert mbe_step.mbe._triples_low_level(P) is None
+    frame = node._frame(conf, node._rules(P), P)
+    assert "molecular:3" not in frame["calculations"]
+    _, same = run(node, P, frame, _low_levels(False))
+    assert same.energy == plain.energy
+    assert np.array_equal(same.forces, plain.forces)
+
+
+def test_the_increments_file_records_the_low_level(db, monkeypatch, tmp_path):
+    monkeypatch.setattr(levels.Level, "evaluate", evaluate_with_low_triples_shift)
+    monkeypatch.setattr(mbe_step.Mbe, "directory", str(tmp_path), raising=False)
+    conf = cluster(db)
+    node, P = parameters(**SETTINGS, **{"triples low level": "TRIPLES"})
+    frame = node._frame(conf, node._rules(P), P)
+    run(node, P, frame, _low_levels(True))
+    node._write_increments(frame, P)
+    data = json.loads((tmp_path / f"increments_c{conf.id}.json").read_text())
+    records = data["increments"]
+    assert all(r["low level"] == "molecular:3" for r in records if r["order"] == 3)
+    assert all(r["low level"] == "molecular" for r in records if r["order"] < 3)
+    node._id = (1,)
+    assert "TRIPLES" in node.description_text(P)
+
+
+def test_a_triples_low_level_that_is_the_low_level_is_refused(db, monkeypatch):
+    def resolve(text, context, current=None, periodic=False):
+        return {"level": text.upper(), "step": "fake", "options": {}}
+
+    monkeypatch.setattr(levels, "resolve", resolve)
+    monkeypatch.setattr(mbe_step.Mbe, "variable_exists", lambda self, name: False)
+    conf = cluster(db)
+    node, P = parameters(
+        **SETTINGS,
+        **{"molecular low level": "orca:low", "triples low level": "ORCA:LOW"},
+    )
+    frame = node._frame(conf, node._rules(P), P)
+    with pytest.raises(ValueError, match="is the molecular low level"):
+        node._levels(P, {}, [frame])

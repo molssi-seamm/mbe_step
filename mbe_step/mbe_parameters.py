@@ -69,6 +69,24 @@ class MbeParameters(seamm.Parameters):
                 "levels."
             ),
         },
+        "triples low level": {
+            "default": "same as the molecular low level",
+            "kind": "string",
+            "default_units": "",
+            "enumeration": ("same as the molecular low level",),
+            "format_string": "",
+            "description": "Triples' low level:",
+            "help_text": (
+                "The molecular low level for the triples' increments, if it differs "
+                "from the pairs', e.g. 'ORCA:DFT@R2SCAN-D4/def2-TZVPPD' with the "
+                "molecular low level at def2-QZVPPD. Each triple's increment is "
+                "built entirely at this level (the triple, its pairs and its "
+                "monomers), so the monomers and sub-pairs of the triples are "
+                "computed at both levels. An order's increment is a difference "
+                "within its own ladder, so its levels need only be consistent "
+                "within it."
+            ),
+        },
         "molecular low level": {
             "default": "",
             "kind": "string",
