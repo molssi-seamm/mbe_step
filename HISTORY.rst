@@ -2,6 +2,12 @@
 History
 =======
 
+2026.10.6.1 -- The levels run at the same time
+    * The levels that run as batch tasks now run at the same time, with the whole cell
+      and the periodic fragments started first. Their long calculations overlap the
+      molecular ones instead of following them, roughly halving the time a frame takes.
+      Levels that use an MDI engine still run one at a time.
+
 2026.10.6 -- A low level of their own for the triples
     * The new 'triples low level' gives the triples' increments their own molecular low
       level, e.g. r2SCAN-D4 at def2-TZVPPD with the molecular low level at def2-QZVPPD

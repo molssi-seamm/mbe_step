@@ -126,6 +126,24 @@ class Level:
 
         return Resources(ntasks=self.ranks, mem_per_cpu=int(self.memory * 1e6))
 
+    def runs_as_tasks(self, node):
+        """Whether this level runs its calculations as queued tasks (the batch
+        path) rather than through an MDI engine. Batch levels can run at the same
+        time as each other; an MDI engine is driven from this process, so those
+        levels run one at a time."""
+        import seamm_exec
+
+        try:
+            evaluator = seamm_exec.Evaluator(
+                node,
+                self.mc,
+                directory=Path(node.directory) / self.name,
+                name=f"MBE_{self.name}",
+            )
+            return evaluator.path == "batch"
+        except Exception:
+            return False
+
     def evaluate(self, node, structures, *, stress=False):
         """Evaluate structures at this level.
 

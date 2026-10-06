@@ -485,12 +485,18 @@ class Mbe(seamm.Node):
 
     # ------------------------------------------------------------ evaluation
     def _evaluate(self, levels_, frames):
-        """Run every level, one after the other, on what each frame needs.
+        """Run every level on what each frame needs.
+
+        The levels that run as queued tasks run at the same time, so the slow
+        periodic calculations (the cell and the periodic fragments, each hours
+        on many cores) overlap the many molecular ones instead of following
+        them; they are started first. Levels driven through an MDI engine run
+        one at a time in this process.
 
         Returns {level name: {key: EvaluatorResult}}.
         """
-        results = {}
-        for name, level in levels_.items():
+        work = []
+        for name, level in self._evaluation_order(levels_):
             structures = {}
             for frame in frames:
                 system = frame["system"]
@@ -522,6 +528,9 @@ class Mbe(seamm.Node):
                             structures[counterpoise.key(prefix, pair.name, label)] = job
             if not structures:
                 continue
+            work.append((name, level, structures))
+
+        for name, level, structures in work:
             printer.important(
                 __(
                     f"Running {len(structures)} calculations at the {name} level, "
@@ -529,7 +538,9 @@ class Mbe(seamm.Node):
                     indent=4 * " ",
                 )
             )
-            results[name] = level.evaluate(self, structures, stress=(name == "cell"))
+        results = self._run_levels(work)
+
+        for name, level, structures in work:
             if name == "cell":
                 for result in results[name].values():
                     if result.ok and result.stress is None:
@@ -544,7 +555,46 @@ class Mbe(seamm.Node):
             if failed:
                 notes.append(f"{failed} failed")
             if notes:
-                printer.important(__("    (" + "; ".join(notes) + ")", indent=4 * " "))
+                printer.important(
+                    __(f"    ({name} level: " + "; ".join(notes) + ")", indent=4 * " ")
+                )
+        return results
+
+    @staticmethod
+    def _evaluation_order(levels_):
+        """The levels with the long-running ones first: the whole cell (or
+        cluster), then the periodic fragments, then the rest as given."""
+        first = [n for n in ("cell", "cluster", "periodic") if n in levels_]
+        rest = [n for n in levels_ if n not in first]
+        return [(n, levels_[n]) for n in first + rest]
+
+    def _run_levels(self, work):
+        """Evaluate each level: those that run as queued tasks concurrently, in
+        threads, and those that use an MDI engine one after the other here.
+
+        Returns {level name: {key: EvaluatorResult}}.
+        """
+        from concurrent.futures import ThreadPoolExecutor
+
+        results = {}
+        batch = [w for w in work if w[1].runs_as_tasks(self)]
+        serial = [w for w in work if w not in batch]
+        if len(batch) < 2:
+            serial = work
+            batch = []
+        with ThreadPoolExecutor(max_workers=max(1, len(batch))) as pool:
+            futures = {
+                name: pool.submit(
+                    level.evaluate, self, structures, stress=(name == "cell")
+                )
+                for name, level, structures in batch
+            }
+            for name, level, structures in serial:
+                results[name] = level.evaluate(
+                    self, structures, stress=(name == "cell")
+                )
+            for name, future in futures.items():
+                results[name] = future.result()
         return results
 
     def _assemble(self, frame, levels_, results, offsets):
