@@ -149,8 +149,13 @@ Each level runs through SEAMM's task layer: as batch tasks wherever the job's
 target sends them (a local pool, or bundled jobs on a cluster), or on a warm MDI
 engine for cheap codes run locally. The *Execution* settings give the cores and
 memory of each calculation and how many share a batch job. Finished bundles are
-archived, keeping a configuration to a few files. In this version the levels run
-one after the other.
+archived, keeping a configuration to a few files.
+
+The levels that run as batch tasks run at the same time, and the long periodic
+calculations (the whole cell and the periodic fragments) are started first, so
+they overlap the many molecular calculations instead of following them. For the
+32-molecule ethylene carbonate pilot this roughly halves the time to the labels.
+Levels that use an MDI engine run one at a time.
 
 Periodic fragments on the cell's grid
 =====================================
