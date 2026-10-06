@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mbe_step.mbe &#8212; SEAMM MBE Plug-in 2026.10.6.1 documentation</title>
+    <title>mbe_step.mbe &#8212; SEAMM MBE Plug-in 2026.10.6.2 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../_static/documentation_options.js?v=6b967701"></script>
+    <script src="../../_static/documentation_options.js?v=5c6efd6b"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -51,7 +51,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.6.1" />
+  <meta name="docsearch:version" content="2026.10.6.2" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -1072,9 +1072,15 @@
 <span class="w">        </span><span class="sd">"""Evaluate each level: those that run as queued tasks concurrently, in</span>
 <span class="sd">        threads, and those that use an MDI engine one after the other here.</span>
 
+<span class="sd">        A level that raises, or whose every calculation failed, means no</span>
+<span class="sd">        configuration can be labelled, so the other levels are cancelled at</span>
+<span class="sd">        once rather than left to run for hours: their calculations come back as</span>
+<span class="sd">        failed ("cancelled"), and a rerun of the job submits them afresh. An</span>
+<span class="sd">        exception is raised again once the levels have stopped.</span>
+
 <span class="sd">        Returns {level name: {key: EvaluatorResult}}.</span>
 <span class="sd">        """</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">FIRST_COMPLETED</span><span class="p">,</span> <span class="n">ThreadPoolExecutor</span><span class="p">,</span> <span class="n">wait</span>
 
         <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">batch</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">work</span> <span class="k">if</span> <span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">runs_as_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">)]</span>
@@ -1082,19 +1088,71 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">serial</span> <span class="o">=</span> <span class="n">work</span>
             <span class="n">batch</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">failure</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># (level name, exception or None)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">failed</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">failure</span><span class="p">:</span>
+                <span class="n">failure</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">error</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">other</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">work</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">other</span> <span class="o">!=</span> <span class="n">name</span><span class="p">:</span>
+                        <span class="n">level</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">hopeless</span><span class="p">(</span><span class="n">level_results</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">level_results</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">ok</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">level_results</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
         <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="p">)))</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
             <span class="n">futures</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="n">name</span><span class="p">:</span> <span class="n">pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
+                <span class="n">pool</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span>
                     <span class="n">level</span><span class="o">.</span><span class="n">evaluate</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">structures</span><span class="p">,</span> <span class="n">stress</span><span class="o">=</span><span class="p">(</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"cell"</span><span class="p">)</span>
-                <span class="p">)</span>
+                <span class="p">):</span> <span class="n">name</span>
                 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">structures</span> <span class="ow">in</span> <span class="n">batch</span>
             <span class="p">}</span>
-            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">structures</span> <span class="ow">in</span> <span class="n">serial</span><span class="p">:</span>
-                <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">level</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="p">,</span> <span class="n">structures</span><span class="p">,</span> <span class="n">stress</span><span class="o">=</span><span class="p">(</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"cell"</span><span class="p">)</span>
-                <span class="p">)</span>
-            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">futures</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">collected</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+            <span class="k">def</span><span class="w"> </span><span class="nf">collect</span><span class="p">(</span><span class="n">future</span><span class="p">):</span>
+<span class="w">                </span><span class="sd">"""Take a finished batch level's results, noting a failure."""</span>
+                <span class="n">collected</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">future</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">futures</span><span class="p">[</span><span class="n">future</span><span class="p">]</span>
+                <span class="n">error</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">exception</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">failed</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+                    <span class="k">return</span>
                 <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">hopeless</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]):</span>
+                    <span class="n">failed</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">structures</span> <span class="ow">in</span> <span class="n">serial</span><span class="p">:</span>
+                <span class="c1"># A batch level that has already failed stops the rest here too</span>
+                <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">futures</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">done</span><span class="p">()</span> <span class="ow">and</span> <span class="n">f</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">collected</span><span class="p">]:</span>
+                    <span class="n">collect</span><span class="p">(</span><span class="n">future</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">failure</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">level</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="p">,</span> <span class="n">structures</span><span class="p">,</span> <span class="n">stress</span><span class="o">=</span><span class="p">(</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"cell"</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+                    <span class="n">failed</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="n">hopeless</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]):</span>
+                    <span class="n">failed</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">pending</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">futures</span><span class="p">)</span> <span class="o">-</span> <span class="n">collected</span>
+            <span class="k">while</span> <span class="n">pending</span><span class="p">:</span>
+                <span class="n">done</span><span class="p">,</span> <span class="n">pending</span> <span class="o">=</span> <span class="n">wait</span><span class="p">(</span><span class="n">pending</span><span class="p">,</span> <span class="n">return_when</span><span class="o">=</span><span class="n">FIRST_COMPLETED</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">done</span><span class="p">:</span>
+                    <span class="n">collect</span><span class="p">(</span><span class="n">future</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">failure</span><span class="p">:</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="n">failure</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">error</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">work</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span>
+                    <span class="n">__</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"Every calculation at the </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> level failed, so the other "</span>
+                        <span class="s2">"levels were stopped early."</span><span class="p">,</span>
+                        <span class="n">indent</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="s2">" "</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
         <span class="k">return</span> <span class="n">results</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_assemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">levels_</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">offsets</span><span class="p">):</span>

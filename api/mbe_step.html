@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>mbe_step package &#8212; SEAMM MBE Plug-in 2026.10.6.1 documentation</title>
+    <title>mbe_step package &#8212; SEAMM MBE Plug-in 2026.10.6.2 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../_static/documentation_options.js?v=6b967701"></script>
+    <script src="../_static/documentation_options.js?v=5c6efd6b"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -54,7 +54,7 @@
     <link rel="prev" title="mbe_step" href="modules.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.6.1" />
+  <meta name="docsearch:version" content="2026.10.6.2" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -689,6 +689,15 @@ other; running them concurrently is a seamm_exec follow-up.</p>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.levels.Level.cancel">
+<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/levels.html#Level.cancel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.levels.Level.cancel" title="Link to this definition">#</a></dt>
+<dd><p>Stop this level’s calculations, from another thread: those in flight
+are killed and the rest dropped, all coming back as failed with the
+reason “cancelled” (a rerun submits them afresh). Results already
+produced stand.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="mbe_step.levels.Level.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">structures</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/levels.html#Level.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.levels.Level.evaluate" title="Link to this definition">#</a></dt>
 <dd><p>Evaluate structures at this level.</p>
@@ -1171,6 +1180,7 @@ A SEAMM plug-in for many-body expansion (MBE) corrections of periodic cells and 
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-mbe_step.levels">mbe_step.levels module</a><ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.CURRENT"><code class="docutils literal notranslate"><span class="pre">CURRENT</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.Level"><code class="docutils literal notranslate"><span class="pre">Level</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.Level.cancel"><code class="docutils literal notranslate"><span class="pre">Level.cancel()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.Level.evaluate"><code class="docutils literal notranslate"><span class="pre">Level.evaluate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.Level.level"><code class="docutils literal notranslate"><span class="pre">Level.level</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.Level.resources"><code class="docutils literal notranslate"><span class="pre">Level.resources()</span></code></a></li>

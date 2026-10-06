@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>History &#8212; SEAMM MBE Plug-in 2026.10.6.1 documentation</title>
+    <title>History &#8212; SEAMM MBE Plug-in 2026.10.6.2 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="_static/documentation_options.js?v=6b967701"></script>
+    <script src="_static/documentation_options.js?v=5c6efd6b"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -53,7 +53,7 @@
     <link rel="prev" title="Development Team" href="authors.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.6.1" />
+  <meta name="docsearch:version" content="2026.10.6.2" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -510,6 +510,14 @@
   <section id="history">
 <h1>History<a class="headerlink" href="#history" title="Link to this heading">#</a></h1>
 <dl class="simple">
+<dt>2026.10.6.2 – A failed level stops the others</dt><dd><ul class="simple">
+<li><p>If a level fails outright (an error, or every one of its calculations failing),
+the other levels are stopped at once instead of being left to run for hours:
+their queued and running calculations are cancelled. A rerun keeps everything
+already finished and submits the rest afresh.</p></li>
+<li><p>Requires seamm-exec 2026.10.6.2.</p></li>
+</ul>
+</dd>
 <dt>2026.10.6.1 – The levels run at the same time</dt><dd><ul class="simple">
 <li><p>The levels that run as batch tasks now run at the same time, with the whole cell
 and the periodic fragments started first. Their long calculations overlap the

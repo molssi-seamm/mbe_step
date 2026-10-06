@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mbe_step.levels &#8212; SEAMM MBE Plug-in 2026.10.6.1 documentation</title>
+    <title>mbe_step.levels &#8212; SEAMM MBE Plug-in 2026.10.6.2 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../_static/documentation_options.js?v=6b967701"></script>
+    <script src="../../_static/documentation_options.js?v=5c6efd6b"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -51,7 +51,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.6.1" />
+  <meta name="docsearch:version" content="2026.10.6.2" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -616,6 +616,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">bundle</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bundle</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">walltime</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">walltime</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">archive</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">archive</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_evaluator</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># while evaluate() runs, so cancel() can reach it</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_requested</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -627,6 +629,19 @@
         <span class="kn">from</span><span class="w"> </span><span class="nn">seamm_exec</span><span class="w"> </span><span class="kn">import</span> <span class="n">Resources</span>
 
         <span class="k">return</span> <span class="n">Resources</span><span class="p">(</span><span class="n">ntasks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ranks</span><span class="p">,</span> <span class="n">mem_per_cpu</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Level.cancel">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.levels.Level.cancel">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Stop this level's calculations, from another thread: those in flight</span>
+<span class="sd">        are killed and the rest dropped, all coming back as failed with the</span>
+<span class="sd">        reason "cancelled" (a rerun submits them afresh). Results already</span>
+<span class="sd">        produced stand."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_requested</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">evaluator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluator</span>
+        <span class="k">if</span> <span class="n">evaluator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">evaluator</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Level.runs_as_tasks">
@@ -684,13 +699,19 @@
             <span class="n">resources</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">resources</span><span class="p">(),</span>
             <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"MBE_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>  <span class="c1"># no spaces: it goes into MDI_Init</span>
         <span class="p">)</span> <span class="k">as</span> <span class="n">evaluator</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">structure</span> <span class="ow">in</span> <span class="n">structures</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">options</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-                    <span class="n">structure</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="n">structure</span>
-                <span class="n">evaluator</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">results</span><span class="p">():</span>
-                <span class="n">results</span><span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_evaluator</span> <span class="o">=</span> <span class="n">evaluator</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_requested</span><span class="p">:</span>
+                <span class="n">evaluator</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">structure</span> <span class="ow">in</span> <span class="n">structures</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">options</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                        <span class="n">structure</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="n">structure</span>
+                    <span class="n">evaluator</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">results</span><span class="p">():</span>
+                    <span class="n">results</span><span class="p">[</span><span class="n">result</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_evaluator</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">results</span></div>
 </div>
 
