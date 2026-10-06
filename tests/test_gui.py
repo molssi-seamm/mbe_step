@@ -134,3 +134,18 @@ def test_triples_high_level_only_with_triples(tk_node):
     tk_node["triple rule"].set("none")
     tk_node.reset_dialog()
     assert not mapped(tk_node, "triples high level")
+
+
+def test_triples_low_level_only_with_triples(tk_node):
+    tk_node.create_dialog()
+    tk_node["maximum order"].set("3")
+    tk_node["triple rule"].set("connected")
+    tk_node.reset_dialog()
+    assert mapped(tk_node, "triples low level")
+    tk_node["maximum order"].set("2")
+    tk_node.reset_dialog()
+    assert not mapped(tk_node, "triples low level")
+    tk_node["maximum order"].set("3")
+    tk_node["triple rule"].set("none")
+    tk_node.reset_dialog()
+    assert not mapped(tk_node, "triples low level")

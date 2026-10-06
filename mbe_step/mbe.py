@@ -50,8 +50,20 @@ def _truthy(value):
 def _triples_level(P):
     """The triples' own high level, or None when it is the high level's or there
     are no triples."""
-    text = (P["triples high level"] or "").strip()
-    if text in ("", "same as the high level") or text == P["high level"]:
+    return _triples_override(P, "triples high level", "high level")
+
+
+def _triples_low_level(P):
+    """The triples' own molecular low level, or None when it is the molecular low
+    level or there are no triples."""
+    return _triples_override(P, "triples low level", "molecular low level")
+
+
+def _triples_override(P, key, base):
+    """The triples' own level from parameter ``key``, or None when it is blank,
+    "same as the ...", the same text as ``base``, or there are no triples."""
+    text = (P[key] or "").strip()
+    if text == "" or text.startswith("same as the") or text == P[base]:
         return None
     if P["triple rule"] == "none":
         return None
@@ -179,6 +191,12 @@ class Mbe(seamm.Node):
             text += (
                 f" The triples' increments use {triples} as their high level, with "
                 "their pairs and monomers at that level too."
+            )
+        triples_low = _triples_low_level(P)
+        if triples_low:
+            text += (
+                f" The triples' increments use {triples_low} as their molecular low "
+                "level, with their pairs and monomers at that level too."
             )
         if order >= 2:
             if P["cutoffs"] == "single value":
@@ -314,11 +332,14 @@ class Mbe(seamm.Node):
         seamm_mbe.assign_levels(fragments, periodic)
         self._check_frame(configuration, system, rules, P)
         high_levels = {3: "high:3"} if _triples_level(P) else None
+        low_levels = {3: "molecular:3"} if _triples_low_level(P) else None
         return {
             "configuration": configuration,
             "system": system,
             "fragments": fragments,
-            "calculations": fragments.calculations(high_levels=high_levels),
+            "calculations": fragments.calculations(
+                high_levels=high_levels, low_levels=low_levels
+            ),
             "prefix": f"c{configuration.id}-",
         }
 
@@ -390,6 +411,19 @@ class Mbe(seamm.Node):
         result["molecular"] = make(
             "molecular", P["molecular low level"], False, "molecular"
         )
+        triples_low = _triples_low_level(P)
+        if triples_low:
+            # Its own Evaluator (and directory): the triples' molecular low level
+            result["molecular:3"] = make(
+                "molecular_triples", triples_low, False, "molecular"
+            )
+            if result["molecular:3"].level == result["molecular"].level:
+                raise ValueError(
+                    f"The triples' low level ({triples_low}) is the molecular low "
+                    f"level ({result['molecular'].level}): set it to 'same as the "
+                    "molecular low level', or every monomer and pair would be "
+                    "computed twice."
+                )
         if P["periodic low level"] != "none":
             result["periodic"] = make(
                 "periodic", P["periodic low level"], False, "periodic"
@@ -540,6 +574,7 @@ class Mbe(seamm.Node):
             cell = levels.to_library(cell_result)
         corrections = self._corrections(frame, results) if self._counterpoise else {}
         high_by_order = {3: library("high:3")} if "high:3" in levels_ else None
+        low_by_order = {3: library("molecular:3")} if "molecular:3" in levels_ else None
         correction = seamm_mbe.mbe_correction(
             frame["fragments"],
             library("high"),
@@ -547,6 +582,7 @@ class Mbe(seamm.Node):
             molecular=library("molecular"),
             corrections=corrections,
             high_by_order=high_by_order,
+            low_by_order=low_by_order,
         )
         frame["correction"] = correction
         term = seamm_mbe.CellTerm(
@@ -674,7 +710,7 @@ class Mbe(seamm.Node):
                 "distances": {
                     f"{i},{j}": float(d) for (i, j), d in f.distances.items()
                 },
-                "low level": inc.level,
+                "low level": inc.low_level or inc.level,
                 "high level": inc.high_level,
                 "energy": float(inc.energy),
                 "forces": np.asarray(inc.forces).tolist(),
@@ -770,7 +806,12 @@ class Mbe(seamm.Node):
                     else ""
                 )
                 + f"{len(calcs['molecular']) + ghosts['molecular']} molecular, "
-                f"{len(calcs['periodic'])} periodic, plus the whole system",
+                + (
+                    f"{len(calcs['molecular:3'])} molecular (triples), "
+                    if "molecular:3" in calcs
+                    else ""
+                )
+                + f"{len(calcs['periodic'])} periodic, plus the whole system",
                 f"    E = {data['energy']:.3f} kJ/mol, correction "
                 f"{data['MBE energy']:.3f} kJ/mol",
             ]

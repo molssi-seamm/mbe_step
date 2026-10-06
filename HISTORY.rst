@@ -2,6 +2,17 @@
 History
 =======
 
+2026.10.6 -- A low level of their own for the triples
+    * The new 'triples low level' gives the triples' increments their own molecular low
+      level, e.g. r2SCAN-D4 at def2-TZVPPD with the molecular low level at def2-QZVPPD
+      for the pairs. Each triple's increment is built entirely at that level, so the
+      triples' monomers and pairs are computed at both levels. It is shown only when
+      there are triples; by default it is the molecular low level. A triples' low level
+      that is the molecular low level under another name is refused.
+    * The increments file records each increment's low level.
+    * The user guide explains when to use the periodic low level for the monomers only.
+    * Requires seamm-mbe 2026.10.6.
+
 2026.10.5 -- A high level of their own for the triples; the increments in a file
     * The new 'triples high level' gives the triples' increments their own high
       level, e.g. revDSD at def2-TZVPPD with the high level at def2-QZVPPD for the

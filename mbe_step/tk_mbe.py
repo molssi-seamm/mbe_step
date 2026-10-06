@@ -18,6 +18,7 @@ GROUPS = {
             "high level",
             "triples high level",
             "molecular low level",
+            "triples low level",
             "periodic low level",
             "cell low level",
         ),
@@ -138,7 +139,9 @@ class TkMbe(seamm.TkNode):
             molecular = periodic = []
         values = {
             "high level": ["current model chemistry"] + molecular,
+            "triples high level": ["same as the high level"] + molecular,
             "molecular low level": molecular,
+            "triples low level": ["same as the molecular low level"] + molecular,
             "periodic low level": ["none"] + molecular,
             "cell low level": ["automatic"] + periodic + molecular,
         }
@@ -190,8 +193,9 @@ class TkMbe(seamm.TkNode):
         periodic = self._value("periodic low level") != "none"
         shown = set(GROUPS["levels"][1]) | set(GROUPS["labels"][1])
         if not triples:
-            # A triples' high level only applies when there are triples
+            # The triples' own levels only apply when there are triples
             shown.discard("triples high level")
+            shown.discard("triples low level")
         shown |= {"maximum order", "distance criterion"}
         if order >= 2 and not periodic:
             # counterpoise is refused for periodic cells, which a periodic low
