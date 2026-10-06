@@ -607,7 +607,24 @@ class Mbe(seamm.Node):
                 ): name
                 for name, level, structures in batch
             }
+            collected = set()
+
+            def collect(future):
+                """Take a finished batch level's results, noting a failure."""
+                collected.add(future)
+                name = futures[future]
+                error = future.exception()
+                if error is not None:
+                    failed(name, error)
+                    return
+                results[name] = future.result()
+                if hopeless(results[name]):
+                    failed(name)
+
             for name, level, structures in serial:
+                # A batch level that has already failed stops the rest here too
+                for future in [f for f in futures if f.done() and f not in collected]:
+                    collect(future)
                 if failure:
                     break
                 try:
@@ -619,18 +636,11 @@ class Mbe(seamm.Node):
                     break
                 if hopeless(results[name]):
                     failed(name)
-            pending = set(futures)
+            pending = set(futures) - collected
             while pending:
                 done, pending = wait(pending, return_when=FIRST_COMPLETED)
                 for future in done:
-                    name = futures[future]
-                    error = future.exception()
-                    if error is not None:
-                        failed(name, error)
-                        continue
-                    results[name] = future.result()
-                    if hopeless(results[name]):
-                        failed(name)
+                    collect(future)
         if failure:
             name, error = failure[0]
             if error is not None:

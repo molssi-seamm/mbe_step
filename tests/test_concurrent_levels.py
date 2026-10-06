@@ -176,3 +176,36 @@ def test_cancel_reaches_a_running_evaluator():
     lv._evaluator = SimpleNamespace(cancel=lambda: cancelled.append(True))
     lv.cancel()
     assert cancelled == [True] and lv._cancel_requested
+
+
+def test_a_batch_failure_skips_the_serial_levels(db, monkeypatch):
+    """A batch level fails while the first MDI level runs: that one finishes,
+    the MDI level after it never starts."""
+    import time
+
+    calls = []
+
+    def evaluate(self, node, structures, stress=False):
+        calls.append(self.name)
+        if self.name in ("high", "molecular"):
+            time.sleep(0.1)
+            raise RuntimeError("bad input for this level")
+        time.sleep(0.5)  # the first MDI level: the batch ones fail meanwhile
+        return evaluate_with_bsse(self, node, structures, stress)
+
+    monkeypatch.setattr(levels.Level, "evaluate", evaluate)
+    # high and molecular run as tasks; cluster and extra through MDI
+    monkeypatch.setattr(
+        levels.Level,
+        "runs_as_tasks",
+        lambda self, node: self.name in ("high", "molecular"),
+    )
+    levels_ = {**_levels(), "extra": level("extra")}
+    conf = cluster(db)
+    node, P = parameters(**SETTINGS)
+    frame = node._frame(conf, node._rules(P), P)
+    frame["calculations"]["extra"] = frame["calculations"]["molecular"]
+    with pytest.raises(RuntimeError, match="bad input"):
+        node._evaluate(levels_, [frame])
+    # The cluster (serial, first) ran; "extra" (serial, after it) never started
+    assert "cluster" in calls and "extra" not in calls
