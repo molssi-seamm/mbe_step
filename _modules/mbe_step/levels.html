@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mbe_step.levels &#8212; SEAMM MBE Plug-in 2026.10.6 documentation</title>
+    <title>mbe_step.levels &#8212; SEAMM MBE Plug-in 2026.10.6.1 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../_static/documentation_options.js?v=ae463d2f"></script>
+    <script src="../../_static/documentation_options.js?v=6b967701"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -51,7 +51,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.6" />
+  <meta name="docsearch:version" content="2026.10.6.1" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -627,6 +627,27 @@
         <span class="kn">from</span><span class="w"> </span><span class="nn">seamm_exec</span><span class="w"> </span><span class="kn">import</span> <span class="n">Resources</span>
 
         <span class="k">return</span> <span class="n">Resources</span><span class="p">(</span><span class="n">ntasks</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ranks</span><span class="p">,</span> <span class="n">mem_per_cpu</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Level.runs_as_tasks">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.levels.Level.runs_as_tasks">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">runs_as_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Whether this level runs its calculations as queued tasks (the batch</span>
+<span class="sd">        path) rather than through an MDI engine. Batch levels can run at the same</span>
+<span class="sd">        time as each other; an MDI engine is driven from this process, so those</span>
+<span class="sd">        levels run one at a time."""</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">seamm_exec</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">evaluator</span> <span class="o">=</span> <span class="n">seamm_exec</span><span class="o">.</span><span class="n">Evaluator</span><span class="p">(</span>
+                <span class="n">node</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mc</span><span class="p">,</span>
+                <span class="n">directory</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"MBE_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s2">"batch"</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="Level.evaluate">

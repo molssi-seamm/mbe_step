@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>mbe_step package &#8212; SEAMM MBE Plug-in 2026.10.6 documentation</title>
+    <title>mbe_step package &#8212; SEAMM MBE Plug-in 2026.10.6.1 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../_static/documentation_options.js?v=ae463d2f"></script>
+    <script src="../_static/documentation_options.js?v=6b967701"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -54,7 +54,7 @@
     <link rel="prev" title="mbe_step" href="modules.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.6" />
+  <meta name="docsearch:version" content="2026.10.6.1" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -719,6 +719,15 @@ other; running them concurrently is a seamm_exec follow-up.</p>
 <span class="sig-name descname"><span class="pre">resources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/levels.html#Level.resources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.levels.Level.resources" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="mbe_step.levels.Level.runs_as_tasks">
+<span class="sig-name descname"><span class="pre">runs_as_tasks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mbe_step/levels.html#Level.runs_as_tasks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mbe_step.levels.Level.runs_as_tasks" title="Link to this definition">#</a></dt>
+<dd><p>Whether this level runs its calculations as queued tasks (the batch
+path) rather than through an MDI engine. Batch levels can run at the same
+time as each other; an MDI engine is driven from this process, so those
+levels run one at a time.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -1165,6 +1174,7 @@ A SEAMM plug-in for many-body expansion (MBE) corrections of periodic cells and 
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.Level.evaluate"><code class="docutils literal notranslate"><span class="pre">Level.evaluate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.Level.level"><code class="docutils literal notranslate"><span class="pre">Level.level</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.Level.resources"><code class="docutils literal notranslate"><span class="pre">Level.resources()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.Level.runs_as_tasks"><code class="docutils literal notranslate"><span class="pre">Level.runs_as_tasks()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mbe_step.levels.geometry"><code class="docutils literal notranslate"><span class="pre">geometry()</span></code></a></li>
