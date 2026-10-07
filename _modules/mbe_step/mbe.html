@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mbe_step.mbe &#8212; SEAMM MBE Plug-in 2026.10.6.2 documentation</title>
+    <title>mbe_step.mbe &#8212; SEAMM MBE Plug-in 2026.10.6.3 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../_static/documentation_options.js?v=5c6efd6b"></script>
+    <script src="../../_static/documentation_options.js?v=f8167972"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -51,7 +51,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.6.2" />
+  <meta name="docsearch:version" content="2026.10.6.3" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -1437,12 +1437,21 @@
                 <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">"    P = </span><span class="si">{</span><span class="n">labels</span><span class="o">.</span><span class="n">pressure</span><span class="si">:</span><span class="s2">+.1f</span><span class="si">}</span><span class="s2"> atm atomic, "</span>
                     <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">labels</span><span class="o">.</span><span class="n">molecular_pressure</span><span class="si">:</span><span class="s2">+.1f</span><span class="si">}</span><span class="s2"> atm molecular "</span>
-                    <span class="sa">f</span><span class="s2">"(MBE </span><span class="si">{</span><span class="n">labels</span><span class="o">.</span><span class="n">breakdown</span><span class="p">[</span><span class="s1">'MBE'</span><span class="p">][</span><span class="s1">'pressure'</span><span class="p">]</span><span class="si">:</span><span class="s2">+.1f</span><span class="si">}</span><span class="s2"> atm)"</span>
+                    <span class="sa">f</span><span class="s2">"(MBE </span><span class="si">{</span><span class="n">labels</span><span class="o">.</span><span class="n">breakdown</span><span class="p">[</span><span class="s1">'MBE'</span><span class="p">][</span><span class="s1">'pressure'</span><span class="p">]</span><span class="si">:</span><span class="s2">+.1f</span><span class="si">}</span><span class="s2"> atm atomic, "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">labels</span><span class="o">.</span><span class="n">breakdown</span><span class="p">[</span><span class="s1">'MBE'</span><span class="p">][</span><span class="s1">'molecular pressure'</span><span class="p">]</span><span class="si">:</span><span class="s2">+.1f</span><span class="si">}</span><span class="s2"> atm "</span>
+                    <span class="s2">"molecular)"</span>
                 <span class="p">)</span>
                 <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="s2">"    per body (atm): "</span>
+                    <span class="s2">"    per body (atm, atomic): "</span>
                     <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                         <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">-body </span><span class="si">{</span><span class="n">per</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">'pressure'</span><span class="p">]</span><span class="si">:</span><span class="s2">+.1f</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">per</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">"    per body (atm, molecular): "</span>
+                    <span class="o">+</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">-body </span><span class="si">{</span><span class="n">per</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s1">'molecular pressure'</span><span class="p">]</span><span class="si">:</span><span class="s2">+.1f</span><span class="si">}</span><span class="s2">"</span>
+                        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">per</span><span class="p">)</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
             <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>

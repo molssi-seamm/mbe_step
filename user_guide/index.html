@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.6.2 documentation</title>
+    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.6.3 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../_static/documentation_options.js?v=5c6efd6b"></script>
+    <script src="../_static/documentation_options.js?v=f8167972"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -54,7 +54,7 @@
     <link rel="prev" title="&lt;no title&gt;" href="../getting_started/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.6.2" />
+  <meta name="docsearch:version" content="2026.10.6.3" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -617,8 +617,11 @@ form two different fragments.</p>
 Voigt [6] vector in GPa, σ = −P), as properties <code class="docutils literal notranslate"><span class="pre">energy#MBE#&lt;model&gt;</span></code> and so
 on, with the gradients also on the atoms;</p></li>
 <li><p>the atomic and molecular pressures, the correction and its breakdown by body
-order, the fragment counts and the largest increment net force, as results
-for variables and tables;</p></li>
+order (energy, and both the atomic and the molecular pressure), the fragment
+counts and the largest increment net force, as results for variables and
+tables. Each order’s share of the molecular pressure is its virial less its
+own intramolecular part, so the shares add up and the monomers’ share is zero:
+it is the breakdown to compare with the virial errors of a cluster validation;</p></li>
 <li><p>an extended XYZ file (default <code class="docutils literal notranslate"><span class="pre">mbe_labels.extxyz</span></code> in the step’s directory;
 <code class="docutils literal notranslate"><span class="pre">job:NAME</span></code> puts it in the job’s directory) with <code class="docutils literal notranslate"><span class="pre">REF_energy</span></code>,
 <code class="docutils literal notranslate"><span class="pre">REF_forces</span></code> and, for a cell, the nine-value <code class="docutils literal notranslate"><span class="pre">REF_stress</span></code>. Rerunning
