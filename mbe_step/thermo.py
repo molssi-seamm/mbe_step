@@ -75,7 +75,16 @@ def dfe0_offsets(model_chemistry, systems, provider=None):
     code, method, settings = reference(model_chemistry, provider)
     level = model_chemistry.get("level", f"{code}:{method}/{settings}")
     offsets = {}
-    with ThermoDB(read_only=True) as db:
+    try:
+        database = ThermoDB(read_only=True)
+    except (FileNotFoundError, OSError) as e:
+        raise ValueError(
+            "The energy offsets onto the DfE0 scale need the thermochemistry "
+            f"database, which is not installed here ({e}). Install it with "
+            "seamm-thermochemistry's installer, or set 'energy offsets' to 'none' "
+            "or give them."
+        ) from None
+    with database as db:
         for name, composition in sorted(compositions(systems).items()):
             try:
                 kj = formation_energy(

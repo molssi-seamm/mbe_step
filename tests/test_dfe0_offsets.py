@@ -114,3 +114,16 @@ def test_the_real_database():
     assert offsets["EC"] == pytest.approx(9300.3625, abs=1e-4)
     tz = thermo.dfe0_offsets({**MC, "basis": "def2-TZVPPD"}, [ec()])
     assert tz["EC"] == pytest.approx(9299.16652, abs=1e-4)
+
+
+def test_without_the_database_file(monkeypatch):
+    """seamm_thermochemistry installed by pip alone has no database file."""
+
+    class DB:
+        def __init__(self, read_only=True):
+            raise FileNotFoundError("/somewhere/thermochemistry.db")
+
+    module = types.SimpleNamespace(ThermoDB=DB, formation_energy=None)
+    monkeypatch.setitem(sys.modules, "seamm_thermochemistry", module)
+    with pytest.raises(ValueError, match="database, which is not installed"):
+        thermo.dfe0_offsets(MC, [ec()])
