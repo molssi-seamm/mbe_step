@@ -185,6 +185,7 @@ def to_seamm(labels, volume):
         data["pressure"] = labels.pressure
         data["molecular pressure"] = labels.molecular_pressure
         data["MBE pressure"] = labels.breakdown["MBE"]["pressure"]
+        data["MBE molecular pressure"] = labels.breakdown["MBE"]["molecular pressure"]
     data["MBE energy"] = float(
         units.ev_to_kj_per_mol(labels.breakdown["MBE"]["energy"])
     )
@@ -195,6 +196,9 @@ def to_seamm(labels, volume):
     if labels.virial is not None:
         data["per-body pressures"] = {
             str(k): v["pressure"] for k, v in labels.per_body.items()
+        }
+        data["per-body molecular pressures"] = {
+            str(k): v["molecular pressure"] for k, v in labels.per_body.items()
         }
     data["maximum increment net force"] = float(
         units.ev_to_kj_per_mol(labels.max_increment_net_force)

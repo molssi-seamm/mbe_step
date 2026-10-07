@@ -142,6 +142,12 @@ def test_pilot_through_the_step(pilot, db, monkeypatch, tmp_path):
     # SEAMM's units and the labels file
     seamm = labels_.to_seamm(labels, box**3)
     assert len(seamm["stress"]) == 6
+    # The molecular pressure by order adds up to the correction's
+    by_body = seamm["per-body molecular pressures"]
+    assert sum(by_body.values()) == pytest.approx(
+        seamm["MBE molecular pressure"], abs=1e-6
+    )
+    assert abs(by_body["1"]) < abs(seamm["per-body pressures"]["1"])
     p_from_voigt = -np.mean(seamm["stress"][:3]) * 1e9 / 101325
     assert p_from_voigt == pytest.approx(labels.pressure, abs=1e-3)
     path = tmp_path / "labels.extxyz"
