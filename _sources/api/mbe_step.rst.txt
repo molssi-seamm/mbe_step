@@ -60,6 +60,14 @@ mbe\_step.metadata module
    :show-inheritance:
    :undoc-members:
 
+mbe\_step.thermo module
+-----------------------
+
+.. automodule:: mbe_step.thermo
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
 mbe\_step.tk\_mbe module
 ------------------------
 

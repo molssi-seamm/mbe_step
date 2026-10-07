@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mbe_step.mbe_step &#8212; SEAMM MBE Plug-in 2026.10.7 documentation</title>
+    <title>mbe_step.thermo &#8212; SEAMM MBE Plug-in 2026.10.7 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/mbe_step/mbe_step';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/mbe_step/thermo';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -472,7 +472,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">mbe_step.mbe_step</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">mbe_step.thermo</span></li>
   </ul>
 </nav>
 </div>
@@ -489,115 +489,127 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for mbe_step.mbe_step</h1><div class="highlight"><pre>
+  <h1>Source code for mbe_step.thermo</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">mbe_step</span>
+<span class="sd">"""Energy offsets onto the DfE0 scale from SEAMM's thermochemistry database.</span>
+
+<span class="sd">A configuration's labels are on the high level's absolute energy scale (the</span>
+<span class="sd">VASP cell's pseudopotential reference is replaced by the high-level monomers').</span>
+<span class="sd">The training sets use the energy of formation at 0 K instead, DfE0 = E -</span>
+<span class="sd">sum(atomic reference energies) + sum(atomic heats of formation at 0 K), with the</span>
+<span class="sd">atomic references at the same level. For a molecule the difference DfE0 - E is a</span>
+<span class="sd">constant, so it enters as an offset per molecule type, exactly the number the</span>
+<span class="sd">code steps' own DfE0 uses (seamm_thermochemistry.formation_energy, anchored at</span>
+<span class="sd">0 K).</span>
+<span class="sd">"""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">seamm_mbe.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">EV_TO_KJ_PER_MOL</span>
+
+<span class="c1">#: The parameter value that asks for the offsets from the database</span>
+<span class="n">AUTOMATIC</span> <span class="o">=</span> <span class="s2">"DfE0 (from the thermochemistry database)"</span>
 
 
-<div class="viewcode-block" id="MbeStep">
-<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.mbe_step.MbeStep">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">MbeStep</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Helper class needed for the stevedore integration.</span>
+<div class="viewcode-block" id="is_automatic">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.thermo.is_automatic">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_automatic</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Whether the 'energy offsets' parameter asks for DfE0 offsets."""</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">text</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="n">AUTOMATIC</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="s2">"dfe0"</span><span class="p">)</span></div>
 
-<span class="sd">    This must provide a `description()` method that returns a dict containing a</span>
-<span class="sd">    description of this node, and `create_node()` and `create_tk_node()` methods</span>
-<span class="sd">    for creating the graphical and non-graphical nodes.</span>
 
-<span class="sd">    The dictionary for the description is the class variable just below these</span>
-<span class="sd">    comments. The felds are as follows:</span>
 
-<span class="sd">        my_description : {str, str}</span>
-<span class="sd">            A human-readable description of this step. It can be</span>
-<span class="sd">            several lines long, and needs to be clear to non-expert users.</span>
-<span class="sd">            It contains the following keys: description, group, name.</span>
+<div class="viewcode-block" id="reference">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.thermo.reference">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">reference</span><span class="p">(</span><span class="n">model_chemistry</span><span class="p">,</span> <span class="n">provider</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""(code, method, settings) under which the database holds the atomic</span>
+<span class="sd">    references for a model chemistry. A program can say with a</span>
+<span class="sd">    ``thermochemistry_reference(model_chemistry)`` hook on its step; otherwise</span>
+<span class="sd">    the code is the step's name in lower case, the method the model</span>
+<span class="sd">    chemistry's (in its model-chemistry spelling, as the reference runs were</span>
+<span class="sd">    tagged) and the settings its basis, without a ``bse:`` prefix."""</span>
+    <span class="n">hook</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="s2">"thermochemistry_reference"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">hook</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">hook</span><span class="p">(</span><span class="n">model_chemistry</span><span class="p">)</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">model_chemistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"step"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">model_chemistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"owner"</span><span class="p">))</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">model_chemistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"method"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span>
+    <span class="n">basis</span> <span class="o">=</span> <span class="n">model_chemistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"basis"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span>
+    <span class="k">if</span> <span class="n">basis</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"bse:"</span><span class="p">):</span>
+        <span class="n">basis</span> <span class="o">=</span> <span class="n">basis</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="n">code</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">basis</span></div>
 
-<span class="sd">        my_description["description"] : tuple</span>
-<span class="sd">            A description of the MBE step. It must be</span>
-<span class="sd">            clear to non-experts.</span>
 
-<span class="sd">        my_description["group"] : str</span>
-<span class="sd">            Which group in the menus to put this step. If the group does</span>
-<span class="sd">            not exist it will be created. Common groups are "Building",</span>
-<span class="sd">            "Control", "Custom", "Data", and "Simulations".</span>
 
-<span class="sd">        my_description["name"] : str</span>
-<span class="sd">            The name of this step, to be displayed in the menus.</span>
+<div class="viewcode-block" id="compositions">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.thermo.compositions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compositions</span><span class="p">(</span><span class="n">systems</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""{type name: Counter of element symbols} for the molecule types of</span>
+<span class="sd">    seamm_mbe Systems."""</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="n">systems</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">molecule</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">molecules</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">molecule</span><span class="o">.</span><span class="n">type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">molecule</span><span class="o">.</span><span class="n">type</span><span class="p">]</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span>
+                    <span class="n">system</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">molecule</span><span class="o">.</span><span class="n">atoms</span>
+                <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="dfe0_offsets">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.thermo.dfe0_offsets">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">dfe0_offsets</span><span class="p">(</span><span class="n">model_chemistry</span><span class="p">,</span> <span class="n">systems</span><span class="p">,</span> <span class="n">provider</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The offsets DfE0 - E in eV per molecule, by type, at a model chemistry.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If seamm_thermochemistry is not installed or has no atomic references</span>
+<span class="sd">        for the elements at this level.</span>
 <span class="sd">    """</span>
-
-    <span class="n">my_description</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">"description"</span><span class="p">:</span> <span class="p">(</span>
-            <span class="s2">"Many-body expansion (MBE) corrections of periodic cells and clusters"</span>
-        <span class="p">),</span>
-        <span class="s2">"group"</span><span class="p">:</span> <span class="s2">"Simulations"</span><span class="p">,</span>
-        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"MBE"</span><span class="p">,</span>
-    <span class="p">}</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flowchart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gui</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Initialize this helper class, which is used by</span>
-<span class="sd">        the application via stevedore to get information about</span>
-<span class="sd">        and create node objects for the flowchart</span>
-<span class="sd">        """</span>
-        <span class="k">pass</span>
-
-<div class="viewcode-block" id="MbeStep.create_node">
-<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.mbe_step.MbeStep.create_node">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flowchart</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Create and return the new node object.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        flowchart: seamm.Node</span>
-<span class="sd">            A non-graphical SEAMM node</span>
-
-<span class="sd">        **kwargs : keyword arguments</span>
-<span class="sd">            Various keyword arguments such as title, namespace or</span>
-<span class="sd">            extension representing the title displayed in the flowchart,</span>
-<span class="sd">            the namespace for the plugins of a subflowchart and</span>
-<span class="sd">            the extension, respectively.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Mbe</span>
-<span class="sd">        """</span>
-
-        <span class="k">return</span> <span class="n">mbe_step</span><span class="o">.</span><span class="n">Mbe</span><span class="p">(</span><span class="n">flowchart</span><span class="o">=</span><span class="n">flowchart</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="MbeStep.create_tk_node">
-<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.mbe_step.MbeStep.create_tk_node">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_tk_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Create and return the graphical Tk node object.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        canvas : tk.Canvas</span>
-<span class="sd">            The Tk Canvas widget</span>
-
-<span class="sd">        **kwargs : keyword arguments</span>
-<span class="sd">            Various keyword arguments such as tk_flowchart, node, x, y, w, h</span>
-<span class="sd">            representing a graphical flowchart object, a non-graphical node for</span>
-<span class="sd">            a step, and dimensions of the graphical node.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        TkMbe</span>
-<span class="sd">        """</span>
-
-        <span class="k">return</span> <span class="n">mbe_step</span><span class="o">.</span><span class="n">TkMbe</span><span class="p">(</span><span class="n">canvas</span><span class="o">=</span><span class="n">canvas</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="MbeStep.description">
-<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.mbe_step.MbeStep.description">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">"""Return a description of what this step does.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        description : dict(str, str)</span>
-<span class="sd">        """</span>
-        <span class="k">return</span> <span class="n">MbeStep</span><span class="o">.</span><span class="n">my_description</span></div>
-</div>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">seamm_thermochemistry</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThermoDB</span><span class="p">,</span> <span class="n">formation_energy</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"The energy offsets onto the DfE0 scale need seamm_thermochemistry, "</span>
+            <span class="s2">"which is not installed. Set 'energy offsets' to 'none', or give them."</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+    <span class="n">code</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">settings</span> <span class="o">=</span> <span class="n">reference</span><span class="p">(</span><span class="n">model_chemistry</span><span class="p">,</span> <span class="n">provider</span><span class="p">)</span>
+    <span class="n">level</span> <span class="o">=</span> <span class="n">model_chemistry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"level"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">settings</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">offsets</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">database</span> <span class="o">=</span> <span class="n">ThermoDB</span><span class="p">(</span><span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"The energy offsets onto the DfE0 scale need the thermochemistry "</span>
+            <span class="sa">f</span><span class="s2">"database, which is not installed here (</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">). Install it with "</span>
+            <span class="s2">"seamm-thermochemistry's installer, or set 'energy offsets' to 'none' "</span>
+            <span class="s2">"or give them."</span>
+        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+    <span class="k">with</span> <span class="n">database</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">composition</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">compositions</span><span class="p">(</span><span class="n">systems</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">kj</span> <span class="o">=</span> <span class="n">formation_energy</span><span class="p">(</span>
+                    <span class="nb">dict</span><span class="p">(</span><span class="n">composition</span><span class="p">),</span>
+                    <span class="mf">0.0</span><span class="p">,</span>
+                    <span class="n">db</span><span class="p">,</span>
+                    <span class="n">code</span><span class="p">,</span>
+                    <span class="n">method</span><span class="p">,</span>
+                    <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span>
+                    <span class="n">anchor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">anchor_at_0K</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">units</span><span class="o">=</span><span class="s2">"kJ/mol"</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"No DfE0 energy offset for </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">: the "</span>
+                    <span class="sa">f</span><span class="s2">"thermochemistry database has no atomic references for it "</span>
+                    <span class="sa">f</span><span class="s2">"(</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">). Set 'energy offsets' to 'none' "</span>
+                    <span class="s2">"for absolute energies, or give the offsets as 'type value'."</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+            <span class="n">offsets</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">kj</span> <span class="o">/</span> <span class="n">EV_TO_KJ_PER_MOL</span>
+    <span class="k">return</span> <span class="n">offsets</span></div>
 
 </pre></div>
 

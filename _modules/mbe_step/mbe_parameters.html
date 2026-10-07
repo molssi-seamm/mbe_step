@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mbe_step.mbe_parameters &#8212; SEAMM MBE Plug-in 2026.10.6.3 documentation</title>
+    <title>mbe_step.mbe_parameters &#8212; SEAMM MBE Plug-in 2026.10.7 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=64cc4de3f052d77215f0" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=64cc4de3f052d77215f0" />
 
-    <script src="../../_static/documentation_options.js?v=f8167972"></script>
+    <script src="../../_static/documentation_options.js?v=0a3eb936"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -51,7 +51,7 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.6.3" />
+  <meta name="docsearch:version" content="2026.10.7" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -796,18 +796,21 @@
         <span class="p">},</span>
         <span class="c1"># ------------------------------------------------------ energy scale</span>
         <span class="s2">"energy offsets"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"none"</span><span class="p">,</span>
+            <span class="s2">"default"</span><span class="p">:</span> <span class="s2">"DfE0 (from the thermochemistry database)"</span><span class="p">,</span>
             <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">,</span>
             <span class="s2">"default_units"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
-            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"none"</span><span class="p">,),</span>
+            <span class="s2">"enumeration"</span><span class="p">:</span> <span class="p">(</span><span class="s2">"DfE0 (from the thermochemistry database)"</span><span class="p">,</span> <span class="s2">"none"</span><span class="p">),</span>
             <span class="s2">"format_string"</span><span class="p">:</span> <span class="s2">""</span><span class="p">,</span>
             <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Energy offsets (eV per molecule):"</span><span class="p">,</span>
             <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
                 <span class="s2">"Added to the energy per molecule of each type, to put the labels "</span>
-                <span class="s2">"on the scale of other training data, as entries 'type offset' "</span>
-                <span class="s2">"separated by ';', e.g. 'water 2074.69325' (the water training "</span>
-                <span class="s2">"sets' formation-energy scale). Every molecule type present needs "</span>
-                <span class="s2">"one. 'none' keeps the absolute energy."</span>
+                <span class="s2">"on the scale of other training data. 'DfE0 (from the "</span>
+                <span class="s2">"thermochemistry database)' gives the energy of formation at 0 K, "</span>
+                <span class="s2">"with the atomic references at the high level, as the code steps' "</span>
+                <span class="s2">"own DfE0; a level the database has no atoms for is refused before "</span>
+                <span class="s2">"any calculation. 'none' keeps the absolute energy. Or give them "</span>
+                <span class="s2">"as entries 'type offset' separated by ';', e.g. 'water "</span>
+                <span class="s2">"2074.69325'; every molecule type present then needs one."</span>
             <span class="p">),</span>
         <span class="p">},</span>
         <span class="c1"># ------------------------------------------------------------ output</span>
