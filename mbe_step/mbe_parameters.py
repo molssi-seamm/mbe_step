@@ -302,18 +302,21 @@ class MbeParameters(seamm.Parameters):
         },
         # ------------------------------------------------------ energy scale
         "energy offsets": {
-            "default": "none",
+            "default": "DfE0 (from the thermochemistry database)",
             "kind": "string",
             "default_units": "",
-            "enumeration": ("none",),
+            "enumeration": ("DfE0 (from the thermochemistry database)", "none"),
             "format_string": "",
             "description": "Energy offsets (eV per molecule):",
             "help_text": (
                 "Added to the energy per molecule of each type, to put the labels "
-                "on the scale of other training data, as entries 'type offset' "
-                "separated by ';', e.g. 'water 2074.69325' (the water training "
-                "sets' formation-energy scale). Every molecule type present needs "
-                "one. 'none' keeps the absolute energy."
+                "on the scale of other training data. 'DfE0 (from the "
+                "thermochemistry database)' gives the energy of formation at 0 K, "
+                "with the atomic references at the high level, as the code steps' "
+                "own DfE0; a level the database has no atoms for is refused before "
+                "any calculation. 'none' keeps the absolute energy. Or give them "
+                "as entries 'type offset' separated by ';', e.g. 'water "
+                "2074.69325'; every molecule type present then needs one."
             ),
         },
         # ------------------------------------------------------------ output

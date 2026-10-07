@@ -2,6 +2,16 @@
 History
 =======
 
+2026.10.7 -- Energies on the DfE0 scale by default
+    * The new default for 'energy offsets', "DfE0 (from the thermochemistry
+      database)", puts the labels on the energy-of-formation scale (DfE0, at 0 K)
+      that the code steps use: each molecule type's offset comes from the atomic
+      reference energies at the high level in SEAMM's thermochemistry database. The
+      step prints the offsets it used, and stops before any calculation if the
+      database has no atoms at the high level. 'none' and offsets given by hand work
+      as before; existing flowcharts keep the value they were saved with.
+    * Requires seamm-thermochemistry 2026.9.28.
+
 2026.10.6.3 -- The molecular pressure by body order
     * The summary and the results give the many-body correction's share of the
       molecular pressure, in total and by body order, alongside the atomic one. The

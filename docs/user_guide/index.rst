@@ -136,9 +136,21 @@ levels; and its energy (eV) and forces (eV/Å). Triples are marked "chain" or
 "closed" by how many of their pairs are within the triple cutoff.
 
 **Energy offsets** (eV per molecule, by type) put the labels on the scale of
-other training data, e.g. ``water 2074.69325`` for the water training sets'
-formation-energy scale. The default, ``none``, gives absolute energies. Every
-molecule type present must have an offset when any is given.
+other training data. The labels come out on the high level's absolute scale: the
+monomers' high-level energies replace the periodic code's pseudopotential
+reference in the cell's energy. An offset per molecule type then shifts them;
+forces and stress are unchanged.
+
+* **DfE0 (from the thermochemistry database)**, the default, gives the energy of
+  formation at 0 K, the scale of the code steps' own ``DfE0``. Each type's offset
+  is DfE0 − E for one molecule, from the atomic reference energies at the high
+  level (the monomers' level) and the atoms' heats of formation at 0 K. The step
+  prints the offsets it used, e.g. ``EC 9300.36250`` eV per molecule at
+  revDSD-PBEP86-D4/def2-QZVPPD. If the database has no atoms at that level the
+  step stops before any calculation.
+* **none** gives absolute energies.
+* Or give the offsets as ``type value`` entries separated by ``;``, e.g.
+  ``water 2074.69325``. Every molecule type present then needs one.
 
 A configuration with a failed or missing calculation gets no labels. The step
 reports which calculations failed, stores the complete configurations, and
