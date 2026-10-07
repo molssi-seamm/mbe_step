@@ -22,6 +22,7 @@ from seamm_util.printing import FormattedText as __
 from . import counterpoise
 from . import labels as labels_
 from . import levels
+from . import thermo
 from .mbe_parameters import CRITERIA
 
 # In addition to the normal logger, two logger-like printing facilities are
@@ -217,6 +218,15 @@ class Mbe(seamm.Node):
                     "(pairwise counterpoise) at the high level and the molecular low "
                     "level."
                 )
+        offsets = (P["energy offsets"] or "").strip()
+        if thermo.is_automatic(offsets):
+            text += (
+                " The energies are put on the DfE0 scale (energy of formation at 0 "
+                "K) with the atomic references at the high level from the "
+                "thermochemistry database."
+            )
+        elif offsets.lower() not in ("", "none"):
+            text += f" Energy offsets (eV per molecule): {offsets}."
         return self.header + "\n" + __(text, indent=4 * " ").__str__()
 
     # ------------------------------------------------------------------ #
@@ -245,9 +255,13 @@ class Mbe(seamm.Node):
         if len(configurations) == 0:
             raise ValueError("The MBE step found no configurations to label.")
         rules = self._rules(P)
-        offsets = labels_.parse_offsets(P["energy offsets"])
+        automatic = thermo.is_automatic(P["energy offsets"])
+        offsets = None if automatic else labels_.parse_offsets(P["energy offsets"])
         frames = [self._frame(c, rules, P) for c in configurations]
         levels_ = self._levels(P, context, frames)
+        if automatic:
+            # Before any calculation: a level without atomic references is refused
+            offsets = self._dfe0_offsets(levels_["high"], frames)
         self._grid = {
             "max_spacing": P["grid spacing"].m_as("Å"),
             "padding": P["box padding"].m_as("Å"),
@@ -348,7 +362,10 @@ class Mbe(seamm.Node):
         missing energy offsets, a configuration charge that disagrees with the
         molecules', and open-shell molecules inside larger fragments."""
         name = configuration.name
-        offsets = labels_.parse_offsets(P["energy offsets"])
+        if thermo.is_automatic(P["energy offsets"]):
+            offsets = None  # from the database for every type, in run()
+        else:
+            offsets = labels_.parse_offsets(P["energy offsets"])
         if offsets is not None:
             missing = sorted(set(system.type_counts()) - set(offsets))
             if missing:
@@ -372,6 +389,29 @@ class Mbe(seamm.Node):
                 f"({', '.join(open_shell)}); fragments of several molecules with "
                 "open shells are not supported yet. Use maximum order 1."
             )
+
+    def _dfe0_offsets(self, level, frames):
+        """The energy offsets onto the DfE0 scale, eV per molecule by type, from
+        the thermochemistry database's atomic references at the high level (the
+        level of the monomers' energies, which set the labels' scale)."""
+        try:
+            provider = self.flowchart.plugin_manager.get(level.mc["step"])
+        except Exception:
+            provider = None
+        offsets = thermo.dfe0_offsets(
+            level.mc, [frame["system"] for frame in frames], provider
+        )
+        printer.important(
+            __(
+                f"Energies on the DfE0 scale, with the atomic references at "
+                f"{level.level}: offsets (eV per molecule) "
+                + ", ".join(f"{name} {value:.5f}" for name, value in offsets.items())
+                + ".",
+                indent=4 * " ",
+            )
+        )
+        printer.important("")
+        return offsets
 
     def _levels(self, P, context, frames):
         """Resolve each level's model chemistry, checking what is needed."""
