@@ -118,8 +118,11 @@ For each configuration the step stores:
   Voigt [6] vector in GPa, σ = −P), as properties ``energy#MBE#<model>`` and so
   on, with the gradients also on the atoms;
 - the atomic and molecular pressures, the correction and its breakdown by body
-  order, the fragment counts and the largest increment net force, as results
-  for variables and tables;
+  order (energy, and both the atomic and the molecular pressure), the fragment
+  counts and the largest increment net force, as results for variables and
+  tables. Each order's share of the molecular pressure is its virial less its
+  own intramolecular part, so the shares add up and the monomers' share is zero:
+  it is the breakdown to compare with the virial errors of a cluster validation;
 - an extended XYZ file (default ``mbe_labels.extxyz`` in the step's directory;
   ``job:NAME`` puts it in the job's directory) with ``REF_energy``,
   ``REF_forces`` and, for a cell, the nine-value ``REF_stress``. Rerunning

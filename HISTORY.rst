@@ -2,6 +2,13 @@
 History
 =======
 
+2026.10.6.3 -- The molecular pressure by body order
+    * The summary and the results give the many-body correction's share of the
+      molecular pressure, in total and by body order, alongside the atomic one. The
+      molecular breakdown is the one to compare with the virial errors of a cluster
+      validation; the monomers' share of it is zero.
+    * Requires seamm-mbe 2026.10.6.1.
+
 2026.10.6.2 -- A failed level stops the others
     * If a level fails outright (an error, or every one of its calculations failing),
       the other levels are stopped at once instead of being left to run for hours:

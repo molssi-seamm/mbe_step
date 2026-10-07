@@ -176,12 +176,23 @@ metadata["results"] = {
     "MBE pressure": _result(
         "The many-body correction's contribution to the pressure", "atm", format=".1f"
     ),
+    "MBE molecular pressure": _result(
+        "The many-body correction's contribution to the molecular pressure",
+        "atm",
+        format=".1f",
+    ),
     "MBE energy": _result("The many-body correction to the energy", "kJ/mol"),
     "per-body energies": _result(
         "The correction to the energy by order, in kJ/mol", "", "json", "json"
     ),
     "per-body pressures": _result(
         "The correction to the pressure by order, in atm", "", "json", "json"
+    ),
+    "per-body molecular pressures": _result(
+        "The correction to the molecular pressure by order, in atm",
+        "",
+        "json",
+        "json",
     ),
     "fragment counts": _result(
         "The selected and auxiliary fragments by order", "", "json", "json"

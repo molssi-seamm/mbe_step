@@ -935,12 +935,21 @@ class Mbe(seamm.Node):
                 text.append(
                     f"    P = {labels.pressure:+.1f} atm atomic, "
                     f"{labels.molecular_pressure:+.1f} atm molecular "
-                    f"(MBE {labels.breakdown['MBE']['pressure']:+.1f} atm)"
+                    f"(MBE {labels.breakdown['MBE']['pressure']:+.1f} atm atomic, "
+                    f"{labels.breakdown['MBE']['molecular pressure']:+.1f} atm "
+                    "molecular)"
                 )
                 text.append(
-                    "    per body (atm): "
+                    "    per body (atm, atomic): "
                     + ", ".join(
                         f"{k}-body {per[k]['pressure']:+.1f}" for k in sorted(per)
+                    )
+                )
+                text.append(
+                    "    per body (atm, molecular): "
+                    + ", ".join(
+                        f"{k}-body {per[k]['molecular pressure']:+.1f}"
+                        for k in sorted(per)
                     )
                 )
             text.append(
