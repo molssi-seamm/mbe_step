@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>2026-10-05: preparing the 32-EC pilot &#8212; SEAMM MBE Plug-in 2026.10.10 documentation</title>
+    <title>2026-10-08: the 32-FEC pilot &#8212; SEAMM MBE Plug-in 2026.10.10 documentation</title>
   
   
   
@@ -46,12 +46,12 @@
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'developer_guide/campaigns/2026-10-05/index';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'developer_guide/campaigns/2026-10-08/index';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="2026-10-08: the 32-FEC pilot" href="../2026-10-08/index.html" />
-    <link rel="prev" title="2026-10-03: the MBE step, phase 2 (mbe_step)" href="../2026-10-03/index.html" />
+    <link rel="next" title="API Documentation" href="../../../api/index.html" />
+    <link rel="prev" title="2026-10-05: preparing the 32-EC pilot" href="../2026-10-05/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
@@ -461,8 +461,8 @@
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Campaigns</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../2026-10-03/index.html">2026-10-03: the MBE step, phase 2 (<code class="docutils literal notranslate"><span class="pre">mbe_step</span></code>)</a></li>
-<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">2026-10-05: preparing the 32-EC pilot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../2026-10-08/index.html">2026-10-08: the 32-FEC pilot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../2026-10-05/index.html">2026-10-05: preparing the 32-EC pilot</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">2026-10-08: the 32-FEC pilot</a></li>
 </ul>
 </details></li>
 </ul>
@@ -511,7 +511,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Campaigns</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">2026-10-05: preparing the 32-EC pilot</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">2026-10-08: the 32-FEC pilot</span></li>
   </ul>
 </nav>
 </div>
@@ -528,66 +528,268 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="preparing-the-32-ec-pilot">
-<h1>2026-10-05: preparing the 32-EC pilot<a class="headerlink" href="#preparing-the-32-ec-pilot" title="Link to this heading">#</a></h1>
-<p>The ethylene carbonate (EC) reference, as decided on 2026-10-05: QZ pairs and TZ
-triples, no counterpoise, with criterion “contact”, a pair cutoff of 4.5 Å and
-connected triples within 3.0 Å. The low level is mixed: VASP for the monomers and
-close pairs, ORCA for the rest, and the cell at the VASP level.</p>
-<section id="what-it-needed">
-<h2>What it needed<a class="headerlink" href="#what-it-needed" title="Link to this heading">#</a></h2>
+  <section id="the-32-fec-pilot">
+<h1>2026-10-08: the 32-FEC pilot<a class="headerlink" href="#the-32-fec-pilot" title="Link to this heading">#</a></h1>
+<p>The fluoroethylene carbonate (FEC) pilot uses option A, as decided for EC on
+2026-10-05:</p>
 <ul class="simple">
-<li><p><strong>A high level per order:</strong> seamm-mbe 2026.10.5 (<code class="docutils literal notranslate"><span class="pre">high_by_order</span></code>) and mbe_step
-2026.10.5 (the “triples high level” and the <code class="docutils literal notranslate"><span class="pre">increments_c&lt;id&gt;.json</span></code> file).</p></li>
-<li><p><strong>Fragments through different images:</strong> seamm-mbe 2026.10.5.1. The 32-EC cell is
-narrower than the uniqueness bound, which is 20.07 Å for these pairs and
-25.61 Å for these triples, so the same molecules can form several triples.</p>
-<ul>
-<li><p>Each of these triples is enumerated. The minimum-image one keeps the plain name
-and the others carry their images.</p></li>
-<li><p>A molecule bonded to two images of a partner only skips the placement that
-would hold the partner twice.</p></li>
-<li><p>A molecule within the pair cutoff of its own image is refused.</p></li>
+<li><p><strong>Monomers:</strong> VASP r2SCAN-D4 (hard PAW, 1,200 eV) in registered, cell-sized
+boxes.</p></li>
+<li><p><strong>Pairs:</strong> ORCA r2SCAN-D4/def2-QZVPPD as the low level and
+revDSD-PBEP86-D4(2021)/def2-QZVPPD as the high level.</p></li>
+<li><p><strong>Triples:</strong> the same two methods at def2-TZVPPD, with each triple’s pairs and
+monomers recomputed at those levels.</p></li>
+<li><p><strong>Selection:</strong> criterion “contact”, a pair cutoff of 4.5 Å, connected triples
+within 3.0 Å, no counterpoise.</p></li>
+<li><p><strong>The cell:</strong> VASP r2SCAN-D4.</p></li>
+<li><p><strong>Energy offsets:</strong> automatic, DfE0 from the thermochemistry database (mbe_step
+2026.10.7), FEC 11997.11204 eV per molecule at def2-QZVPPD.</p></li>
 </ul>
+<p>It finished on TinkerCliffs as job 7903005 (2026-10-08, return code 0) with
+mbe-step 2026.10.7, seamm-mbe 2026.10.6.1, seamm-exec 2026.10.7.1 and vasp-step
+2026.10.8. It took six attempts; see <a class="reference internal" href="#the-runs">The runs</a>.</p>
+<section id="the-files">
+<h2>The files<a class="headerlink" href="#the-files" title="Link to this heading">#</a></h2>
+<p>All are under <code class="docutils literal notranslate"><span class="pre">/projects/seamm/psaxe/fec_pilot</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fec32.extxyz</span></code>: the frame, 32 FEC in a cubic cell of 15.70789 Å, with the
+velocities stripped;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fec_pilot.flow</span></code>: the flowchart, with cell ranks 64 (<code class="docutils literal notranslate"><span class="pre">fec_pilot_cell32.flow</span></code>
+is the 32-rank version);</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run/3/mbe_labels.extxyz</span></code>: the labels (energy, forces, stress), already on
+the DfE0 scale: REF_energy = −286.50801 eV;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run/3/increments_c1.json</span></code>: every increment’s energy and forces;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scf_tests/</span></code>: the SCF tests of the cell (below).</p></li>
+</ul>
+</section>
+<section id="results">
+<h2>Results<a class="headerlink" href="#results" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>monomers</p></td>
+<td><p>32</p></td>
+<td><p>32</p></td>
+</tr>
+<tr class="row-odd"><td><p>pairs (+ outer and image pairs)</p></td>
+<td><p>230 (+408)</p></td>
+<td><p>241 (+443)</p></td>
+</tr>
+<tr class="row-even"><td><p>connected triples</p></td>
+<td><p>764</p></td>
+<td><p>878</p></td>
+</tr>
+<tr class="row-odd"><td><p>— closed / chain</p></td>
+<td><p>86 / 678</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>2-body, kJ/mol per molecule</p></td>
+<td><p>−3.043</p></td>
+<td><p>−4.238</p></td>
+</tr>
+<tr class="row-odd"><td><p>3-body, kJ/mol per molecule</p></td>
+<td><p>+0.356</p></td>
+<td><p>+1.189</p></td>
+</tr>
+<tr class="row-even"><td><p>P, atomic virial (atm)</p></td>
+<td><p>+4,824.3</p></td>
+<td><p>+13,612.4</p></td>
+</tr>
+<tr class="row-odd"><td><p>P, molecular virial (atm)</p></td>
+<td><p>−6,180.1</p></td>
+<td><p>−6,800.3</p></td>
+</tr>
+<tr class="row-even"><td><p>MBE correction to P, atomic (atm)</p></td>
+<td><p>−3,633.7</p></td>
+<td><p>−2,059.8</p></td>
+</tr>
+<tr class="row-odd"><td><p>— 1-body / 2-body / 3-body</p></td>
+<td><p>−4,011.7 /
++72.9 /
++305.1</p></td>
+<td><p>−2,606.7 /
+−33.3 /
++580.2</p></td>
+</tr>
+<tr class="row-even"><td><p>MBE correction to P, molecular (atm)</p></td>
+<td><p>−77.2</p></td>
+<td><p>−71.5</p></td>
+</tr>
+<tr class="row-odd"><td><p>— 1-body / 2-body / 3-body</p></td>
+<td><p>−0.6 /
+−357.1 /
++280.5</p></td>
+<td><p>−1.0 /
+−756.2 /
++685.7</p></td>
+</tr>
+<tr class="row-even"><td><p>largest increment net force (meV/Å)</p></td>
+<td><p>9.15</p></td>
+<td><p>7.25</p></td>
+</tr>
+<tr class="row-odd"><td><p>cost (core-h)</p></td>
+<td><p>~4,600</p></td>
+<td><p>5,180</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Notes:</p>
+<ul>
+<li><p>A triple is “closed” when all three of its pairs are within 3.0 Å, and a
+“chain” when two are.</p></li>
+<li><p>The EC molecular breakdown was computed afterwards from its increments
+(<code class="docutils literal notranslate"><span class="pre">ec_pilot/molecular_by_body.py</span></code>); the step prints it since mbe_step
+2026.10.6.3.</p></li>
+<li><p><strong>Net forces by order:</strong> monomers at most 10.4 meV/Å (m27, the ORCA − VASP
+monomer increment), pairs 1.9 meV/Å, triples 4.7 meV/Å.</p></li>
+<li><p><strong>The many-body terms are smaller than EC’s:</strong> the 2-body term is 72% of EC’s
+and the 3-body term 30%. In the molecular virial, the 2- and 3-body terms
+again largely cancel, leaving a correction of −77 atm, close to EC’s −72 atm.</p></li>
+<li><p><strong>FEC’s cost:</strong> about 4,600 core-h for the final run, which recomputed the cell
+and 728 high-level tasks and reused the rest. The six attempts used about
+7,230 core-h in all:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>level</p></th>
+<th class="head"><p>core-h</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>high (triples)</p></td>
+<td><p>5,280</p></td>
+</tr>
+<tr class="row-odd"><td><p>high (pairs)</p></td>
+<td><p>825</p></td>
+</tr>
+<tr class="row-even"><td><p>cell</p></td>
+<td><p>425</p></td>
+</tr>
+<tr class="row-odd"><td><p>molecular triples</p></td>
+<td><p>413</p></td>
+</tr>
+<tr class="row-even"><td><p>periodic monomers</p></td>
+<td><p>163</p></td>
+</tr>
+<tr class="row-odd"><td><p>molecular pairs</p></td>
+<td><p>126</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>These are sacct CPU times of the bundles whose logs remain; bundles cancelled
+in the first attempts are partly missing.</p>
 </li>
 </ul>
 </section>
-<section id="expected-counts-for-the-pilot-frame">
-<h2>Expected counts for the pilot frame<a class="headerlink" href="#expected-counts-for-the-pilot-frame" title="Link to this heading">#</a></h2>
-<p>The frame is from ChemAI job 5170: 32 EC, a cubic cell of 15.2423 Å, with the
-cell held fixed in the minimization. Enumerated with seamm-mbe 2026.10.5.1 at the
-settings above, it gives:</p>
+<section id="the-cell-s-scf">
+<h2>The cell’s SCF<a class="headerlink" href="#the-cell-s-scf" title="Link to this heading">#</a></h2>
+<p>VASP’s minimizer for the whole cell needed three changes to converge both
+carbonates:</p>
+<ul>
+<li><p><strong>ALGO = All with the new line search (ISEARCH = 1)</strong>, vasp-step up to
+2026.10.6, converged EC in 30 steps. On FEC it aborted at SCF step 6, the
+first self-consistent step, with “EDWAV: internal error, the gradient is not
+orthogonal”, on 24 and 32 ranks alike.</p></li>
+<li><p><strong>ALGO = Normal (Davidson) with VASP’s default mixing</strong>, vasp-step 2026.10.7,
+diverged on FEC. The density residual grew from 1.5 to 7.6 over steps 10–30,
+and the energy swung by up to 500 eV a step. It was cancelled after 6.5 hours.</p></li>
+<li><p><strong>A three-way test on the FEC cell’s own inputs</strong> (64 ranks, TinkerCliffs
+7884921):</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>setting</p></th>
+<th class="head"><p>FEC</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ALGO = All, ISEARCH = 0</p></td>
+<td><p>converged, 44 steps, −2210.922324 eV</p></td>
+</tr>
+<tr class="row-odd"><td><p>Normal, AMIX 0.2, BMIX 0.0001,</p></td>
+<td><p>converged, 24 steps, −2210.922324 eV</p></td>
+</tr>
+<tr class="row-even"><td><p>MAXMIX 50</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>ALGO = Damped, TIME 0.2</p></td>
+<td><p>~100 eV off after 10 steps; cancelled</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</li>
+<li><p><strong>The EC check</strong> (7890904, 7899733):</p>
 <ul class="simple">
-<li><p>2 warnings, one for the pairs’ bound and one for the triples’;</p></li>
-<li><p>32 monomers;</p></li>
-<li><p>241 pairs, 15.1 contacts per molecule;</p></li>
-<li><p>878 connected triples. Fifteen molecule sets each form three different triples,
-e.g. (0, 1, 25) gives <code class="docutils literal notranslate"><span class="pre">t00_01_25</span></code>, <code class="docutils literal notranslate"><span class="pre">t00_01_25_xm0mm0m</span></code> and
-<code class="docutils literal notranslate"><span class="pre">t00_01_25_xm00m00</span></code>;</p></li>
-<li><p>443 auxiliary pairs, the triples’ outer pairs and image pairs;</p></li>
-<li><p>1,594 fragments in all, with unique names.</p></li>
+<li><p>Normal with the gentler mixing came within 0.4 eV at step 10, then
+collapsed: by step 23 the energy was −1.4 × 10⁶ eV.</p></li>
+<li><p>ALGO = All with ISEARCH = 0 converged in 33 steps to −2153.9255 eV, the
+energy of EC’s original run with ISEARCH = 1 (30 steps), so the legacy line
+search costs EC almost nothing.</p></li>
 </ul>
-<p>A pilot run on this frame should list exactly these. A different count means the
-enumeration or the settings changed.</p>
+</li>
+</ul>
+<p>So since vasp-step 2026.10.8 a whole cell uses ALGO = All with ISEARCH = 0, and
+fragments keep ISEARCH = 1. In the pilot the FEC cell converged in 27 steps, in
+2 h 22 min on 64 ranks, to −2210.92232 eV. The cell’s time limit is 3× the
+hand-fitted estimate; on 32 ranks that is 11:15 against about 8 hours, so the
+pilot used 64 ranks (an 8-hour limit against the measured 2.4 hours).</p>
 </section>
-<section id="the-staged-pre-pilot-tinkercliffs-job-7859415">
-<h2>The staged pre-pilot (TinkerCliffs job 7859415)<a class="headerlink" href="#the-staged-pre-pilot-tinkercliffs-job-7859415" title="Link to this heading">#</a></h2>
-<p>The pre-pilot ran before the image fix, so its 48 fragments were sampled from the
-2×2×2 supercell, where images are not ambiguous. Each fragment was mapped back
-to the 32-EC cell’s grid. The run computes:</p>
+<section id="the-runs">
+<h2>The runs<a class="headerlink" href="#the-runs" title="Link to this heading">#</a></h2>
+<ol class="arabic">
+<li><p><strong>Attempts 1–2</strong> (32 and 24 cell ranks): the cell aborted with EDWAV on ALGO =
+All. The fix was vasp-step 2026.10.7 (ALGO = Normal for cells).</p></li>
+<li><p><strong>Attempt 3:</strong> seamm-exec 2026.10.6’s cost model was fitted only on science’s
+timing rows, and it predicted about 13 s per ORCA task. So it packed about 240
+tasks into each 51-minute bundle. The ORCA bundles were cancelled. The fix was
+seamm-exec 2026.10.7, which refuses to predict outside the fitted range.</p></li>
+<li><p><strong>Attempt 4</strong> sat idle. The tasks lost in attempt 3’s timeouts had used their
+three attempts, so they were never resubmitted. Their manifest entries (state
+lost, attempts ≥ 3) were deleted, keeping backups
+<code class="docutils literal notranslate"><span class="pre">*/tasks/manifest.json.before-reset-2026-10-07</span></code>.</p></li>
+<li><p><strong>Attempt 5</strong> (7881654) had two problems:</p>
 <ul class="simple">
-<li><p>all 48 fragments with VASP in a box the size of the cell;</p></li>
-<li><p>all 48 with ORCA at TZ, and the 43 monomers and pairs at QZ;</p></li>
-<li><p>the tightest stacked pair, d00_26, and its two monomers with VASP in a 1.5×
-box.</p></li>
+<li><p>the cell diverged on ALGO = Normal (above);</p></li>
+<li><p>22 high and 706 high-triples tasks could never run. The bundles cancelled in
+attempt 3 had left them with state cancelled and three attempts, and the
+reset had removed only the lost ones.</p></li>
 </ul>
-<p>It compares the VASP and ORCA increments by body order and contact class, and the
-pair’s box-image effect at 1.5×.</p>
-<p>The probe calibrated the VASP cost:</p>
+<p>It was cancelled, and those entries were deleted too (backups
+<code class="docutils literal notranslate"><span class="pre">*.before-reset2-2026-10-07</span></code>).</p>
+</li>
+<li><p><strong>Attempt 6</strong> (7903005) ran on vasp-step 2026.10.8 with 64 cell ranks:</p>
 <ul class="simple">
-<li><p>an EC monomer in the cell-sized box took 1,543 s on 8 ranks, 3.4 core-h, with a
-peak of about 2.3 GB per rank, so 4 GB per rank is needed;</p></li>
-<li><p>that is 0.656 of the model’s time.</p></li>
+<li><p>the ORCA triples went one per 4-hour bundle;</p></li>
+<li><p>seven tasks timed out on a contended node, with six triples on tc307 in the
+MP2 gradient at about 26% CPU, and passed on retry;</p></li>
+<li><p>it finished in 5.5 hours.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="lessons">
+<h2>Lessons<a class="headerlink" href="#lessons" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Resetting after a cancellation:</strong> delete the manifest entries that are not
+finished and have used their attempts, whatever their state, not only the
+lost ones. Check first for a DONE marker. Tasks that finished before the
+cancellation can still show “cancelled” or no state, but their DONE is reused.
+seamm-exec dev f9aba39 (unreleased) fixes both: cancelling collects tasks
+whose DONE or FAILED exists, and a cancelled task gets its attempt back.</p></li>
+<li><p><strong>Timeouts counted as attempts,</strong> so a low estimate burned a task’s three
+attempts. In seamm-exec dev f9aba39 (unreleased) the first <code class="docutils literal notranslate"><span class="pre">max_timeouts</span></code>
+(default 4) timeouts don’t count; each retry still doubles the time.</p></li>
+<li><p><strong>Bundles in a queue wrote no wall time</strong> in their timing records, so none of
+this pilot’s ORCA rows could be fitted. Fixed in seamm-exec 2026.10.8.1.</p></li>
+<li><p><strong>A converged cell SCF on one carbonate says little about another.</strong> Check a
+new cell’s SCF on its own inputs before a pilot, e.g. 15 steps on 64 ranks,
+about an hour.</p></li>
 </ul>
 </section>
 </section>
@@ -603,20 +805,20 @@ peak of about 2.3 GB per rank, so 4 GB per rank is needed;</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../2026-10-03/index.html"
+       href="../2026-10-05/index.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">2026-10-03: the MBE step, phase 2 (<code class="docutils literal notranslate"><span class="pre">mbe_step</span></code>)</p>
+        <p class="prev-next-title">2026-10-05: preparing the 32-EC pilot</p>
       </div>
     </a>
     <a class="right-next"
-       href="../2026-10-08/index.html"
+       href="../../../api/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">2026-10-08: the 32-FEC pilot</p>
+        <p class="prev-next-title">API Documentation</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -639,16 +841,18 @@ peak of about 2.3 GB per rank, so 4 GB per rank is needed;</p></li>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-it-needed">What it needed</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#expected-counts-for-the-pilot-frame">Expected counts for the pilot frame</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-staged-pre-pilot-tinkercliffs-job-7859415">The staged pre-pilot (TinkerCliffs job 7859415)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-files">The files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#results">Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-cell-s-scf">The cell’s SCF</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-runs">The runs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lessons">Lessons</a></li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../../_sources/developer_guide/campaigns/2026-10-05/index.rst.txt">
+    <a href="../../../_sources/developer_guide/campaigns/2026-10-08/index.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>
