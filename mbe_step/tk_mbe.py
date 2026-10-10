@@ -7,6 +7,8 @@ import tkinter as tk
 import tkinter.ttk as ttk
 
 import seamm
+
+from .mbe_parameters import CRITERIA
 from seamm_util import ureg, Q_, units_class  # noqa: F401
 import seamm_widgets as sw
 
@@ -34,6 +36,10 @@ GROUPS = {
             "triple rule",
             "triple cutoff",
             "triple cutoff table",
+            "ion shells",
+            "ion shell cutoffs",
+            "shell members",
+            "shell truncation",
             "counterpoise",
         ),
     ),
@@ -60,7 +66,13 @@ GROUPS = {
 }
 
 #: Parameters whose value changes the layout
-DRIVERS = ("maximum order", "cutoffs", "triple rule", "periodic low level")
+DRIVERS = (
+    "maximum order",
+    "cutoffs",
+    "triple rule",
+    "periodic low level",
+    "ion shells",
+)
 
 
 class TkMbe(seamm.TkNode):
@@ -164,6 +176,22 @@ class TkMbe(seamm.TkNode):
         sw.align_labels(widgets, sticky=tk.E)
         row += 1
 
+        # Ion shells need a contact criterion (a shell's designated atom is its
+        # ion), and counterpoise is not available with them: offer only what
+        # works, and don't leave a hidden choice that would fail at run time.
+        criteria = list(CRITERIA)
+        if self._value("ion shells") != "none":
+            criteria = [c for c in CRITERIA if "contact" in c]
+            if self._value("distance criterion") not in criteria:
+                self["distance criterion"].set("closest contact")
+            try:
+                self["counterpoise"].set("none")
+            except Exception:
+                pass
+        try:
+            self["distance criterion"].combobox.config(values=criteria)
+        except Exception:
+            pass
         shown = self.shown()
         for group in GROUPS:
             subframe = self[f"{group} frame"]
@@ -196,10 +224,15 @@ class TkMbe(seamm.TkNode):
             # The triples' own levels only apply when there are triples
             shown.discard("triples high level")
             shown.discard("triples low level")
-        shown |= {"maximum order", "distance criterion"}
-        if order >= 2 and not periodic:
+        shown |= {"maximum order", "distance criterion", "ion shells"}
+        shells = self._value("ion shells") != "none"
+        if shells:
+            shown |= {"ion shell cutoffs", "shell members"}
+            if triples:
+                shown.add("shell truncation")
+        if order >= 2 and not periodic and not shells:
             # counterpoise is refused for periodic cells, which a periodic low
-            # level implies
+            # level implies, and with ion shells
             shown.add("counterpoise")
         shown |= {"molecular ranks", "molecular memory", "molecular bundle"}
         shown |= {"cell ranks", "cell memory", "bundle walltime", "archive"}

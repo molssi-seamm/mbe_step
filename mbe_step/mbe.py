@@ -207,6 +207,17 @@ class Mbe(seamm.Node):
             if order >= 3 and P["triple rule"] != "none":
                 text += f", and {P['triple rule']} triples"
             text += f" ({P['distance criterion']})."
+            if P["ion shells"] != "none":
+                text += (
+                    " Each Li+ and the molecules in its first shell are one unit of "
+                    f"the expansion (shell cutoffs {P['ion shell cutoffs']}"
+                )
+                if int(P["shell members"]) > 0:
+                    text += f", at most {P['shell members']} molecules"
+                text += ")"
+                if P["shell truncation"] == "pairs":
+                    text += ", and a shell's pairs are selected but not its triples"
+                text += "."
             if P["counterpoise"] == "pairwise":
                 text += (
                     " Each pair is corrected for the basis-set superposition error "
@@ -317,11 +328,23 @@ class Mbe(seamm.Node):
                 else P["triple cutoff"].m_as("Å")
             )
             rules[3] = P["triple rule"]
+        shells = self._shell_rules(P) is not None
         return seamm_mbe.SelectionRules(
             max_order=order,
             criterion=CRITERIA[P["distance criterion"]],
             cutoffs=cutoffs,
             rules=rules,
+            shell_max_order=2 if shells and P["shell truncation"] == "pairs" else None,
+        )
+
+    def _shell_rules(self, P):
+        """The seamm_mbe ion-shell rules from the parameters, or None."""
+        if P["ion shells"] == "none":
+            return None
+        members = int(P["shell members"])
+        return seamm_mbe.IonShellRules(
+            cutoffs=labels_.parse_shells(P["ion shell cutoffs"]),
+            max_members=members if members > 0 else None,
         )
 
     def _frame(self, configuration, rules, P):
@@ -336,7 +359,14 @@ class Mbe(seamm.Node):
                 )
             )
         system = seamm_mbe.System.from_configuration(configuration)
-        fragments = seamm_mbe.enumerate_fragments(system, rules)
+        # With ion shells the fragments are built from units (each shell one
+        # unit); the real system keeps the molecules, for the energy offsets,
+        # the charges and the molecular virial.
+        shell_rules = self._shell_rules(P)
+        units = (
+            system if shell_rules is None else seamm_mbe.ion_shells(system, shell_rules)
+        )
+        fragments = seamm_mbe.enumerate_fragments(units, rules)
         periodic = {}
         if P["periodic low level"] != "none":
             periodic[1] = _truthy(P["periodic monomers"])
@@ -379,6 +409,11 @@ class Mbe(seamm.Node):
             raise ValueError(
                 f"Configuration {name} has charge {given:+d}, but its molecules' "
                 f"charges add up to {total:+d}."
+            )
+        if P["ion shells"] != "none" and P["counterpoise"] != "none":
+            raise ValueError(
+                "Counterpoise corrections are not available with ion shells yet: "
+                "the ghost calculations are built per molecule, not per shell."
             )
         open_shell = sorted(
             t.name for t in system.types.values() if t.multiplicity != 1
@@ -863,6 +898,11 @@ class Mbe(seamm.Node):
                 "energy": float(inc.energy),
                 "forces": np.asarray(inc.forces).tolist(),
             }
+            members = getattr(fragments.system, "members", None)
+            if members is not None:
+                # With ion shells the "molecules" are units: the real molecules
+                # each holds (a shell's ion first)
+                record["members"] = [[int(m) for m in members[u]] for u in f.molecules]
             if inc.order == 3:
                 # The cutoffs the enumerator used, per slot pair (tables too)
                 n = 0
@@ -944,8 +984,19 @@ class Mbe(seamm.Node):
             types = ", ".join(
                 f"{c} {t}" for t, c in frame["system"].type_counts().items()
             )
-            text = [
-                f"{configuration.name}: {n} molecules ({types})",
+            text = [f"{configuration.name}: {n} molecules ({types})"]
+            shells = getattr(fragments.system, "shell_sizes", dict)()
+            if shells:
+                sizes = sorted(shells.values())
+                span = (
+                    f"{sizes[0]}"
+                    if sizes[0] == sizes[-1]
+                    else f"{sizes[0]}-{sizes[-1]}"
+                )
+                text.append(
+                    f"    ion shells: {len(sizes)}, of {span} molecules besides the ion"
+                )
+            text += [
                 f"    fragments: {labels_.counts_text(fragments)}",
                 f"    calculations: {len(calcs['high']) + ghosts['high']} high, "
                 + (

@@ -3,7 +3,7 @@ molsystem>=2026.9.20
 numpy
 seamm-bsse>=2026.8.7.1
 seamm-exec>=2026.10.6.2
-seamm-mbe>=2026.10.6.1
+seamm-mbe>=2026.10.10
 seamm-thermochemistry>=2026.9.28
 seamm-util
 seamm-widgets

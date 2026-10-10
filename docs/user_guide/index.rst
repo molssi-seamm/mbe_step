@@ -195,6 +195,60 @@ The step runs the cell at the Γ point alone, so with VASP the cell must be at l
 10 Å across; VASP refuses a smaller cell, and the step reports it as a failed
 calculation.
 
+Ion shells
+==========
+
+Around a small, strongly polarizing ion such as Li⁺, the per-molecule expansion
+converges slowly. In a test cluster of Li⁺, BF₄⁻, six waters and four EC molecules,
+the Li⁺ 3-body [revDSD − r2SCAN] increments summed to about +20 kJ/mol and the
+4-body ones to −5 to −18 kJ/mol.
+
+**Ion shells** *Li+ first shell* fixes this. Each Li⁺ and the molecules in its
+first shell become one unit of the expansion, and pairs and triples are then
+built from units. In the test cluster this brought the error at triples to +1–2
+kJ/mol and the forces to 3.6 meV/Å RMS.
+
+- **Who joins a shell:** a molecule with an atom of a listed element within that
+  element's cutoff of the ion. **Shell cutoffs** defaults to ``Li O 2.6; Li F
+  2.6``, just inside the first minima of g(r) in carbonate electrolytes.
+- **When:** the shells are rebuilt for every configuration.
+- **Anions:** an anion in contact with Li⁺ joins its shell. Anions get no shells
+  of their own.
+- **Shared molecules:** a molecule within reach of two ions joins the nearer one,
+  so shells never overlap.
+- **Crowded shells:** **Most molecules in a shell** (default 5) keeps a crowded
+  shell's nearest molecules. The others stay units of their own.
+- **Cheaper truncation:** a shell has 40–70 atoms, so its triples hold most of the
+  cost. **Fragments with a shell** *pairs* selects a shell's pairs but none of its
+  triples.
+
+What stays per molecule:
+
+- the energy offsets;
+- the charges, which a shell's charge sums;
+- the molecular virial.
+
+The job output lists the shells and their sizes for each configuration.
+In ``increments_c<id>.json``, each increment's ``members`` lists the real
+molecules in each of its units.
+
+**A contact criterion.** Ion shells need **Distance between molecules** set to a
+contact criterion. A shell's designated atom is its ion, so measuring from it
+would miss partners near the shell's members. The dialog offers only the contact
+criteria when shells are on.
+
+**Larger cells.** The selection needs the cell's smallest width to exceed the pair
+cutoff plus twice the largest unit's radius, so shells need larger cells than
+single molecules (about 17 Å for carbonate shells). A cell that is too small is
+refused, with the reason.
+
+**Not yet available:**
+
+- **counterpoise:** it is hidden in the dialog, and refused at run time;
+- **a periodic low level for a charged shell's monomer term:** a charged unit in a
+  box picks up a Madelung energy that depends on the box. Validate it before
+  relying on it.
+
 Counterpoise
 ============
 

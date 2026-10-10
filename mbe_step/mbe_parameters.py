@@ -228,6 +228,60 @@ class MbeParameters(seamm.Parameters):
                 "the pair cutoffs."
             ),
         },
+        # ------------------------------------------------------------ ion shells
+        "ion shells": {
+            "default": "none",
+            "kind": "enum",
+            "default_units": "",
+            "enumeration": ("none", "Li+ first shell"),
+            "format_string": "",
+            "description": "Ion shells:",
+            "help_text": (
+                "'Li+ first shell' makes each Li+ and the molecules in its first "
+                "shell one unit of the expansion, rebuilt for each configuration: "
+                "around Li+ the per-molecule expansion converges slowly (its 3- "
+                "and 4-body increments are large), while with the shell as one "
+                "unit it converges as for neutral molecules."
+            ),
+        },
+        "ion shell cutoffs": {
+            "default": "Li O 2.6; Li F 2.6",
+            "kind": "string",
+            "default_units": "",
+            "enumeration": tuple(),
+            "format_string": "",
+            "description": "Shell cutoffs (Å):",
+            "help_text": (
+                "Entries 'ion-element partner-element cutoff' separated by ';': a "
+                "molecule joins an ion's shell when one of its atoms of a listed "
+                "element is within the cutoff of the ion. A molecule within reach "
+                "of two ions joins the nearer one."
+            ),
+        },
+        "shell members": {
+            "default": 5,
+            "kind": "integer",
+            "default_units": "",
+            "enumeration": tuple(),
+            "format_string": "",
+            "description": "Most molecules in a shell:",
+            "help_text": (
+                "A crowded shell keeps its nearest molecules and the others "
+                "remain units of their own. 0 for no limit."
+            ),
+        },
+        "shell truncation": {
+            "default": "as the other fragments",
+            "kind": "enum",
+            "default_units": "",
+            "enumeration": ("as the other fragments", "pairs"),
+            "format_string": "",
+            "description": "Fragments with a shell:",
+            "help_text": (
+                "'pairs' selects a shell's pairs but none of its triples, which "
+                "hold most of the cost (a shell has 40-70 atoms)."
+            ),
+        },
         # ------------------------------------------------- low-level assignment
         "periodic monomers": {
             "default": "yes",

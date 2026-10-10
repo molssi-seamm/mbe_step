@@ -149,3 +149,28 @@ def test_triples_low_level_only_with_triples(tk_node):
     tk_node["triple rule"].set("none")
     tk_node.reset_dialog()
     assert not mapped(tk_node, "triples low level")
+
+
+def test_ion_shell_layouts(tk_node):
+    tk_node.create_dialog()
+    tk_node.reset_dialog()
+    assert mapped(tk_node, "ion shells")
+    assert not mapped(tk_node, "ion shell cutoffs")
+    assert mapped(tk_node, "counterpoise")
+
+    tk_node["counterpoise"].set("pairwise")
+    tk_node["ion shells"].set("Li+ first shell")
+    tk_node.reset_dialog()
+    assert mapped(tk_node, "ion shell cutoffs") and mapped(tk_node, "shell members")
+    assert mapped(tk_node, "shell truncation")
+    # Not available with shells: hidden, and set back to none
+    assert not mapped(tk_node, "counterpoise")
+    assert tk_node["counterpoise"].get() == "none"
+    # Only the contact criteria, and the default designated atoms moved off
+    assert tk_node["distance criterion"].get() == "closest contact"
+    values = list(tk_node["distance criterion"].combobox.cget("values"))
+    assert values == ["closest contact", "closest heavy-atom contact"]
+
+    tk_node["maximum order"].set("2")
+    tk_node.reset_dialog()
+    assert not mapped(tk_node, "shell truncation")

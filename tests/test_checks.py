@@ -182,3 +182,61 @@ def test_real_evaluator_with_resources(tmp_path):
     assert results["c1-m00"].energy == pytest.approx(-1.5)
     (resources,) = FakeProvider.seen
     assert resources.ntasks == 4 and resources.mem_per_cpu == 1_500_000_000
+
+
+def test_ion_shells_make_units(db):
+    """Li+ with a water at 2.0 Å (its shell) and one beyond: the fragments are
+    built from two units, the shell (charge +1) and the other water, while the
+    system keeps its three molecules."""
+    xyz = [[-2.0, 0.0, 0.0]] + WATERS
+    conf = configuration(
+        db, ["Li"] + ["O", "H", "H"] * 2, xyz, bonds=[(1, 2), (1, 3), (4, 5), (4, 6)]
+    )
+    node, P = parameters(
+        **{"ion shells": "Li+ first shell", "distance criterion": "closest contact"}
+    )
+    rules = node._rules(P)
+    assert rules.shell_max_order is None
+    frame = node._frame(conf, rules, P)
+    assert len(frame["system"].molecules) == 3
+    fragments = frame["fragments"]
+    assert fragments.system.members == [(0, 1), (2,)]
+    shell = fragments["m00"]
+    assert list(shell.atoms) == [0, 1, 2, 3] and shell.charge == 1
+    assert fragments["m01"].charge == 0
+    assert "d00_01" in fragments
+    geometry = levels.geometry(frame["system"], shell)
+    assert seamm_exec.structure_data(geometry)["charge"] == 1
+
+    node, P = parameters(
+        **{"ion shells": "Li+ first shell", "shell truncation": "pairs"}
+    )
+    assert node._rules(P).shell_max_order == 2
+
+    node, P = parameters(
+        **{
+            "ion shells": "Li+ first shell",
+            "distance criterion": "closest contact",
+            "counterpoise": "pairwise",
+        }
+    )
+    with pytest.raises(ValueError, match="not available with ion shells"):
+        node._frame(conf, node._rules(P), P)
+
+
+def test_shell_cutoffs_are_parsed():
+    from mbe_step import labels
+
+    assert labels.parse_shells("Li O 2.6; Li F 2.5") == {"Li": {"O": 2.6, "F": 2.5}}
+    with pytest.raises(ValueError, match="explicit elements"):
+        labels.parse_shells("Li * 2.6")
+
+
+def test_ion_shells_need_a_contact_criterion(db):
+    xyz = [[-2.0, 0.0, 0.0]] + WATERS
+    conf = configuration(
+        db, ["Li"] + ["O", "H", "H"] * 2, xyz, bonds=[(1, 2), (1, 3), (4, 5), (4, 6)]
+    )
+    node, P = parameters(**{"ion shells": "Li+ first shell"})  # designated atoms
+    with pytest.raises(seamm_mbe.SelectionError, match="contact criterion"):
+        node._frame(conf, node._rules(P), P)

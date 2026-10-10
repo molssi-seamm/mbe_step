@@ -8,6 +8,30 @@ import numpy as np
 import seamm_mbe
 
 
+def parse_shells(text):
+    """The ion-shell cutoffs.
+
+    Parameters
+    ----------
+    text : str
+        Entries 'ion-element partner-element cutoff' separated by ';' or new
+        lines, e.g. 'Li O 2.6; Li F 2.6'.
+
+    Returns
+    -------
+    {str: {str: float}}
+        Per ion element, the cutoff (Å) to each partner element.
+    """
+    table = {}
+    for (ion, partner), value in parse_table(text, "shell cutoff").items():
+        if "*" in (ion, partner):
+            raise ValueError(
+                f"The shell cutoffs need explicit elements, not '*' ({ion} {partner})."
+            )
+        table.setdefault(ion, {})[partner] = value
+    return table
+
+
 def parse_table(text, what="cutoff"):
     """A table of values by molecule-type pair.
 

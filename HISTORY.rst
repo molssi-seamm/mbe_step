@@ -2,6 +2,22 @@
 History
 =======
 
+2026.10.10 -- Ion shells
+    * 'Ion shells' *Li+ first shell* makes each Li⁺ and the molecules in its first
+      shell one unit of the expansion, rebuilt for every configuration. Around Li⁺
+      the per-molecule expansion converges slowly; with the shell as one unit it
+      converges as for neutral molecules. 'Shell cutoffs' (default Li-O and Li-F
+      2.6 Å) say who joins, a molecule near two ions joins the nearer one, and 'Most
+      molecules in a shell' (default 5) caps crowded shells. 'Fragments with a
+      shell' *pairs* selects a shell's pairs but not its triples, which hold most
+      of the cost. The job output lists the shells per configuration, and the
+      increments file lists each unit's molecules. Shells need a contact
+      criterion; the dialog offers only those when shells are on.
+    * The energy offsets, the charges and the molecular virial stay per molecule.
+      Counterpoise is not available with ion shells yet (hidden in the dialog,
+      refused at run time).
+    * Requires seamm-mbe 2026.10.10.
+
 2026.10.7 -- Energies on the DfE0 scale by default
     * The new default for 'energy offsets', "DfE0 (from the thermochemistry
       database)", puts the labels on the energy-of-formation scale (DfE0, at 0 K)
