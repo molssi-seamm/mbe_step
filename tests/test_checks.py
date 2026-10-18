@@ -146,7 +146,7 @@ class FakeProvider:
     ):
         n = len(seamm_exec.structure_data(configuration)["atomic_numbers"])
         return {
-            "energy": float(result.files["energy.txt"]),
+            "energy": float(result.read("energy.txt")),
             "gradients": np.zeros((n, 3)),
         }
 
