@@ -1,6 +1,11 @@
 =======
 History
 =======
+2026.10.18 -- Internal: requires seamm-exec 2026.10.18
+    * seamm-exec 2026.10.18 records where each file a task returns is, not its contents.
+      The MBE step's tests read them with ``result.read()``, so it requires that
+      version.
+
 
 2026.10.10 -- Ion shells
     * 'Ion shells' *Li+ first shell* makes each Li⁺ and the molecules in its first
