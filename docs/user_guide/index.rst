@@ -179,13 +179,21 @@ memory of each calculation and how many share a batch job. Finished bundles are
 archived, keeping a configuration to a few files.
 
 **Larger fragments** give more cores and memory to the larger molecular
-fragments, as entries ``atoms ranks memory`` (MB per rank) separated by ``;``. For
-example ``60 16 8000`` runs every molecular fragment of 60 atoms or more with 16
-cores of 8,000 MB and the rest with the molecular cores and memory. A Li⁺ shell
-pair can have 90–115 atoms, against 20–30 for a solvent pair or triple. Each size
-runs as its own set of jobs, in the directory ``<level>_<atoms>``, at the same time
-as the others, and a rerun finds the finished calculations there. The step can't
-yet check a size against what the queue's nodes can hold, so make sure it fits.
+fragments, as entries ``atoms ranks memory [bundle]`` (MB per rank) separated by
+``;``. For example ``60 16 8000`` runs every molecular fragment of 60 atoms or more
+with 16 cores of 8,000 MB and the rest with the molecular cores and memory. A Li⁺
+shell pair can have 90–115 atoms, against 20–30 for a solvent pair or triple. Each
+size runs as its own set of jobs, in the directory ``<level>_<atoms>``, at the same
+time as the others, and a rerun finds the finished calculations there. The step
+can't yet check a size against what the queue's nodes can hold, so make sure it
+fits.
+
+The optional fourth field sets how many calculations of that size share a job
+(otherwise **Molecular calculations per job**). Use it to keep the many short
+calculations bundled while the long ones each get a job of their own, e.g.
+``30 8 6000 8; 45 32 7000 1``. One calculation per job for everything is slow on a
+busy cluster: schedulers start only a few of a user's jobs at a time, so thousands
+of 20-minute jobs leave the cores idle between them.
 
 **Task options** pass options to every calculation of a level, as entries
 ``level key=value ...`` separated by ``;``. The levels are ``high``, ``high:3``,

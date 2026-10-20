@@ -460,13 +460,16 @@ class MbeParameters(seamm.Parameters):
             "default_units": "",
             "enumeration": tuple(),
             "format_string": "",
-            "description": "Larger fragments (atoms ranks MB):",
+            "description": "Larger fragments (atoms ranks MB [per job]):",
             "help_text": (
                 "More cores and memory for the larger molecular fragments, as "
-                "entries 'atoms ranks memory' separated by ';': fragments of at "
-                "least that many atoms run with that many MPI ranks and that much "
-                "memory per rank (MB). For example '40 4 6000; 60 16 8000'. Each "
-                "size runs as its own set of jobs, in the directory "
+                "entries 'atoms ranks memory [bundle]' separated by ';': fragments "
+                "of at least that many atoms run with that many MPI ranks and that "
+                "much memory per rank (MB), and, if given, that many calculations "
+                "per job (otherwise the molecular calculations per job). For "
+                "example '30 8 6000 8; 45 32 7000 1' packs eight 30-44-atom "
+                "fragments per job but gives each larger one a job of its own. "
+                "Each size runs as its own set of jobs, in the directory "
                 "<level>_<atoms>, at the same time as the others. Blank for every "
                 "molecular calculation at the molecular ranks and memory."
             ),

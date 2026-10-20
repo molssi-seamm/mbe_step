@@ -266,7 +266,9 @@ class Mbe(seamm.Node):
             text += (
                 " Larger molecular fragments run with more resources: "
                 + "; ".join(
-                    f"from {a} atoms {r} cores of {m:.0f} MB" for a, r, m in tiers
+                    f"from {a} atoms {r} cores of {m:.0f} MB"
+                    + (f", {b} per job" if b else "")
+                    for a, r, m, b in tiers
                 )
                 + "."
             )

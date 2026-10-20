@@ -201,11 +201,18 @@ def test_a_shell_level_equal_to_the_high_level_is_refused(db, monkeypatch):
 def test_parse_resources():
     assert levels.parse_resources("") == []
     assert levels.parse_resources("none") == []
-    assert levels.parse_resources("60 16 8000; 40 4 6000") == [
-        (40, 4, 6000.0),
-        (60, 16, 8000.0),
+    assert levels.parse_resources("60 16 8000 1; 40 4 6000") == [
+        (40, 4, 6000.0, None),
+        (60, 16, 8000.0, 1),
     ]
-    for bad in ("60 16", "a 4 6000", "40 0 6000", "40 4 6000; 40 8 8000"):
+    for bad in (
+        "60 16",
+        "a 4 6000",
+        "40 0 6000",
+        "40 4 6000; 40 8 8000",
+        "40 4 6000 0",
+        "40 4 6000 1 2",
+    ):
         with pytest.raises(ValueError):
             levels.parse_resources(bad)
 
@@ -225,15 +232,16 @@ def test_split_by_size():
         bundle=8,
         walltime=0,
         archive=False,
-        tiers=levels.parse_resources("40 4 6000; 60 16 8000"),
+        tiers=levels.parse_resources("40 4 6000; 60 16 8000 1"),
     )
     structures = {f"s{n}": _structure(n) for n in (10, 39, 40, 59, 60, 114)}
     structures["opt"] = (_structure(70), {"grid": {}})
-    parts = {name: (r, m, sorted(s)) for name, r, m, s in lv.split(structures)}
+    parts = {name: (r, m, b, sorted(s)) for name, r, m, b, s in lv.split(structures)}
+    # a tier's own bundle size, else the level's (8)
     assert parts == {
-        "high": (2, 3800, ["s10", "s39"]),
-        "high_40": (4, 6000.0, ["s40", "s59"]),
-        "high_60": (16, 8000.0, ["opt", "s114", "s60"]),
+        "high": (2, 3800, 8, ["s10", "s39"]),
+        "high_40": (4, 6000.0, 8, ["s40", "s59"]),
+        "high_60": (16, 8000.0, 1, ["opt", "s114", "s60"]),
     }
     # a tier with nothing in it is left out
     small = {"a": _structure(5)}
@@ -243,8 +251,8 @@ def test_split_by_size():
 def test_tiers_run_as_their_own_evaluators(monkeypatch):
     calls = []
 
-    def fake(self, node, structures, directory, ranks, memory, stress):
-        calls.append((directory, ranks, memory, sorted(structures)))
+    def fake(self, node, structures, directory, ranks, memory, stress, bundle=None):
+        calls.append((directory, ranks, memory, bundle, sorted(structures)))
         return {key: key for key in structures}
 
     monkeypatch.setattr(levels.Level, "_evaluate", fake)
@@ -256,17 +264,17 @@ def test_tiers_run_as_their_own_evaluators(monkeypatch):
         bundle=8,
         walltime=0,
         archive=False,
-        tiers=[(60, 16, 8000.0)],
+        tiers=[(60, 16, 8000.0, 1)],
     )
     structures = {"a": _structure(20), "b": _structure(90)}
     results = lv.evaluate(None, structures)
     assert results == {"a": "a", "b": "b"}
     assert sorted(calls) == [
-        ("molecular", 2, 3800, ["a"]),
-        ("molecular_60", 16, 8000.0, ["b"]),
+        ("molecular", 2, 3800, 8, ["a"]),
+        ("molecular_60", 16, 8000.0, 1, ["b"]),
     ]
     # without tiers, one Evaluator in the level's own directory
     calls.clear()
     lv.tiers = []
     lv.evaluate(None, structures)
-    assert calls == [("molecular", 2, 3800.0, ["a", "b"])]
+    assert calls == [("molecular", 2, 3800.0, 8, ["a", "b"])]
