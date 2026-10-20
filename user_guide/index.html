@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.18 documentation</title>
+    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.20 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=16cc37ab"></script>
+    <script src="../_static/documentation_options.js?v=980f7468"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -55,7 +55,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.18" />
+  <meta name="docsearch:version" content="2026.10.20" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -524,7 +524,7 @@ bookkeeping is done by the <a class="reference external" href="https://molssi-se
 library.</p>
 <section id="the-levels-of-theory">
 <h2>The levels of theory<a class="headerlink" href="#the-levels-of-theory" title="Link to this heading">#</a></h2>
-<p>The step uses up to six Model Chemistries:</p>
+<p>The step uses up to eight Model Chemistries:</p>
 <dl>
 <dt><strong>High level</strong></dt><dd><p>The level the labels approximate, run on every fragment. By default it is
 the one chosen by the Model Chemistry step before this step.</p>
@@ -549,6 +549,15 @@ molecular low level.</p>
 increment is a difference within its own ladder (a triple minus its pairs
 plus its monomers, all at the same levels), so its levels only need to be
 consistent within that ladder, never across orders.</p>
+</dd>
+<dt><strong>Shell fragments’ high and low levels</strong></dt><dd><p>Optional, with ion shells only (see <a class="reference internal" href="#ion-shells">Ion shells</a>): a high and a molecular low
+level for the increments of the fragments holding an ion shell, e.g. the Li⁺
+shell pairs at def2-TZVPPD with the solvent pairs at def2-QZVPPD. Each such
+increment is built entirely at its own levels (the fragment and its
+sub-fragments), so the shell’s partner molecules are computed at both. They
+take precedence over the triples’ levels for a triple holding a shell. A shell
+level that is the same model chemistry as the triples’ is computed once, for
+both. By default they are the high and the molecular low level.</p>
 </dd>
 <dt><strong>Periodic low level</strong></dt><dd><p>Optional. A periodic code for the compact fragments: monomers, and pairs
 closer than a distance r1. It should be the code of the cell’s low level,
@@ -663,6 +672,14 @@ target sends them (a local pool, or bundled jobs on a cluster), or on a warm MDI
 engine for cheap codes run locally. The <em>Execution</em> settings give the cores and
 memory of each calculation and how many share a batch job. Finished bundles are
 archived, keeping a configuration to a few files.</p>
+<p><strong>Larger fragments</strong> give more cores and memory to the larger molecular
+fragments, as entries <code class="docutils literal notranslate"><span class="pre">atoms</span> <span class="pre">ranks</span> <span class="pre">memory</span></code> (MB per rank) separated by <code class="docutils literal notranslate"><span class="pre">;</span></code>. For
+example <code class="docutils literal notranslate"><span class="pre">60</span> <span class="pre">16</span> <span class="pre">8000</span></code> runs every molecular fragment of 60 atoms or more with 16
+cores of 8,000 MB and the rest with the molecular cores and memory. A Li⁺ shell
+pair can have 90–115 atoms, against 20–30 for a solvent pair or triple. Each size
+runs as its own set of jobs, in the directory <code class="docutils literal notranslate"><span class="pre">&lt;level&gt;_&lt;atoms&gt;</span></code>, at the same time
+as the others, and a rerun finds the finished calculations there. The step can’t
+yet check a size against what the queue’s nodes can hold, so make sure it fits.</p>
 <p>The levels that run as batch tasks run at the same time, and the long periodic
 calculations (the whole cell and the periodic fragments) are started first, so
 they overlap the many molecular calculations instead of following them. For the
@@ -713,6 +730,13 @@ shell’s nearest molecules. The others stay units of their own.</p></li>
 <li><p><strong>Cheaper truncation:</strong> a shell has 40–70 atoms, so its triples hold most of the
 cost. <strong>Fragments with a shell</strong> <em>pairs</em> selects a shell’s pairs but none of its
 triples.</p></li>
+<li><p><strong>Cheaper levels:</strong> <strong>Shell fragments’ high level</strong> and <strong>low level</strong> compute
+the fragments holding a shell at their own levels, e.g. def2-TZVPPD, while the
+solvent pairs stay at def2-QZVPPD. In Li-salt cells of about 520 atoms this cuts
+the cost by four to seven times. The job output lists, for each configuration,
+the number of increments at the shell levels by order.</p></li>
+<li><p><strong>Larger fragments:</strong> shell pairs are large, so give them more cores and memory
+with <strong>Larger fragments</strong> (see <a class="reference internal" href="#running-the-calculations">Running the calculations</a>).</p></li>
 </ul>
 <p>What stays per molecule:</p>
 <ul class="simple">
