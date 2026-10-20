@@ -48,13 +48,16 @@ The step uses up to eight Model Chemistries:
     consistent within that ladder, never across orders.
 **Shell fragments' high and low levels**
     Optional, with ion shells only (see `Ion shells`_): a high and a molecular low
-    level for the increments of the fragments holding an ion shell, e.g. the Li⁺
-    shell pairs at def2-TZVPPD with the solvent pairs at def2-QZVPPD. Each such
-    increment is built entirely at its own levels (the fragment and its
-    sub-fragments), so the shell's partner molecules are computed at both. They
-    take precedence over the triples' levels for a triple holding a shell. A shell
-    level that is the same model chemistry as the triples' is computed once, for
-    both. By default they are the high and the molecular low level.
+    level for the increments of the fragments of two or more units holding an ion
+    shell, e.g. the Li⁺ shell pairs at def2-TZVPPD with the solvent pairs at
+    def2-QZVPPD. Each such increment is built entirely at its own levels (the
+    fragment and its sub-fragments), so the shell and its partner molecules are
+    computed at both. A shell's own 1-body term stays at the high level, like every
+    other unit's: the 1-body terms set the labels' absolute energy scale, and the
+    energy offsets. The shell levels take precedence over the triples' levels for a
+    triple holding a shell. A shell level that is the same model chemistry as the
+    triples' is computed once, for both. By default they are the high and the
+    molecular low level.
 **Periodic low level**
     Optional. A periodic code for the compact fragments: monomers, and pairs
     closer than a distance r1. It should be the code of the cell's low level,
@@ -240,8 +243,8 @@ kJ/mol and the forces to 3.6 meV/Å RMS.
   cost. **Fragments with a shell** *pairs* selects a shell's pairs but none of its
   triples.
 - **Cheaper levels:** **Shell fragments' high level** and **low level** compute
-  the fragments holding a shell at their own levels, e.g. def2-TZVPPD, while the
-  solvent pairs stay at def2-QZVPPD. In Li-salt cells of about 520 atoms this cuts
+  the shell pairs at their own levels, e.g. def2-TZVPPD, while the solvent pairs and
+  every 1-body term stay at def2-QZVPPD. In Li-salt cells of about 520 atoms this cuts
   the cost by four to seven times. The job output lists, for each configuration,
   the number of increments at the shell levels by order.
 - **Larger fragments:** shell pairs are large, so give them more cores and memory

@@ -117,20 +117,27 @@ def test_a_shell_level_moves_only_the_shell_increments(db, monkeypatch):
     frame = node._frame(conf, node._rules(P), P)
     fragments = frame["fragments"]
     calcs = frame["calculations"]
-    shell = [f for f in fragments.selected() if holds_shell(fragments, f)]
+    # the fragments of two or more units holding a shell; the shell's own
+    # monomer keeps the 1-body level (the labels' absolute energy scale)
+    shell = [
+        f for f in fragments.selected() if f.order >= 2 and holds_shell(fragments, f)
+    ]
     assert set(calcs["high:shell"]) == set(fragments.closure(shell))
     results, labels = run(node, P, frame, _levels(**{"high:shell": "high_shells"}))
     assert results["high:shell"]
-    n1 = sum(1 for f in shell if f.order == 1)
-    n2 = sum(1 for f in shell if f.order == 2)
-    assert (n1, n2) == (1, 3)
-    # +SHIFT for the shell's monomer increment, -SHIFT for each shell pair's
-    assert labels.energy - plain.energy == pytest.approx((n1 - n2) * SHIFT, abs=1e-9)
+    n2 = len(shell)
+    assert n2 == 3
+    # -SHIFT for each shell pair's increment; the shell monomer's is unchanged
+    assert labels.energy - plain.energy == pytest.approx(-n2 * SHIFT, abs=1e-9)
+    assert labels.per_body[1]["energy"] == pytest.approx(
+        plain.per_body[1]["energy"], abs=1e-12
+    )
     assert labels.per_body[3]["energy"] == pytest.approx(
         plain.per_body[3]["energy"], abs=1e-12
     )
+    names = {f.name for f in shell}
     for name, inc in frame["correction"].increments.items():
-        expected = "high:shell" if holds_shell(fragments, fragments[name]) else "high"
+        expected = "high:shell" if name in names else "high"
         if inc.order < 3:
             assert inc.high_level == expected
 
