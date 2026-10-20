@@ -96,13 +96,15 @@ class MbeParameters(seamm.Parameters):
             "description": "Shell fragments' high level:",
             "help_text": (
                 "With ion shells, the high level for the increments of the "
-                "fragments holding a shell, if it differs from the others', e.g. "
+                "fragments of two or more units holding a shell, if it differs "
+                "from the others', e.g. "
                 "'ORCA:DFT@REVDSD-PBEP86-D4_2021/def2-TZVPPD' for the Li+ shell "
                 "pairs with the solvent pairs at def2-QZVPPD. Each such increment "
                 "is built entirely at this level (the fragment and its "
-                "sub-fragments), so their partner molecules are computed at both "
-                "levels. It takes precedence over the triples' level for a "
-                "triple holding a shell."
+                "sub-fragments), so the shell and its partners are computed at "
+                "both levels. A shell's own 1-body term stays at the high level, "
+                "which sets the labels' energy scale. It takes precedence over the "
+                "triples' level for a triple holding a shell."
             ),
         },
         "shell low level": {

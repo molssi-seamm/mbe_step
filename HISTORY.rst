@@ -1,6 +1,15 @@
 =======
 History
 =======
+2026.10.20.1 -- Bugfix: a shell's own monomer keeps the 1-body level
+    * With **Shell fragments' high level** (and low level), a shell's own 1-body
+      term was computed at the shell level too, so the molecules in Li+ shells were
+      on a different absolute energy scale from the rest (about 1 eV per molecule
+      between def2-TZVPPD and def2-QZVPPD). The shell levels now apply to the
+      fragments of two or more units holding a shell, and every 1-body term stays
+      at the high level. Needs seamm-mbe 2026.10.20.1. No labels were made with
+      2026.10.20's shell levels.
+
 2026.10.20 -- Levels of their own for the ion-shell fragments, and more cores for larger fragments
     * With ion shells, **Shell fragments' high level** and **Shell fragments' low
       level** compute the increments of the fragments holding an ion shell at their
