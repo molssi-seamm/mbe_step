@@ -87,6 +87,56 @@ def stress_convention(mc):
     return convention
 
 
+def parse_resources(text):
+    """Larger resources for larger fragments, from entries "atoms ranks memory"
+    separated by ';' or new lines: fragments of at least that many atoms get
+    that many MPI ranks and that much memory per rank (MB). Blank or "none" for
+    none.
+
+    Returns
+    -------
+    [(int, int, float)]
+        (atoms, ranks, memory) ascending in atoms.
+    """
+    text = (text or "").strip()
+    if text.lower() in ("", "none"):
+        return []
+    tiers = []
+    for entry in text.replace("\n", ";").split(";"):
+        entry = entry.strip()
+        if not entry:
+            continue
+        fields = entry.split()
+        if len(fields) != 3:
+            raise ValueError(
+                f"The fragment resources '{entry}' should be 'atoms ranks memory', "
+                "e.g. '60 16 8000' for 16 ranks of 8,000 MB from 60 atoms."
+            )
+        try:
+            atoms, ranks, memory = int(fields[0]), int(fields[1]), float(fields[2])
+        except ValueError:
+            raise ValueError(
+                f"The fragment resources '{entry}' should be whole numbers of atoms "
+                "and ranks and a memory in MB."
+            ) from None
+        if atoms < 1 or ranks < 1 or memory <= 0:
+            raise ValueError(f"The fragment resources '{entry}' must be positive.")
+        tiers.append((atoms, ranks, memory))
+    atoms = [t[0] for t in tiers]
+    if len(set(atoms)) != len(atoms):
+        raise ValueError(f"The fragment resources give a size twice: '{text}'.")
+    return sorted(tiers)
+
+
+def n_atoms(structure):
+    """The number of atoms of a structure an Evaluator takes (a Geometry or a
+    configuration, possibly with options as a tuple)."""
+    if isinstance(structure, tuple):
+        structure = structure[0]
+    n = getattr(structure, "n_atoms", 0)
+    return int(n() if callable(n) else n)
+
+
 class Level:
     """One level of theory and how it runs.
 
@@ -106,9 +156,15 @@ class Level:
         Seconds per batch job.
     archive : bool
         Tar finished bundles.
+    tiers : [(int, int, float)] or None
+        Larger resources for larger fragments (:func:`parse_resources`): each
+        size runs as its own Evaluator, in the directory ``<name>_<atoms>``, at
+        the same time as the others.
     """
 
-    def __init__(self, name, mc, *, ranks, memory, bundle, walltime, archive):
+    def __init__(
+        self, name, mc, *, ranks, memory, bundle, walltime, archive, tiers=None
+    ):
         self.name = name
         self.mc = mc
         self.ranks = int(ranks)
@@ -116,17 +172,35 @@ class Level:
         self.bundle = int(bundle)
         self.walltime = float(walltime)
         self.archive = bool(archive)
-        self._evaluator = None  # while evaluate() runs, so cancel() can reach it
+        self.tiers = list(tiers or [])
+        self._evaluators = []  # while evaluate() runs, so cancel() can reach them
         self._cancel_requested = False
 
     @property
     def level(self):
         return self.mc["level"]
 
-    def resources(self):
+    def resources(self, ranks=None, memory=None):
         from seamm_exec import Resources
 
-        return Resources(ntasks=self.ranks, mem_per_cpu=int(self.memory * 1e6))
+        ranks = self.ranks if ranks is None else ranks
+        memory = self.memory if memory is None else memory
+        return Resources(ntasks=int(ranks), mem_per_cpu=int(memory * 1e6))
+
+    def split(self, structures):
+        """The structures by size tier: [(directory name, ranks, memory,
+        {key: structure})], the base tier first, empty tiers left out."""
+        parts = [(self.name, self.ranks, self.memory, {})]
+        for atoms, ranks, memory in self.tiers:
+            parts.append((f"{self.name}_{atoms}", ranks, memory, {}))
+        for key, structure in structures.items():
+            n = n_atoms(structure)
+            index = 0
+            for k, (atoms, _, _) in enumerate(self.tiers):
+                if n >= atoms:
+                    index = k + 1
+            parts[index][3][key] = structure
+        return [part for part in parts if part[3]]
 
     def cancel(self):
         """Stop this level's calculations, from another thread: those in flight
@@ -134,8 +208,7 @@ class Level:
         reason "cancelled" (a rerun submits them afresh). Results already
         produced stand."""
         self._cancel_requested = True
-        evaluator = self._evaluator
-        if evaluator is not None:
+        for evaluator in list(self._evaluators):
             evaluator.cancel()
 
     def runs_as_tasks(self, node):
@@ -171,7 +244,30 @@ class Level:
         Returns
         -------
         {str: seamm_exec.EvaluatorResult}
+
+        With size tiers (``tiers``) each tier is its own Evaluator, with its
+        resources and directory; they run at the same time.
         """
+        parts = self.split(structures)
+        if len(parts) <= 1:
+            name, ranks, memory, part = (
+                parts[0] if parts else (self.name, None, None, {})
+            )
+            return self._evaluate(node, part, name, ranks, memory, stress)
+        from concurrent.futures import ThreadPoolExecutor
+
+        results = {}
+        with ThreadPoolExecutor(max_workers=len(parts)) as pool:
+            futures = [
+                pool.submit(self._evaluate, node, part, name, ranks, memory, stress)
+                for name, ranks, memory, part in parts
+            ]
+            for future in futures:
+                results.update(future.result())
+        return results
+
+    def _evaluate(self, node, structures, directory, ranks, memory, stress):
+        """One Evaluator on ``structures``, in ``directory`` under the step's."""
         import seamm_exec
 
         properties = ("energy", "gradients") + (("stress",) if stress else ())
@@ -179,16 +275,18 @@ class Level:
         if self.walltime > 0:
             options["bundle_walltime"] = self.walltime
         results = {}
+        if not structures:
+            return results
         with seamm_exec.Evaluator(
             node,
             self.mc,
             properties=properties,
-            directory=Path(node.directory) / self.name,
+            directory=Path(node.directory) / directory,
             task_set_options=options,
-            resources=self.resources(),
-            name=f"MBE_{self.name}",  # no spaces: it goes into MDI_Init
+            resources=self.resources(ranks, memory),
+            name=f"MBE_{directory}",  # no spaces: it goes into MDI_Init
         ) as evaluator:
-            self._evaluator = evaluator
+            self._evaluators.append(evaluator)
             if self._cancel_requested:
                 evaluator.cancel()
             try:
@@ -200,7 +298,7 @@ class Level:
                 for result in evaluator.results():
                     results[result.key] = result
             finally:
-                self._evaluator = None
+                self._evaluators.remove(evaluator)
         return results
 
 

@@ -19,8 +19,10 @@ GROUPS = {
         (
             "high level",
             "triples high level",
+            "shell high level",
             "molecular low level",
             "triples low level",
+            "shell low level",
             "periodic low level",
             "cell low level",
         ),
@@ -54,6 +56,7 @@ GROUPS = {
             "molecular ranks",
             "molecular memory",
             "molecular bundle",
+            "fragment resources",
             "periodic ranks",
             "periodic memory",
             "periodic bundle",
@@ -131,7 +134,12 @@ class TkMbe(seamm.TkNode):
             self[key].bind("<<ComboboxSelected>>", self.reset_dialog)
             self[key].bind("<Return>", self.reset_dialog)
             self[key].bind("<FocusOut>", self.reset_dialog)
-        for key in ("pair cutoff table", "triple cutoff table", "energy offsets"):
+        for key in (
+            "pair cutoff table",
+            "triple cutoff table",
+            "energy offsets",
+            "fragment resources",
+        ):
             if hasattr(self[key], "entry"):
                 self[key].entry.configure(width=40)
 
@@ -154,6 +162,8 @@ class TkMbe(seamm.TkNode):
             "triples high level": ["same as the high level"] + molecular,
             "molecular low level": molecular,
             "triples low level": ["same as the molecular low level"] + molecular,
+            "shell high level": ["same as the high level"] + molecular,
+            "shell low level": ["same as the molecular low level"] + molecular,
             "periodic low level": ["none"] + molecular,
             "cell low level": ["automatic"] + periodic + molecular,
         }
@@ -226,6 +236,10 @@ class TkMbe(seamm.TkNode):
             shown.discard("triples low level")
         shown |= {"maximum order", "distance criterion", "ion shells"}
         shells = self._value("ion shells") != "none"
+        if not shells:
+            # The shell fragments' own levels only apply with ion shells
+            shown.discard("shell high level")
+            shown.discard("shell low level")
         if shells:
             shown |= {"ion shell cutoffs", "shell members"}
             if triples:
@@ -234,7 +248,12 @@ class TkMbe(seamm.TkNode):
             # counterpoise is refused for periodic cells, which a periodic low
             # level implies, and with ion shells
             shown.add("counterpoise")
-        shown |= {"molecular ranks", "molecular memory", "molecular bundle"}
+        shown |= {
+            "molecular ranks",
+            "molecular memory",
+            "molecular bundle",
+            "fragment resources",
+        }
         shown |= {"cell ranks", "cell memory", "bundle walltime", "archive"}
         if order >= 2:
             shown.add("cutoffs")
