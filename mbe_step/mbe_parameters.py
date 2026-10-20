@@ -471,6 +471,26 @@ class MbeParameters(seamm.Parameters):
                 "molecular calculation at the molecular ranks and memory."
             ),
         },
+        "task options": {
+            "default": "",
+            "kind": "string",
+            "default_units": "",
+            "enumeration": tuple(),
+            "format_string": "",
+            "description": "Task options (level key=value):",
+            "help_text": (
+                "Options for every calculation of a level, as entries 'level "
+                "key=value ...' separated by ';', passed to the program as each "
+                "task's options. The levels are high, high:3 (the triples' high "
+                "level), high:shell (the shell fragments'), molecular, "
+                "molecular:3, molecular:shell, periodic, cell and cluster. For "
+                "example 'high:shell exact_exchange_elements=none' lets ORCA keep "
+                "RIJCOSX for the shell pairs holding B or P, where it uses exact "
+                "exchange by default. A level computed together with another (a "
+                "shell level equal to the triples') takes the options of both. "
+                "Blank for none."
+            ),
+        },
         "periodic ranks": {
             "default": 8,
             "kind": "integer",

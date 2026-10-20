@@ -57,6 +57,7 @@ GROUPS = {
             "molecular memory",
             "molecular bundle",
             "fragment resources",
+            "task options",
             "periodic ranks",
             "periodic memory",
             "periodic bundle",
@@ -139,6 +140,7 @@ class TkMbe(seamm.TkNode):
             "triple cutoff table",
             "energy offsets",
             "fragment resources",
+            "task options",
         ):
             if hasattr(self[key], "entry"):
                 self[key].entry.configure(width=40)
@@ -253,6 +255,7 @@ class TkMbe(seamm.TkNode):
             "molecular memory",
             "molecular bundle",
             "fragment resources",
+            "task options",
         }
         shown |= {"cell ranks", "cell memory", "bundle walltime", "archive"}
         if order >= 2:

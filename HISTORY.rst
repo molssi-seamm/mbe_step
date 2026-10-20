@@ -1,6 +1,15 @@
 =======
 History
 =======
+2026.10.20.2 -- Task options for each level
+    * **Task options** (``level key=value ...; ...``) pass options to every
+      calculation of a level, e.g. ``high:shell exact_exchange_elements=none`` so
+      that ORCA keeps RIJCOSX for the Li+ shell pairs holding B or P, where it would
+      use exact exchange, while the 1-body terms at the high level keep it. A
+      structure's own options take precedence, a level computed together with
+      another takes the options of both, and options for a level the step does not
+      use are refused.
+
 2026.10.20.1 -- Bugfix: a shell's own monomer keeps the 1-body level
     * With **Shell fragments' high level** (and low level), a shell's own 1-body
       term was computed at the shell level too, so the molecules in Li+ shells were

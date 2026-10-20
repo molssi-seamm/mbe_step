@@ -128,6 +128,59 @@ def parse_resources(text):
     return sorted(tiers)
 
 
+#: The level names "task options" entries may use, as the step names its levels
+LEVEL_NAMES = (
+    "high",
+    "high:3",
+    "high:shell",
+    "molecular",
+    "molecular:3",
+    "molecular:shell",
+    "periodic",
+    "cell",
+    "cluster",
+)
+
+
+def parse_task_options(text):
+    """Options for every task of a level, from entries "level key=value ..."
+    separated by ';' or new lines, e.g. "high:shell exact_exchange_elements=none".
+    The values are text, as the program reads them. Blank or "none" for none.
+
+    Returns
+    -------
+    {str: {str: str}}
+        By level name (:data:`LEVEL_NAMES`).
+    """
+    text = (text or "").strip()
+    if text.lower() in ("", "none"):
+        return {}
+    result = {}
+    for entry in text.replace("\n", ";").split(";"):
+        entry = entry.strip()
+        if not entry:
+            continue
+        fields = entry.split()
+        name, pairs = fields[0], fields[1:]
+        if name not in LEVEL_NAMES:
+            raise ValueError(
+                f"The task options '{entry}' name the level '{name}', which is not "
+                f"one of {', '.join(LEVEL_NAMES)}."
+            )
+        if not pairs or any("=" not in pair for pair in pairs):
+            raise ValueError(
+                f"The task options '{entry}' should be 'level key=value ...', e.g. "
+                "'high:shell exact_exchange_elements=none'."
+            )
+        options = result.setdefault(name, {})
+        for pair in pairs:
+            key, value = pair.split("=", 1)
+            if not key:
+                raise ValueError(f"The task options '{entry}' have an empty key.")
+            options[key] = value
+    return result
+
+
 def n_atoms(structure):
     """The number of atoms of a structure an Evaluator takes (a Geometry or a
     configuration, possibly with options as a tuple)."""
@@ -160,10 +213,23 @@ class Level:
         Larger resources for larger fragments (:func:`parse_resources`): each
         size runs as its own Evaluator, in the directory ``<name>_<atoms>``, at
         the same time as the others.
+    options : {str: str} or None
+        Options added to every task of this level (:func:`parse_task_options`);
+        a structure's own options take precedence.
     """
 
     def __init__(
-        self, name, mc, *, ranks, memory, bundle, walltime, archive, tiers=None
+        self,
+        name,
+        mc,
+        *,
+        ranks,
+        memory,
+        bundle,
+        walltime,
+        archive,
+        tiers=None,
+        options=None,
     ):
         self.name = name
         self.mc = mc
@@ -173,6 +239,7 @@ class Level:
         self.walltime = float(walltime)
         self.archive = bool(archive)
         self.tiers = list(tiers or [])
+        self.options = dict(options or {})
         self._evaluators = []  # while evaluate() runs, so cancel() can reach them
         self._cancel_requested = False
 
@@ -294,6 +361,8 @@ class Level:
                     options = None
                     if isinstance(structure, tuple):
                         structure, options = structure
+                    if self.options:
+                        options = {**self.options, **(options or {})}
                     evaluator.submit(structure, key=key, options=options)
                 for result in evaluator.results():
                     results[result.key] = result
