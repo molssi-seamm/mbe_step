@@ -251,6 +251,16 @@ class Mbe(seamm.Node):
                 + " and ".join(parts)
                 + ", with their sub-fragments at that level too."
             )
+        task_options = levels.parse_task_options(P["task options"])
+        if task_options:
+            text += (
+                " Task options: "
+                + "; ".join(
+                    f"{name} " + " ".join(f"{k}={v}" for k, v in options.items())
+                    for name, options in task_options.items()
+                )
+                + "."
+            )
         tiers = levels.parse_resources(P["fragment resources"])
         if tiers:
             text += (
@@ -518,6 +528,7 @@ class Mbe(seamm.Node):
         hours = P["bundle walltime"].m_as("s")
         archive = _truthy(P["archive"])
         tiers = levels.parse_resources(P["fragment resources"])
+        task_options = levels.parse_task_options(P["task options"])
 
         def make(name, text, periodic, prefix):
             mc = levels.resolve(text, context, current=current, periodic=periodic)
@@ -531,6 +542,22 @@ class Mbe(seamm.Node):
                 archive=archive,
                 tiers=tiers if prefix == "molecular" else None,
             )
+
+        def add_options(key):
+            """The task options for level ``key``, onto its Level; a Level
+            shared by two names takes both, and a conflict is refused."""
+            options = task_options.get(key)
+            if not options or key not in result:
+                return
+            level = result[key]
+            for option, value in options.items():
+                if level.options.get(option, value) != value:
+                    raise ValueError(
+                        f"The task options give {option} two values for the "
+                        f"levels computed together with {key}: "
+                        f"{level.options[option]} and {value}."
+                    )
+            level.options.update(options)
 
         def own(key, name, text, base_keys, setting, same):
             """A level of its own, or the same Level as one of ``base_keys`` that
@@ -635,6 +662,14 @@ class Mbe(seamm.Node):
                     f"periodic fragments' ({result['periodic'].level}): their "
                     "errors cancel only if they are the same calculation."
                 )
+
+        for key in task_options:
+            if key not in result:
+                raise ValueError(
+                    f"The task options are for the {key} level, which this step "
+                    "does not use."
+                )
+            add_options(key)
 
         if P["counterpoise"] != "none":
             if periodic_frames:

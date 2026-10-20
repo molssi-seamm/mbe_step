@@ -187,6 +187,19 @@ runs as its own set of jobs, in the directory ``<level>_<atoms>``, at the same t
 as the others, and a rerun finds the finished calculations there. The step can't
 yet check a size against what the queue's nodes can hold, so make sure it fits.
 
+**Task options** pass options to every calculation of a level, as entries
+``level key=value ...`` separated by ``;``. The levels are ``high``, ``high:3``,
+``high:shell``, ``molecular``, ``molecular:3``, ``molecular:shell``, ``periodic``,
+``cell`` and ``cluster``; the options are the program's task options, and a
+structure's own (such as counterpoise ghosts) take precedence. For example, ORCA
+uses exact exchange (NoCOSX) for every job with B or P, which doubles the cost of
+Li-salt cells with BF₄⁻ or PF₆⁻. ``high:shell exact_exchange_elements=none`` keeps
+RIJCOSX for the shell pairs, where it matches exact exchange in the increments
+(0.3 meV/Å rms), while the 1-body terms at the high level keep exact exchange,
+which they need (COSX moves a lone PF₆⁻'s forces by about 6 meV/Å). A level
+computed together with another (a shell level equal to the triples') takes the
+options of both; giving one option two values is refused.
+
 The levels that run as batch tasks run at the same time, and the long periodic
 calculations (the whole cell and the periodic fragments) are started first, so
 they overlap the many molecular calculations instead of following them. For the
@@ -249,6 +262,9 @@ kJ/mol and the forces to 3.6 meV/Å RMS.
   the number of increments at the shell levels by order.
 - **Larger fragments:** shell pairs are large, so give them more cores and memory
   with **Larger fragments** (see `Running the calculations`_).
+- **Anions with B or P:** ORCA's exact exchange for B and P can be lifted for the
+  shell pairs with **Task options** ``high:shell exact_exchange_elements=none``
+  (see `Running the calculations`_).
 
 What stays per molecule:
 
