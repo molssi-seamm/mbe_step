@@ -19,7 +19,7 @@ library.
 The levels of theory
 ====================
 
-The step uses up to six Model Chemistries:
+The step uses up to eight Model Chemistries:
 
 **High level**
     The level the labels approximate, run on every fragment. By default it is
@@ -46,6 +46,15 @@ The step uses up to six Model Chemistries:
     increment is a difference within its own ladder (a triple minus its pairs
     plus its monomers, all at the same levels), so its levels only need to be
     consistent within that ladder, never across orders.
+**Shell fragments' high and low levels**
+    Optional, with ion shells only (see `Ion shells`_): a high and a molecular low
+    level for the increments of the fragments holding an ion shell, e.g. the Li⁺
+    shell pairs at def2-TZVPPD with the solvent pairs at def2-QZVPPD. Each such
+    increment is built entirely at its own levels (the fragment and its
+    sub-fragments), so the shell's partner molecules are computed at both. They
+    take precedence over the triples' levels for a triple holding a shell. A shell
+    level that is the same model chemistry as the triples' is computed once, for
+    both. By default they are the high and the molecular low level.
 **Periodic low level**
     Optional. A periodic code for the compact fragments: monomers, and pairs
     closer than a distance r1. It should be the code of the cell's low level,
@@ -166,6 +175,15 @@ engine for cheap codes run locally. The *Execution* settings give the cores and
 memory of each calculation and how many share a batch job. Finished bundles are
 archived, keeping a configuration to a few files.
 
+**Larger fragments** give more cores and memory to the larger molecular
+fragments, as entries ``atoms ranks memory`` (MB per rank) separated by ``;``. For
+example ``60 16 8000`` runs every molecular fragment of 60 atoms or more with 16
+cores of 8,000 MB and the rest with the molecular cores and memory. A Li⁺ shell
+pair can have 90–115 atoms, against 20–30 for a solvent pair or triple. Each size
+runs as its own set of jobs, in the directory ``<level>_<atoms>``, at the same time
+as the others, and a rerun finds the finished calculations there. The step can't
+yet check a size against what the queue's nodes can hold, so make sure it fits.
+
 The levels that run as batch tasks run at the same time, and the long periodic
 calculations (the whole cell and the periodic fragments) are started first, so
 they overlap the many molecular calculations instead of following them. For the
@@ -221,6 +239,13 @@ kJ/mol and the forces to 3.6 meV/Å RMS.
 - **Cheaper truncation:** a shell has 40–70 atoms, so its triples hold most of the
   cost. **Fragments with a shell** *pairs* selects a shell's pairs but none of its
   triples.
+- **Cheaper levels:** **Shell fragments' high level** and **low level** compute
+  the fragments holding a shell at their own levels, e.g. def2-TZVPPD, while the
+  solvent pairs stay at def2-QZVPPD. In Li-salt cells of about 520 atoms this cuts
+  the cost by four to seven times. The job output lists, for each configuration,
+  the number of increments at the shell levels by order.
+- **Larger fragments:** shell pairs are large, so give them more cores and memory
+  with **Larger fragments** (see `Running the calculations`_).
 
 What stays per molecule:
 

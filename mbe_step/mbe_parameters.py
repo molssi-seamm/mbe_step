@@ -87,6 +87,39 @@ class MbeParameters(seamm.Parameters):
                 "within it."
             ),
         },
+        "shell high level": {
+            "default": "same as the high level",
+            "kind": "string",
+            "default_units": "",
+            "enumeration": ("same as the high level",),
+            "format_string": "",
+            "description": "Shell fragments' high level:",
+            "help_text": (
+                "With ion shells, the high level for the increments of the "
+                "fragments holding a shell, if it differs from the others', e.g. "
+                "'ORCA:DFT@REVDSD-PBEP86-D4_2021/def2-TZVPPD' for the Li+ shell "
+                "pairs with the solvent pairs at def2-QZVPPD. Each such increment "
+                "is built entirely at this level (the fragment and its "
+                "sub-fragments), so their partner molecules are computed at both "
+                "levels. It takes precedence over the triples' level for a "
+                "triple holding a shell."
+            ),
+        },
+        "shell low level": {
+            "default": "same as the molecular low level",
+            "kind": "string",
+            "default_units": "",
+            "enumeration": ("same as the molecular low level",),
+            "format_string": "",
+            "description": "Shell fragments' low level:",
+            "help_text": (
+                "With ion shells, the molecular low level for the increments of "
+                "the fragments holding a shell, if it differs from the others', "
+                "e.g. 'ORCA:DFT@R2SCAN-D4/def2-TZVPPD'. As for the shell "
+                "fragments' high level, each such increment is built entirely at "
+                "this level."
+            ),
+        },
         "molecular low level": {
             "default": "",
             "kind": "string",
@@ -417,6 +450,23 @@ class MbeParameters(seamm.Parameters):
             "help_text": (
                 "How many molecular fragment calculations share one batch job on "
                 "a queue."
+            ),
+        },
+        "fragment resources": {
+            "default": "",
+            "kind": "string",
+            "default_units": "",
+            "enumeration": tuple(),
+            "format_string": "",
+            "description": "Larger fragments (atoms ranks MB):",
+            "help_text": (
+                "More cores and memory for the larger molecular fragments, as "
+                "entries 'atoms ranks memory' separated by ';': fragments of at "
+                "least that many atoms run with that many MPI ranks and that much "
+                "memory per rank (MB). For example '40 4 6000; 60 16 8000'. Each "
+                "size runs as its own set of jobs, in the directory "
+                "<level>_<atoms>, at the same time as the others. Blank for every "
+                "molecular calculation at the molecular ranks and memory."
             ),
         },
         "periodic ranks": {

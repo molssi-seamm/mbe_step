@@ -174,3 +174,19 @@ def test_ion_shell_layouts(tk_node):
     tk_node["maximum order"].set("2")
     tk_node.reset_dialog()
     assert not mapped(tk_node, "shell truncation")
+
+
+def test_shell_levels_only_with_shells(tk_node):
+    tk_node.create_dialog()
+    tk_node.reset_dialog()
+    assert not mapped(tk_node, "shell high level")
+    assert not mapped(tk_node, "shell low level")
+    assert mapped(tk_node, "fragment resources")
+    tk_node["ion shells"].set("Li+ first shell")
+    tk_node.reset_dialog()
+    assert mapped(tk_node, "shell high level") and mapped(tk_node, "shell low level")
+    values = list(tk_node["shell high level"].combobox.cget("values"))
+    assert values[0] == "same as the high level"
+    tk_node["ion shells"].set("none")
+    tk_node.reset_dialog()
+    assert not mapped(tk_node, "shell high level")

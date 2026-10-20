@@ -173,9 +173,13 @@ def test_cancel_reaches_a_running_evaluator():
 
     cancelled = []
     lv = level("high")
-    lv._evaluator = SimpleNamespace(cancel=lambda: cancelled.append(True))
+    # one Evaluator per size tier can be running; cancel reaches each
+    lv._evaluators = [
+        SimpleNamespace(cancel=lambda: cancelled.append(1)),
+        SimpleNamespace(cancel=lambda: cancelled.append(2)),
+    ]
     lv.cancel()
-    assert cancelled == [True] and lv._cancel_requested
+    assert cancelled == [1, 2] and lv._cancel_requested
 
 
 def test_a_batch_failure_skips_the_serial_levels(db, monkeypatch):

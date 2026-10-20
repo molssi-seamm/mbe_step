@@ -60,6 +60,45 @@ def _triples_low_level(P):
     return _triples_override(P, "triples low level", "molecular low level")
 
 
+def _shell_level(P):
+    """The shell fragments' own high level, or None when it is the high level's
+    or there are no ion shells."""
+    return _shell_override(P, "shell high level", "high level")
+
+
+def _shell_low_level(P):
+    """The shell fragments' own molecular low level, or None when it is the
+    molecular low level or there are no ion shells."""
+    return _shell_override(P, "shell low level", "molecular low level")
+
+
+def _shell_override(P, key, base):
+    """The shell fragments' own level from parameter ``key``, or None when it is
+    blank, "same as the ...", the same text as ``base``, or there are no ion
+    shells."""
+    if P["ion shells"] == "none":
+        return None
+    text = (P[key] or "").strip()
+    if text == "" or text.startswith("same as the") or text == P[base]:
+        return None
+    return text
+
+
+def _level_maps(P):
+    """The seamm_mbe level maps ({order or "shell": level name}) for the high and
+    the molecular low levels, or None for each without levels of their own."""
+    high, low = {}, {}
+    if _triples_level(P):
+        high[3] = "high:3"
+    if _shell_level(P):
+        high[seamm_mbe.SHELL] = "high:shell"
+    if _triples_low_level(P):
+        low[3] = "molecular:3"
+    if _shell_low_level(P):
+        low[seamm_mbe.SHELL] = "molecular:shell"
+    return high or None, low or None
+
+
 def _triples_override(P, key, base):
     """The triples' own level from parameter ``key``, or None when it is blank,
     "same as the ...", the same text as ``base``, or there are no triples."""
@@ -198,6 +237,28 @@ class Mbe(seamm.Node):
             text += (
                 f" The triples' increments use {triples_low} as their molecular low "
                 "level, with their pairs and monomers at that level too."
+            )
+        shell = _shell_level(P)
+        shell_low = _shell_low_level(P)
+        if shell or shell_low:
+            parts = []
+            if shell:
+                parts.append(f"{shell} as their high level")
+            if shell_low:
+                parts.append(f"{shell_low} as their molecular low level")
+            text += (
+                " The increments of the fragments holding an ion shell use "
+                + " and ".join(parts)
+                + ", with their sub-fragments at that level too."
+            )
+        tiers = levels.parse_resources(P["fragment resources"])
+        if tiers:
+            text += (
+                " Larger molecular fragments run with more resources: "
+                + "; ".join(
+                    f"from {a} atoms {r} cores of {m:.0f} MB" for a, r, m in tiers
+                )
+                + "."
             )
         if order >= 2:
             if P["cutoffs"] == "single value":
@@ -375,8 +436,7 @@ class Mbe(seamm.Node):
                 periodic[2] = r1
         seamm_mbe.assign_levels(fragments, periodic)
         self._check_frame(configuration, system, rules, P)
-        high_levels = {3: "high:3"} if _triples_level(P) else None
-        low_levels = {3: "molecular:3"} if _triples_low_level(P) else None
+        high_levels, low_levels = _level_maps(P)
         return {
             "configuration": configuration,
             "system": system,
@@ -457,6 +517,7 @@ class Mbe(seamm.Node):
         )
         hours = P["bundle walltime"].m_as("s")
         archive = _truthy(P["archive"])
+        tiers = levels.parse_resources(P["fragment resources"])
 
         def make(name, text, periodic, prefix):
             mc = levels.resolve(text, context, current=current, periodic=periodic)
@@ -468,7 +529,24 @@ class Mbe(seamm.Node):
                 bundle=P[f"{prefix} bundle"] if prefix != "cell" else 1,
                 walltime=hours,
                 archive=archive,
+                tiers=tiers if prefix == "molecular" else None,
             )
+
+        def own(key, name, text, base_keys, setting, same):
+            """A level of its own, or the same Level as one of ``base_keys`` that
+            has its model chemistry (then computed once, for both ladders)."""
+            candidate = make(name, text, False, "molecular")
+            for base in base_keys:
+                if base in result and result[base].level == candidate.level:
+                    if base in ("high", "molecular"):
+                        raise ValueError(
+                            f"The {setting} ({text}) is the {base} level "
+                            f"({result[base].level}): set it to '{same}', or "
+                            "every monomer would be computed twice."
+                        )
+                    result[key] = result[base]
+                    return
+            result[key] = candidate
 
         result = {"high": make("high", P["high level"], False, "molecular")}
         triples = _triples_level(P)
@@ -499,6 +577,26 @@ class Mbe(seamm.Node):
                     "molecular low level', or every monomer and pair would be "
                     "computed twice."
                 )
+        shell = _shell_level(P)
+        if shell:
+            own(
+                "high:shell",
+                "high_shells",
+                shell,
+                ("high", "high:3"),
+                "shell fragments' high level",
+                "same as the high level",
+            )
+        shell_low = _shell_low_level(P)
+        if shell_low:
+            own(
+                "molecular:shell",
+                "molecular_shells",
+                shell_low,
+                ("molecular", "molecular:3"),
+                "shell fragments' low level",
+                "same as the molecular low level",
+            )
         if P["periodic low level"] != "none":
             result["periodic"] = make(
                 "periodic", P["periodic low level"], False, "periodic"
@@ -571,6 +669,13 @@ class Mbe(seamm.Node):
         Returns {level name: {key: EvaluatorResult}}.
         """
         work = []
+        aliases = {}  # name: the name it shares one Level (and its results) with
+        first_name = {}
+        for name, level in self._evaluation_order(levels_):
+            if id(level) in first_name:
+                aliases[name] = first_name[id(level)]
+            else:
+                first_name[id(level)] = name
         for name, level in self._evaluation_order(levels_):
             structures = {}
             for frame in frames:
@@ -603,6 +708,16 @@ class Mbe(seamm.Node):
                             structures[counterpoise.key(prefix, pair.name, label)] = job
             if not structures:
                 continue
+            if name in aliases:
+                # The same calculations as another level's: run them once, there
+                target = aliases[name]
+                for entry in work:
+                    if entry[0] == target:
+                        entry[2].update(structures)
+                        break
+                else:
+                    work.append((target, level, structures))
+                continue
             work.append((name, level, structures))
 
         for name, level, structures in work:
@@ -614,6 +729,9 @@ class Mbe(seamm.Node):
                 )
             )
         results = self._run_levels(work)
+        for name, target in aliases.items():
+            if target in results:
+                results[name] = results[target]
 
         for name, level, structures in work:
             if name == "cell":
@@ -756,8 +874,15 @@ class Mbe(seamm.Node):
         else:
             cell = levels.to_library(cell_result)
         corrections = self._corrections(frame, results) if self._counterpoise else {}
-        high_by_order = {3: library("high:3")} if "high:3" in levels_ else None
-        low_by_order = {3: library("molecular:3")} if "molecular:3" in levels_ else None
+        high_by_order, low_by_order = {}, {}
+        for key, name in ((3, "high:3"), (seamm_mbe.SHELL, "high:shell")):
+            if name in levels_:
+                high_by_order[key] = library(name)
+        for key, name in ((3, "molecular:3"), (seamm_mbe.SHELL, "molecular:shell")):
+            if name in levels_:
+                low_by_order[key] = library(name)
+        high_by_order = high_by_order or None
+        low_by_order = low_by_order or None
         correction = seamm_mbe.mbe_correction(
             frame["fragments"],
             library("high"),
@@ -1004,16 +1129,41 @@ class Mbe(seamm.Node):
                     if "high:3" in calcs
                     else ""
                 )
+                + (
+                    f"{len(calcs['high:shell'])} high (shells), "
+                    if "high:shell" in calcs
+                    else ""
+                )
                 + f"{len(calcs['molecular']) + ghosts['molecular']} molecular, "
                 + (
                     f"{len(calcs['molecular:3'])} molecular (triples), "
                     if "molecular:3" in calcs
                     else ""
                 )
+                + (
+                    f"{len(calcs['molecular:shell'])} molecular (shells), "
+                    if "molecular:shell" in calcs
+                    else ""
+                )
                 + f"{len(calcs['periodic'])} periodic, plus the whole system",
                 f"    E = {data['energy']:.3f} kJ/mol, correction "
                 f"{data['MBE energy']:.3f} kJ/mol",
             ]
+            correction = frame.get("correction")
+            if correction is not None and fragments.shells:
+                by_order = {}
+                for inc in correction.increments.values():
+                    if inc.high_level == "high:shell" or inc.low_level == (
+                        "molecular:shell"
+                    ):
+                        by_order[inc.order] = by_order.get(inc.order, 0) + 1
+                if by_order:
+                    text.append(
+                        "    increments at the shell levels: "
+                        + ", ".join(
+                            f"{c} of order {k}" for k, c in sorted(by_order.items())
+                        )
+                    )
             per = labels.per_body
             text.append(
                 "    per body (kJ/mol per molecule): "

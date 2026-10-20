@@ -1,6 +1,19 @@
 =======
 History
 =======
+2026.10.20 -- Levels of their own for the ion-shell fragments, and more cores for larger fragments
+    * With ion shells, **Shell fragments' high level** and **Shell fragments' low
+      level** compute the increments of the fragments holding an ion shell at their
+      own levels, e.g. the Li+ shell pairs at def2-TZVPPD with the solvent pairs at
+      def2-QZVPPD. Each such increment is built entirely at its own levels, they take
+      precedence over the triples' levels, and a shell level that is the same model
+      chemistry as the triples' is computed once for both. The output counts the
+      increments at the shell levels by order.
+    * **Larger fragments** (``atoms ranks memory; ...``) gives the larger molecular
+      fragments more cores and memory, e.g. ``60 16 8000``. Each size runs as its own
+      set of jobs in ``<level>_<atoms>``, at the same time as the others.
+    * Needs seamm-mbe 2026.10.20.
+
 2026.10.18 -- Internal: requires seamm-exec 2026.10.18
     * seamm-exec 2026.10.18 records where each file a task returns is, not its contents.
       The MBE step's tests read them with ``result.read()``, so it requires that
