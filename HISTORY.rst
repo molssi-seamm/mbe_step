@@ -1,6 +1,13 @@
 =======
 History
 =======
+2026.10.20.3 -- Calculations per job for each fragment size
+    * **Larger fragments** takes an optional fourth field per entry, the number of
+      calculations of that size that share a job (``atoms ranks memory [bundle]``),
+      e.g. ``30 8 6000 8; 45 32 7000 1`` to keep the many short fragments bundled
+      while each large one gets a job of its own. Without it a size uses
+      **Molecular calculations per job**, as before.
+
 2026.10.20.2 -- Task options for each level
     * **Task options** (``level key=value ...; ...``) pass options to every
       calculation of a level, e.g. ``high:shell exact_exchange_elements=none`` so

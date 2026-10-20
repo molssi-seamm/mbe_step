@@ -88,15 +88,15 @@ def stress_convention(mc):
 
 
 def parse_resources(text):
-    """Larger resources for larger fragments, from entries "atoms ranks memory"
-    separated by ';' or new lines: fragments of at least that many atoms get
-    that many MPI ranks and that much memory per rank (MB). Blank or "none" for
-    none.
+    """Larger resources for larger fragments, from entries "atoms ranks memory
+    [bundle]" separated by ';' or new lines: fragments of at least that many atoms
+    get that many MPI ranks and that much memory per rank (MB), and, if given, that
+    many calculations per batch job (else the level's). Blank or "none" for none.
 
     Returns
     -------
-    [(int, int, float)]
-        (atoms, ranks, memory) ascending in atoms.
+    [(int, int, float, int or None)]
+        (atoms, ranks, memory, bundle) ascending in atoms.
     """
     text = (text or "").strip()
     if text.lower() in ("", "none"):
@@ -107,21 +107,23 @@ def parse_resources(text):
         if not entry:
             continue
         fields = entry.split()
-        if len(fields) != 3:
+        if len(fields) not in (3, 4):
             raise ValueError(
-                f"The fragment resources '{entry}' should be 'atoms ranks memory', "
-                "e.g. '60 16 8000' for 16 ranks of 8,000 MB from 60 atoms."
+                f"The fragment resources '{entry}' should be 'atoms ranks memory "
+                "[bundle]', e.g. '60 16 8000 1' for 16 ranks of 8,000 MB from 60 "
+                "atoms, one calculation per job."
             )
         try:
             atoms, ranks, memory = int(fields[0]), int(fields[1]), float(fields[2])
+            bundle = int(fields[3]) if len(fields) == 4 else None
         except ValueError:
             raise ValueError(
-                f"The fragment resources '{entry}' should be whole numbers of atoms "
-                "and ranks and a memory in MB."
+                f"The fragment resources '{entry}' should be whole numbers of atoms, "
+                "ranks and calculations per job, and a memory in MB."
             ) from None
-        if atoms < 1 or ranks < 1 or memory <= 0:
+        if atoms < 1 or ranks < 1 or memory <= 0 or (bundle is not None and bundle < 1):
             raise ValueError(f"The fragment resources '{entry}' must be positive.")
-        tiers.append((atoms, ranks, memory))
+        tiers.append((atoms, ranks, memory, bundle))
     atoms = [t[0] for t in tiers]
     if len(set(atoms)) != len(atoms):
         raise ValueError(f"The fragment resources give a size twice: '{text}'.")
@@ -255,19 +257,21 @@ class Level:
         return Resources(ntasks=int(ranks), mem_per_cpu=int(memory * 1e6))
 
     def split(self, structures):
-        """The structures by size tier: [(directory name, ranks, memory,
-        {key: structure})], the base tier first, empty tiers left out."""
-        parts = [(self.name, self.ranks, self.memory, {})]
-        for atoms, ranks, memory in self.tiers:
-            parts.append((f"{self.name}_{atoms}", ranks, memory, {}))
+        """The structures by size tier: [(directory name, ranks, memory, bundle,
+        {key: structure})], the base tier first, empty tiers left out. A tier
+        without a bundle size of its own uses the level's."""
+        parts = [(self.name, self.ranks, self.memory, self.bundle, {})]
+        for atoms, ranks, memory, *rest in self.tiers:
+            bundle = rest[0] if rest and rest[0] is not None else self.bundle
+            parts.append((f"{self.name}_{atoms}", ranks, memory, bundle, {}))
         for key, structure in structures.items():
             n = n_atoms(structure)
             index = 0
-            for k, (atoms, _, _) in enumerate(self.tiers):
+            for k, (atoms, *_) in enumerate(self.tiers):
                 if n >= atoms:
                     index = k + 1
-            parts[index][3][key] = structure
-        return [part for part in parts if part[3]]
+            parts[index][4][key] = structure
+        return [part for part in parts if part[4]]
 
     def cancel(self):
         """Stop this level's calculations, from another thread: those in flight
@@ -317,28 +321,34 @@ class Level:
         """
         parts = self.split(structures)
         if len(parts) <= 1:
-            name, ranks, memory, part = (
-                parts[0] if parts else (self.name, None, None, {})
+            name, ranks, memory, bundle, part = (
+                parts[0] if parts else (self.name, None, None, None, {})
             )
-            return self._evaluate(node, part, name, ranks, memory, stress)
+            return self._evaluate(node, part, name, ranks, memory, stress, bundle)
         from concurrent.futures import ThreadPoolExecutor
 
         results = {}
         with ThreadPoolExecutor(max_workers=len(parts)) as pool:
             futures = [
-                pool.submit(self._evaluate, node, part, name, ranks, memory, stress)
-                for name, ranks, memory, part in parts
+                pool.submit(
+                    self._evaluate, node, part, name, ranks, memory, stress, bundle
+                )
+                for name, ranks, memory, bundle, part in parts
             ]
             for future in futures:
                 results.update(future.result())
         return results
 
-    def _evaluate(self, node, structures, directory, ranks, memory, stress):
-        """One Evaluator on ``structures``, in ``directory`` under the step's."""
+    def _evaluate(
+        self, node, structures, directory, ranks, memory, stress, bundle=None
+    ):
+        """One Evaluator on ``structures``, in ``directory`` under the step's,
+        ``bundle`` calculations per batch job (default the level's)."""
         import seamm_exec
 
         properties = ("energy", "gradients") + (("stress",) if stress else ())
-        options = {"archive": self.archive, "bundle_tasks": self.bundle}
+        bundle = self.bundle if bundle is None else bundle
+        options = {"archive": self.archive, "bundle_tasks": bundle}
         if self.walltime > 0:
             options["bundle_walltime"] = self.walltime
         results = {}
