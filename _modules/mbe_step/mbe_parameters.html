@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mbe_step.mbe_parameters &#8212; SEAMM MBE Plug-in 2026.10.20 documentation</title>
+    <title>mbe_step.mbe_parameters &#8212; SEAMM MBE Plug-in 2026.10.20.1 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=980f7468"></script>
+    <script src="../../_static/documentation_options.js?v=dbae61be"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -52,7 +52,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.20" />
+  <meta name="docsearch:version" content="2026.10.20.1" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -591,13 +591,15 @@
             <span class="s2">"description"</span><span class="p">:</span> <span class="s2">"Shell fragments' high level:"</span><span class="p">,</span>
             <span class="s2">"help_text"</span><span class="p">:</span> <span class="p">(</span>
                 <span class="s2">"With ion shells, the high level for the increments of the "</span>
-                <span class="s2">"fragments holding a shell, if it differs from the others', e.g. "</span>
+                <span class="s2">"fragments of two or more units holding a shell, if it differs "</span>
+                <span class="s2">"from the others', e.g. "</span>
                 <span class="s2">"'ORCA:DFT@REVDSD-PBEP86-D4_2021/def2-TZVPPD' for the Li+ shell "</span>
                 <span class="s2">"pairs with the solvent pairs at def2-QZVPPD. Each such increment "</span>
                 <span class="s2">"is built entirely at this level (the fragment and its "</span>
-                <span class="s2">"sub-fragments), so their partner molecules are computed at both "</span>
-                <span class="s2">"levels. It takes precedence over the triples' level for a "</span>
-                <span class="s2">"triple holding a shell."</span>
+                <span class="s2">"sub-fragments), so the shell and its partners are computed at "</span>
+                <span class="s2">"both levels. A shell's own 1-body term stays at the high level, "</span>
+                <span class="s2">"which sets the labels' energy scale. It takes precedence over the "</span>
+                <span class="s2">"triples' level for a triple holding a shell."</span>
             <span class="p">),</span>
         <span class="p">},</span>
         <span class="s2">"shell low level"</span><span class="p">:</span> <span class="p">{</span>
