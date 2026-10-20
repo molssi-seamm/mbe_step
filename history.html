@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>History &#8212; SEAMM MBE Plug-in 2026.10.20.2 documentation</title>
+    <title>History &#8212; SEAMM MBE Plug-in 2026.10.20.3 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="_static/documentation_options.js?v=ec56ebd4"></script>
+    <script src="_static/documentation_options.js?v=482e6fcd"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -54,7 +54,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.20.2" />
+  <meta name="docsearch:version" content="2026.10.20.3" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -511,6 +511,14 @@
   <section id="history">
 <h1>History<a class="headerlink" href="#history" title="Link to this heading">#</a></h1>
 <dl class="simple">
+<dt>2026.10.20.3 – Calculations per job for each fragment size</dt><dd><ul class="simple">
+<li><p><strong>Larger fragments</strong> takes an optional fourth field per entry, the number of
+calculations of that size that share a job (<code class="docutils literal notranslate"><span class="pre">atoms</span> <span class="pre">ranks</span> <span class="pre">memory</span> <span class="pre">[bundle]</span></code>),
+e.g. <code class="docutils literal notranslate"><span class="pre">30</span> <span class="pre">8</span> <span class="pre">6000</span> <span class="pre">8;</span> <span class="pre">45</span> <span class="pre">32</span> <span class="pre">7000</span> <span class="pre">1</span></code> to keep the many short fragments bundled
+while each large one gets a job of its own. Without it a size uses
+<strong>Molecular calculations per job</strong>, as before.</p></li>
+</ul>
+</dd>
 <dt>2026.10.20.2 – Task options for each level</dt><dd><ul class="simple">
 <li><p><strong>Task options</strong> (<code class="docutils literal notranslate"><span class="pre">level</span> <span class="pre">key=value</span> <span class="pre">...;</span> <span class="pre">...</span></code>) pass options to every
 calculation of a level, e.g. <code class="docutils literal notranslate"><span class="pre">high:shell</span> <span class="pre">exact_exchange_elements=none</span></code> so
