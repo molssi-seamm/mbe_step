@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.20.3 documentation</title>
+    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.23 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=482e6fcd"></script>
+    <script src="../_static/documentation_options.js?v=aff7fe02"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -55,7 +55,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.20.3" />
+  <meta name="docsearch:version" content="2026.10.23" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -702,6 +702,26 @@ RIJCOSX for the shell pairs, where it matches exact exchange in the increments
 which they need (COSX moves a lone PF₆⁻’s forces by about 6 meV/Å). A level
 computed together with another (a shell level equal to the triples’) takes the
 options of both; giving one option two values is refused.</p>
+<p><strong>Explicit auxiliary basis for</strong> names single fragments whose increment at a level
+is computed with explicit auxiliary basis sets instead of ORCA’s AutoAux, as
+entries <code class="docutils literal notranslate"><span class="pre">level</span> <span class="pre">fragment</span> <span class="pre">...</span></code> separated by <code class="docutils literal notranslate"><span class="pre">;</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">high:shell</span> <span class="pre">c1-d01_09;</span>
+<span class="pre">molecular:shell</span> <span class="pre">c1-d01_09</span></code>. For some large or highly charged clusters AutoAux
+makes the auxiliary basis linearly dependent and ORCA stops at the start (“SHARK
+not equipped”), as for a 104-atom pair with two Li⁺ shells. Each listed fragment
+is then computed, with all its sub-fragments, at a copy of the level with the
+explicit sets, in its own directory (e.g. <code class="docutils literal notranslate"><span class="pre">high_shells_aux</span></code>), and its increment
+is built from those calculations alone, so one auxiliary basis is used throughout
+it. The fragment’s own AutoAux calculation is left out; its sub-fragments’ AutoAux
+calculations stay where the other increments need them, and every other increment,
+the 1-body terms among them, is unchanged. The keys are those of the task
+directories, <code class="docutils literal notranslate"><span class="pre">c&lt;configuration</span> <span class="pre">id&gt;-&lt;fragment&gt;</span></code>. It applies to fragments of two or
+more units at ORCA levels run as tasks (ORCA step 2026.10.23.1 or later), and not
+yet with counterpoise. <strong>Explicit auxiliary sets</strong> chooses the sets: <code class="docutils literal notranslate"><span class="pre">explicit</span></code>
+(the default) for def2/J and, for MP2 and double hybrids, the /C set matching the
+orbital basis (def2-TZVPP/C for def2-TZVPPD), or entries <code class="docutils literal notranslate"><span class="pre">level</span> <span class="pre">sets</span></code> with the
+sets separated by commas, e.g. <code class="docutils literal notranslate"><span class="pre">high:shell</span> <span class="pre">def2/J,def2-TZVPP/C</span></code>. The sets change
+the energies slightly, so they are used only within an increment, never mixed with
+AutoAux results.</p>
 <p>The levels that run as batch tasks run at the same time, and the long periodic
 calculations (the whole cell and the periodic fragments) are started first, so
 they overlap the many molecular calculations instead of following them. For the
