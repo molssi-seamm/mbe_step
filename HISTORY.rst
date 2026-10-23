@@ -1,6 +1,19 @@
 =======
 History
 =======
+2026.10.23 -- Explicit auxiliary basis sets for single fragments
+    * **Explicit auxiliary basis for** names fragments whose increment at a level is
+      computed with explicit auxiliary basis sets instead of ORCA's AutoAux, e.g.
+      'high:shell c1-d01_09; molecular:shell c1-d01_09', for clusters where AutoAux
+      makes the auxiliary basis linearly dependent and ORCA stops. Each is computed
+      with its sub-fragments at a copy of the level with the explicit sets, in its
+      own directory, and its increment is built from those alone; its own AutoAux
+      calculation is left out, and the other increments are unchanged.
+    * **Explicit auxiliary sets** chooses the sets: 'explicit' (def2/J, plus the /C
+      set matching the basis for MP2 and double hybrids) or per level. Needs ORCA
+      step 2026.10.23.1 or later.
+    * With no fragments listed, every calculation and its fingerprint is as before.
+
 2026.10.20.3 -- Calculations per job for each fragment size
     * **Larger fragments** takes an optional fourth field per entry, the number of
       calculations of that size that share a job (``atoms ranks memory [bundle]``),

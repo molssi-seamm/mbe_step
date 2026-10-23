@@ -190,3 +190,25 @@ def test_shell_levels_only_with_shells(tk_node):
     tk_node["ion shells"].set("none")
     tk_node.reset_dialog()
     assert not mapped(tk_node, "shell high level")
+
+
+def test_auxiliary_basis_controls(tk_node):
+    """Explicit auxiliary basis fragments: for pairs and larger, not with
+    counterpoise; their sets only once fragments are listed."""
+    tk_node.create_dialog()
+    tk_node["maximum order"].set("2")
+    tk_node["counterpoise"].set("none")
+    tk_node.reset_dialog()
+    assert mapped(tk_node, "auxiliary basis fragments")
+    assert not mapped(tk_node, "auxiliary basis sets")
+    tk_node["auxiliary basis fragments"].set("high:shell c1-d01_09")
+    tk_node.reset_dialog()
+    assert mapped(tk_node, "auxiliary basis sets")
+    tk_node["counterpoise"].set("pairwise")
+    tk_node.reset_dialog()
+    assert not mapped(tk_node, "auxiliary basis fragments")
+    assert not mapped(tk_node, "auxiliary basis sets")
+    tk_node["counterpoise"].set("none")
+    tk_node["maximum order"].set("1")
+    tk_node.reset_dialog()
+    assert not mapped(tk_node, "auxiliary basis fragments")
