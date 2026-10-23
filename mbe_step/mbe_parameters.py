@@ -494,6 +494,43 @@ class MbeParameters(seamm.Parameters):
                 "Blank for none."
             ),
         },
+        "auxiliary basis fragments": {
+            "default": "",
+            "kind": "string",
+            "default_units": "",
+            "enumeration": tuple(),
+            "format_string": "",
+            "description": "Explicit auxiliary basis for (level fragment ...):",
+            "help_text": (
+                "Fragments whose increment at a level is computed with explicit "
+                "auxiliary basis sets instead of AutoAux, as entries 'level "
+                "fragment ...' separated by ';', e.g. 'high:shell c1-d01_09; "
+                "molecular:shell c1-d01_09' -- for clusters where AutoAux makes "
+                "the auxiliary basis linearly dependent and ORCA stops. Each such "
+                "fragment is computed with all its sub-fragments at a copy of the "
+                "level with the explicit sets, in its own directory "
+                "(<level>_aux), and its increment is built from those alone; its "
+                "own AutoAux calculation is left out, and the other increments, "
+                "the 1-body terms among them, are unchanged. Fragments of two or "
+                "more units, at ORCA levels. Blank for none."
+            ),
+        },
+        "auxiliary basis sets": {
+            "default": "explicit",
+            "kind": "string",
+            "default_units": "",
+            "enumeration": ("explicit",),
+            "format_string": "",
+            "description": "Explicit auxiliary sets (level sets):",
+            "help_text": (
+                "The auxiliary basis sets for the fragments above: 'explicit' for "
+                "def2/J and, for MP2 and double hybrids, the /C set matching the "
+                "orbital basis (def2-TZVPP/C for def2-TZVPPD); or entries 'level "
+                "sets' separated by ';', with the sets separated by commas, e.g. "
+                "'high:shell def2/J,def2-TZVPP/C'. Levels not listed use "
+                "'explicit'."
+            ),
+        },
         "periodic ranks": {
             "default": 8,
             "kind": "integer",

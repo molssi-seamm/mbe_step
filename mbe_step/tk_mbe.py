@@ -58,6 +58,8 @@ GROUPS = {
             "molecular bundle",
             "fragment resources",
             "task options",
+            "auxiliary basis fragments",
+            "auxiliary basis sets",
             "periodic ranks",
             "periodic memory",
             "periodic bundle",
@@ -76,6 +78,8 @@ DRIVERS = (
     "triple rule",
     "periodic low level",
     "ion shells",
+    "counterpoise",
+    "auxiliary basis fragments",
 )
 
 
@@ -141,6 +145,8 @@ class TkMbe(seamm.TkNode):
             "energy offsets",
             "fragment resources",
             "task options",
+            "auxiliary basis fragments",
+            "auxiliary basis sets",
         ):
             if hasattr(self[key], "entry"):
                 self[key].entry.configure(width=40)
@@ -257,6 +263,17 @@ class TkMbe(seamm.TkNode):
             "fragment resources",
             "task options",
         }
+        # Explicit auxiliary basis sets for single fragments: fragments of two or
+        # more units, and not with counterpoise, which they are refused with; the
+        # sets only once there are fragments
+        counterpoise = "counterpoise" in shown and (
+            self._value("counterpoise") != "none"
+        )
+        if order >= 2 and not counterpoise:
+            shown.add("auxiliary basis fragments")
+            listed = (self._value("auxiliary basis fragments") or "").strip()
+            if listed.lower() not in ("", "none"):
+                shown.add("auxiliary basis sets")
         shown |= {"cell ranks", "cell memory", "bundle walltime", "archive"}
         if order >= 2:
             shown.add("cutoffs")

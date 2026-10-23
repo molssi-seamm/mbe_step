@@ -183,6 +183,68 @@ def parse_task_options(text):
     return result
 
 
+def _level_entries(text, what, example):
+    """Entries "level word ..." separated by ';' or new lines: {level: [word]}."""
+    text = (text or "").strip()
+    if text.lower() in ("", "none"):
+        return {}
+    result = {}
+    for entry in text.replace("\n", ";").split(";"):
+        entry = entry.strip()
+        if not entry:
+            continue
+        fields = entry.split()
+        name, words = fields[0], fields[1:]
+        if name not in LEVEL_NAMES:
+            raise ValueError(
+                f"The {what} '{entry}' name the level '{name}', which is not one of "
+                f"{', '.join(LEVEL_NAMES)}."
+            )
+        if not words:
+            raise ValueError(f"The {what} '{entry}' should be like '{example}'.")
+        result.setdefault(name, []).extend(words)
+    return result
+
+
+def parse_aux_fragments(text):
+    """The fragments that use explicit auxiliary basis sets, by level, from
+    entries "level fragment ..." (fragment keys such as c1-d01_09).
+
+    Returns
+    -------
+    {str: set of str}
+    """
+    entries = _level_entries(text, "auxiliary basis fragments", "high:shell c1-d01_09")
+    return {level: set(names) for level, names in entries.items()}
+
+
+def parse_aux_sets(text):
+    """The explicit auxiliary sets by level, from "explicit" (for every level) or
+    entries "level sets" with the sets separated by commas.
+
+    Returns
+    -------
+    {str: str}
+        By level; a level not given uses "explicit".
+    """
+    text = (text or "").strip()
+    if text.lower() in ("", "explicit"):
+        return {}
+    entries = _level_entries(
+        text, "auxiliary basis sets", "high:shell def2/J,def2-TZVPP/C"
+    )
+    result = {}
+    for level, words in entries.items():
+        if len(words) != 1:
+            raise ValueError(
+                f"The auxiliary basis sets of {level} should be one word with the "
+                f"sets separated by commas, e.g. def2/J,def2-TZVPP/C, not "
+                f"'{' '.join(words)}'."
+            )
+        result[level] = words[0]
+    return result
+
+
 def n_atoms(structure):
     """The number of atoms of a structure an Evaluator takes (a Geometry or a
     configuration, possibly with options as a tuple)."""
@@ -248,6 +310,21 @@ class Level:
     @property
     def level(self):
         return self.mc["level"]
+
+    def variant(self, name, **options):
+        """A copy of this level with its own name (and directory) and more task
+        options, e.g. explicit auxiliary basis sets."""
+        return Level(
+            name,
+            self.mc,
+            ranks=self.ranks,
+            memory=self.memory,
+            bundle=self.bundle,
+            walltime=self.walltime,
+            archive=self.archive,
+            tiers=self.tiers,
+            options={**self.options, **options},
+        )
 
     def resources(self, ranks=None, memory=None):
         from seamm_exec import Resources

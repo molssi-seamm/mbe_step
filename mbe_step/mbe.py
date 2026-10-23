@@ -261,6 +261,19 @@ class Mbe(seamm.Node):
                 )
                 + "."
             )
+        listed = levels.parse_aux_fragments(P["auxiliary basis fragments"])
+        if listed:
+            sets = levels.parse_aux_sets(P["auxiliary basis sets"])
+            text += (
+                " These fragments are computed, with their sub-fragments, with "
+                "explicit auxiliary basis sets instead of AutoAux: "
+                + "; ".join(
+                    f"{', '.join(sorted(keys))} at the {level} level "
+                    f"({sets.get(level, 'explicit')})"
+                    for level, keys in listed.items()
+                )
+                + "."
+            )
         tiers = levels.parse_resources(P["fragment resources"])
         if tiers:
             text += (
@@ -342,6 +355,7 @@ class Mbe(seamm.Node):
         automatic = thermo.is_automatic(P["energy offsets"])
         offsets = None if automatic else labels_.parse_offsets(P["energy offsets"])
         frames = [self._frame(c, rules, P) for c in configurations]
+        self._check_aux_fragments(P, frames)
         levels_ = self._levels(P, context, frames)
         if automatic:
             # Before any calculation: a level without atomic references is refused
@@ -449,15 +463,76 @@ class Mbe(seamm.Node):
         seamm_mbe.assign_levels(fragments, periodic)
         self._check_frame(configuration, system, rules, P)
         high_levels, low_levels = _level_maps(P)
+        prefix = f"c{configuration.id}-"
+        variants = self._aux_variants(
+            configuration, fragments, prefix, high_levels, low_levels, P
+        )
         return {
             "configuration": configuration,
             "system": system,
             "fragments": fragments,
             "calculations": fragments.calculations(
-                high_levels=high_levels, low_levels=low_levels
+                high_levels=high_levels, low_levels=low_levels, variants=variants
             ),
-            "prefix": f"c{configuration.id}-",
+            "prefix": prefix,
+            "variants": variants,
         }
+
+    @staticmethod
+    def _aux_variants(configuration, fragments, prefix, high_levels, low_levels, P):
+        """The seamm_mbe level variants of a configuration for the fragments
+        listed to use explicit auxiliary basis sets: {level: (level@aux,
+        {fragment name})}."""
+        listed = levels.parse_aux_fragments(P["auxiliary basis fragments"])
+        variants = {}
+        for level, keys in listed.items():
+            names = {k[len(prefix) :] for k in keys if k.startswith(prefix)}
+            for name in sorted(names):
+                where = f"{prefix}{name} (configuration {configuration.name})"
+                if name not in fragments:
+                    raise ValueError(
+                        f"The auxiliary basis fragment {where} is not a fragment."
+                    )
+                f = fragments[name]
+                if not f.in_sum:
+                    raise ValueError(
+                        f"The auxiliary basis fragment {where} is not a selected "
+                        "fragment, so it has no increment of its own."
+                    )
+                if f.order < 2:
+                    raise ValueError(
+                        f"The auxiliary basis fragment {where} is a monomer: the "
+                        "1-body terms set the energy scale of every unit and stay "
+                        "at their level."
+                    )
+                uses = (
+                    seamm_mbe.level_key(f, high_levels, "high", fragments.shells),
+                    seamm_mbe.low_level_of(f, low_levels, fragments.shells),
+                )
+                if level not in uses:
+                    raise ValueError(
+                        f"The auxiliary basis fragment {where} is given for the "
+                        f"{level} level, but its increment uses {uses[0]} and "
+                        f"{uses[1]}."
+                    )
+            if names:
+                variants[level] = (f"{level}@aux", names)
+        return variants
+
+    @staticmethod
+    def _check_aux_fragments(P, frames):
+        """Refuse auxiliary basis fragments that name no configuration's fragment,
+        e.g. a mistyped configuration number."""
+        listed = levels.parse_aux_fragments(P["auxiliary basis fragments"])
+        prefixes = [frame["prefix"] for frame in frames]
+        for level, keys in listed.items():
+            for key in sorted(keys):
+                if not any(key.startswith(prefix) for prefix in prefixes):
+                    raise ValueError(
+                        f"The auxiliary basis fragment {key} ({level}) is not in "
+                        "any of the configurations: the keys are 'c<configuration "
+                        "id>-<fragment>', e.g. c1-d01_09."
+                    )
 
     def _check_frame(self, configuration, system, rules, P):
         """Refuse, before any calculation, what would fail or be wrong later:
@@ -673,6 +748,8 @@ class Mbe(seamm.Node):
                 )
             add_options(key)
 
+        self._aux_levels(P, result)
+
         if P["counterpoise"] != "none":
             if periodic_frames:
                 raise ValueError(
@@ -692,6 +769,57 @@ class Mbe(seamm.Node):
                         "tasks, such as ORCA."
                     )
         return result
+
+    @staticmethod
+    def _aux_levels(P, result):
+        """Add to ``result`` the copies of the levels with explicit auxiliary
+        basis sets, "<level>@aux", for the fragments listed to use them. Levels
+        computed together (one Level) share one copy."""
+        listed = levels.parse_aux_fragments(P["auxiliary basis fragments"])
+        if not listed:
+            return
+        if P["counterpoise"] != "none":
+            raise ValueError(
+                "Explicit auxiliary basis sets for single fragments are not "
+                "available with counterpoise yet: the counterpoise calculations of "
+                "those pairs would need them too."
+            )
+        sets = levels.parse_aux_sets(P["auxiliary basis sets"])
+        for level in sets:
+            if level not in listed:
+                raise ValueError(
+                    f"Auxiliary basis sets are given for the {level} level, which has "
+                    "no auxiliary basis fragments."
+                )
+        copies = {}  # id(Level): (copy, sets)
+        for level in listed:
+            if level not in result or level in ("periodic", "cell", "cluster"):
+                raise ValueError(
+                    f"The auxiliary basis fragments are for the {level} level, which "
+                    "this step does not compute fragments at."
+                )
+            base = result[level]
+            options = base.mc.get("options") or {}
+            if base.mc.get("step") != "ORCA" or (
+                options.get("mdi_capable") and not options.get("prefers_batch")
+            ):
+                raise ValueError(
+                    f"The {level} level ({base.level}) cannot take explicit auxiliary "
+                    "basis sets: they are an option of ORCA's calculations run as "
+                    "tasks."
+                )
+            aux = sets.get(level, "explicit")
+            if id(base) in copies:
+                copy, other = copies[id(base)]
+                if other != aux:
+                    raise ValueError(
+                        f"The levels computed together with {level} are given two "
+                        f"different auxiliary basis sets: {other} and {aux}."
+                    )
+            else:
+                copy = base.variant(f"{base.name}_aux", aux_basis=aux)
+                copies[id(base)] = (copy, aux)
+            result[f"{level}@aux"] = copy
 
     # ------------------------------------------------------------ evaluation
     def _evaluate(self, levels_, frames):
@@ -730,7 +858,7 @@ class Mbe(seamm.Node):
                 options = None
                 if name == "periodic" and system.periodic:
                     options = {"grid": {**self._grid, "reference_cell": system.cell}}
-                for fname in frame["calculations"][name]:
+                for fname in frame["calculations"].get(name, []):
                     geometry = levels.geometry(system, fragments[fname])
                     if options is not None:
                         geometry = (geometry, options)
@@ -920,6 +1048,7 @@ class Mbe(seamm.Node):
                 low_by_order[key] = library(name)
         high_by_order = high_by_order or None
         low_by_order = low_by_order or None
+        variants = frame.get("variants") or {}
         correction = seamm_mbe.mbe_correction(
             frame["fragments"],
             library("high"),
@@ -928,6 +1057,8 @@ class Mbe(seamm.Node):
             corrections=corrections,
             high_by_order=high_by_order,
             low_by_order=low_by_order,
+            variants=variants or None,
+            variant_results={v: library(v) for v, _ in variants.values()} or None,
         )
         frame["correction"] = correction
         term = seamm_mbe.CellTerm(

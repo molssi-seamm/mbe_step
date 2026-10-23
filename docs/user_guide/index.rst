@@ -208,6 +208,27 @@ which they need (COSX moves a lone PF₆⁻'s forces by about 6 meV/Å). A level
 computed together with another (a shell level equal to the triples') takes the
 options of both; giving one option two values is refused.
 
+**Explicit auxiliary basis for** names single fragments whose increment at a level
+is computed with explicit auxiliary basis sets instead of ORCA's AutoAux, as
+entries ``level fragment ...`` separated by ``;``, e.g. ``high:shell c1-d01_09;
+molecular:shell c1-d01_09``. For some large or highly charged clusters AutoAux
+makes the auxiliary basis linearly dependent and ORCA stops at the start ("SHARK
+not equipped"), as for a 104-atom pair with two Li⁺ shells. Each listed fragment
+is then computed, with all its sub-fragments, at a copy of the level with the
+explicit sets, in its own directory (e.g. ``high_shells_aux``), and its increment
+is built from those calculations alone, so one auxiliary basis is used throughout
+it. The fragment's own AutoAux calculation is left out; its sub-fragments' AutoAux
+calculations stay where the other increments need them, and every other increment,
+the 1-body terms among them, is unchanged. The keys are those of the task
+directories, ``c<configuration id>-<fragment>``. It applies to fragments of two or
+more units at ORCA levels run as tasks (ORCA step 2026.10.23.1 or later), and not
+yet with counterpoise. **Explicit auxiliary sets** chooses the sets: ``explicit``
+(the default) for def2/J and, for MP2 and double hybrids, the /C set matching the
+orbital basis (def2-TZVPP/C for def2-TZVPPD), or entries ``level sets`` with the
+sets separated by commas, e.g. ``high:shell def2/J,def2-TZVPP/C``. The sets change
+the energies slightly, so they are used only within an increment, never mixed with
+AutoAux results.
+
 The levels that run as batch tasks run at the same time, and the long periodic
 calculations (the whole cell and the periodic fragments) are started first, so
 they overlap the many molecular calculations instead of following them. For the
