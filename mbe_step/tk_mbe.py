@@ -42,6 +42,7 @@ GROUPS = {
             "ion shell cutoffs",
             "shell members",
             "shell truncation",
+            "shell pair cap",
             "counterpoise",
         ),
     ),
@@ -250,6 +251,9 @@ class TkMbe(seamm.TkNode):
             shown.discard("shell low level")
         if shells:
             shown |= {"ion shell cutoffs", "shell members"}
+            if order >= 2:
+                # A cap on the pairs of two shells
+                shown.add("shell pair cap")
             if triples:
                 shown.add("shell truncation")
         if order >= 2 and not periodic and not shells:

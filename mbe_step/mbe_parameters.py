@@ -317,6 +317,20 @@ class MbeParameters(seamm.Parameters):
                 "hold most of the cost (a shell has 40-70 atoms)."
             ),
         },
+        "shell pair cap": {
+            "default": 0.0,
+            "kind": "float",
+            "default_units": "Å",
+            "enumeration": tuple(),
+            "format_string": ".2f",
+            "description": "Cap for pairs of two shells:",
+            "help_text": (
+                "Pairs of two shells at least this far apart (by the distance "
+                "criterion) are not computed: they are left out of the sum and "
+                "listed as capped in increments_c<id>.json. Two-shell pairs hold "
+                "85-110 atoms and dominate the cost. 0 for no cap."
+            ),
+        },
         # ------------------------------------------------- low-level assignment
         "periodic monomers": {
             "default": "yes",

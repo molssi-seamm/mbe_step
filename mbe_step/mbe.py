@@ -304,6 +304,11 @@ class Mbe(seamm.Node):
                 if P["shell truncation"] == "pairs":
                     text += ", and a shell's pairs are selected but not its triples"
                 text += "."
+                if P["shell pair cap"].m_as("Å") > 0:
+                    text += (
+                        f" Pairs of two shells {P['shell pair cap']} or more apart "
+                        "are not computed (capped)."
+                    )
             if P["counterpoise"] == "pairwise":
                 text += (
                     " Each pair is corrected for the basis-set superposition error "
@@ -416,12 +421,14 @@ class Mbe(seamm.Node):
             )
             rules[3] = P["triple rule"]
         shells = self._shell_rules(P) is not None
+        cap = P["shell pair cap"].m_as("Å")
         return seamm_mbe.SelectionRules(
             max_order=order,
             criterion=CRITERIA[P["distance criterion"]],
             cutoffs=cutoffs,
             rules=rules,
             shell_max_order=2 if shells and P["shell truncation"] == "pairs" else None,
+            shell_pair_cap=cap if shells and cap > 0 else None,
         )
 
     def _shell_rules(self, P):
@@ -454,6 +461,15 @@ class Mbe(seamm.Node):
             system if shell_rules is None else seamm_mbe.ion_shells(system, shell_rules)
         )
         fragments = seamm_mbe.enumerate_fragments(units, rules)
+        if fragments.capped:
+            printer.important(
+                __(
+                    f"Configuration {configuration.name}: {len(fragments.capped)} "
+                    f"pairs of two shells are {rules.shell_pair_cap:.2f} Å or more "
+                    "apart, so they are not computed (capped).",
+                    indent=4 * " ",
+                )
+            )
         periodic = {}
         if P["periodic low level"] != "none":
             periodic[1] = _truthy(P["periodic monomers"])
@@ -1206,6 +1222,25 @@ class Mbe(seamm.Node):
                         n += 1
                 record["topology"] = "closed" if n == 3 else "chain"
             records.append(record)
+        # The pairs of two shells at or beyond the cap: not computed, so no
+        # energy or forces, and not in the sum
+        cap = fragments.rules.shell_pair_cap
+        for c in fragments.capped:
+            record = {
+                "name": c["name"],
+                "order": 2,
+                "molecules": [int(m) for m in c["molecules"]],
+                "images": [[int(x) for x in image] for image in c["images"]],
+                "distances": {"0,1": float(c["distance"])},
+                "capped": f"{cap:g}A",
+                "computed": False,
+            }
+            members = getattr(fragments.system, "members", None)
+            if members is not None:
+                record["members"] = [
+                    [int(m) for m in members[u]] for u in c["molecules"]
+                ]
+            records.append(record)
         path = Path(self.directory) / f"increments_c{frame['configuration'].id}.json"
         path.write_text(
             json.dumps(
@@ -1213,6 +1248,7 @@ class Mbe(seamm.Node):
                     "configuration": frame["configuration"].name,
                     "distance criterion": P["distance criterion"],
                     "triple cutoff (Å)": triple_cutoff,
+                    "shell pair cap (Å)": cap,
                     "units": {"energy": "eV", "forces": "eV/Å", "distances": "Å"},
                     "increments": records,
                 },

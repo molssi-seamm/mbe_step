@@ -156,6 +156,7 @@ def test_ion_shell_layouts(tk_node):
     tk_node.reset_dialog()
     assert mapped(tk_node, "ion shells")
     assert not mapped(tk_node, "ion shell cutoffs")
+    assert not mapped(tk_node, "shell pair cap")
     assert mapped(tk_node, "counterpoise")
 
     tk_node["counterpoise"].set("pairwise")
@@ -163,6 +164,7 @@ def test_ion_shell_layouts(tk_node):
     tk_node.reset_dialog()
     assert mapped(tk_node, "ion shell cutoffs") and mapped(tk_node, "shell members")
     assert mapped(tk_node, "shell truncation")
+    assert mapped(tk_node, "shell pair cap")
     # Not available with shells: hidden, and set back to none
     assert not mapped(tk_node, "counterpoise")
     assert tk_node["counterpoise"].get() == "none"
@@ -174,6 +176,10 @@ def test_ion_shell_layouts(tk_node):
     tk_node["maximum order"].set("2")
     tk_node.reset_dialog()
     assert not mapped(tk_node, "shell truncation")
+    assert mapped(tk_node, "shell pair cap")  # a cap on pairs needs no triples
+    tk_node["maximum order"].set("1")
+    tk_node.reset_dialog()
+    assert not mapped(tk_node, "shell pair cap")
 
 
 def test_shell_levels_only_with_shells(tk_node):
