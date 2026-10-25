@@ -289,6 +289,16 @@ kJ/mol and the forces to 3.6 meV/Å RMS.
   every 1-body term stay at def2-QZVPPD. In Li-salt cells of about 520 atoms this cuts
   the cost by four to seven times. The job output lists, for each configuration,
   the number of increments at the shell levels by order.
+- **Capped two-shell pairs:** a pair of two shells holds 85–110 atoms and costs
+  far more than any other fragment (about 25 h on 32 cores at revDSD/def2-TZVPPD in
+  Li-salt cells). **Cap for pairs of two shells** r leaves out every pair of two
+  shells at least r apart (by the distance criterion), and any larger fragment
+  holding one: they are not computed and not in the sum, so for those pairs the
+  labels stay at the low level (no [high − low] increment). The job output gives
+  the number capped for each configuration, and ``increments_c<id>.json`` lists
+  each capped pair with ``"capped": "<r>A"`` and ``"computed": false`` and no
+  energy or forces, so they can be told apart from computed increments. 0 (the
+  default) caps nothing.
 - **Larger fragments:** shell pairs are large, so give them more cores and memory
   with **Larger fragments** (see `Running the calculations`_).
 - **Anions with B or P:** ORCA's exact exchange for B and P can be lifted for the

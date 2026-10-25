@@ -1,6 +1,19 @@
 =======
 History
 =======
+2026.10.25 -- A cap for the pairs of two ion shells
+    * **Cap for pairs of two shells** r leaves out every pair of two ion shells at
+      least r apart (by the distance criterion): they are not computed and not in
+      the sum, so for those pairs the labels stay at the low level (no [high - low]
+      increment).
+      Pairs of two shells hold 85-110 atoms and dominate the cost of Li-salt cells.
+      0 (the default) caps nothing, and the option shows only with ion shells.
+    * The job output gives the number of capped pairs for each configuration, and
+      ``increments_c<id>.json`` lists each one with ``"capped": "<r>A"``,
+      ``"computed": false`` and no energy or forces, plus the cap as
+      ``"shell pair cap (Å)"``.
+    * Needs seamm-mbe 2026.10.25.
+
 2026.10.23 -- Explicit auxiliary basis sets for single fragments
     * **Explicit auxiliary basis for** names fragments whose increment at a level is
       computed with explicit auxiliary basis sets instead of ORCA's AutoAux, e.g.

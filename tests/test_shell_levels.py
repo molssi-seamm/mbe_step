@@ -2,6 +2,7 @@
 at def2-TZVPPD with the solvent pairs at def2-QZVPPD), and more cores and memory for
 the larger fragments."""
 
+import json
 import types
 
 import numpy as np
@@ -278,3 +279,107 @@ def test_tiers_run_as_their_own_evaluators(monkeypatch):
     lv.tiers = []
     lv.evaluate(None, structures)
     assert calls == [("molecular", 2, 3800.0, 8, ["a", "b"])]
+
+
+def two_shells(db, separation=8.0):
+    """Two Li+ with four waters each in their first shells, and a free water."""
+    symbols, xyz, bonds = [], [], []
+    centers = [np.zeros(3), np.array([separation, 0.0, 0.0])]
+    for c in centers:
+        symbols.append("Li")
+        xyz.append(c)
+    waters = []
+    for c in centers:
+        for k, d in enumerate((1.9, 1.95, 2.0, 2.05)):
+            theta = k * np.pi / 2
+            u = np.array([0.6 * (-1) ** k, np.cos(theta), np.sin(theta)])
+            waters.append((c + d * u / np.linalg.norm(u), c))
+    waters.append(
+        (np.array([separation / 2, 6.0, 0.0]), np.array([separation / 2, 7.0, 0.0]))
+    )
+    for o, center in waters:
+        n = len(symbols)
+        away = (o - center) / np.linalg.norm(o - center)
+        x = np.array([1.0, 0.0, 0.0])
+        v = np.cross(x, away)
+        s, c = np.linalg.norm(v), float(x @ away)
+        if s < 1e-12:
+            rot = np.eye(3) if c > 0 else np.diag([-1.0, -1.0, 1.0])
+        else:
+            k = np.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]]) / s
+            rot = np.eye(3) + s * k + (1 - c) * k @ k
+        symbols += ["O", "H", "H"]
+        xyz += [o, *(o + H_OFFSETS @ rot.T)]
+        bonds += [(n, n + 1), (n, n + 2)]
+    return configuration(db, symbols, np.array(xyz), bonds=bonds)
+
+
+def test_the_shell_pair_cap(db, monkeypatch, tmp_path):
+    """A pair of two shells at or beyond the cap is not computed at any level,
+    its increment leaves the sum, and increments_c<id>.json lists it as capped
+    (Li-salt production, 2026-10-25)."""
+    monkeypatch.setattr(levels.Level, "evaluate", evaluate_with_shift)
+    monkeypatch.setattr(mbe_step.Mbe, "directory", str(tmp_path), raising=False)
+    conf = two_shells(db)
+    shell_levels = {"shell high level": "TZ", "shell low level": "TZLOW"}
+    extra = {"high:shell": "high_shells", "molecular:shell": "molecular_shells"}
+
+    node, P = parameters(**SETTINGS, **shell_levels)
+    frame = node._frame(conf, node._rules(P), P)
+    fragments = frame["fragments"]
+    assert len(fragments.shells) == 2 and fragments.capped == []
+    (pair,) = [f for f in fragments.by_order(2) if set(f.molecules) <= fragments.shells]
+    _, plain = run(node, P, frame, _levels(**extra))
+    increment = frame["correction"].increments[pair.name]
+
+    node, P = parameters(
+        **SETTINGS, **shell_levels, **{"shell pair cap": pair.max_distance - 0.01}
+    )
+    node._id = (1,)  # the header needs a step id, as in a flowchart
+    text = " ".join(node.description_text(P).split())
+    assert "are not computed (capped)" in text
+    frame = node._frame(conf, node._rules(P), P)
+    fragments = frame["fragments"]
+    assert [c["name"] for c in fragments.capped] == [pair.name]
+    assert pair.name not in fragments
+    for level_, names in frame["calculations"].items():
+        assert pair.name not in names, level_
+    _, capped = run(node, P, frame, _levels(**extra))
+    assert capped.energy == pytest.approx(plain.energy - increment.energy, abs=1e-9)
+    assert np.allclose(
+        capped.forces, plain.forces - _on_atoms(increment, pair, len(plain.forces))
+    )
+
+    node._write_increments(frame, P)
+    data = json.loads((tmp_path / f"increments_c{conf.id}.json").read_text())
+    assert data["shell pair cap (Å)"] == pytest.approx(pair.max_distance - 0.01)
+    records = {r["name"]: r for r in data["increments"]}
+    record = records[pair.name]
+    assert record["capped"] == f"{pair.max_distance - 0.01:g}A"
+    assert record["computed"] is False
+    assert "energy" not in record and "forces" not in record
+    assert record["distances"]["0,1"] == pytest.approx(pair.max_distance)
+    assert len(record["members"]) == 2
+    assert all("capped" not in r for n, r in records.items() if n != pair.name)
+
+    # A cap beyond the pair keeps it
+    node, P = parameters(
+        **SETTINGS, **shell_levels, **{"shell pair cap": pair.max_distance + 0.01}
+    )
+    frame = node._frame(conf, node._rules(P), P)
+    assert frame["fragments"].capped == [] and pair.name in frame["fragments"]
+
+
+def _on_atoms(increment, fragment, n_atoms):
+    forces = np.zeros((n_atoms, 3))
+    np.add.at(forces, fragment.atoms, increment.forces)
+    return forces
+
+
+def test_the_shell_pair_cap_needs_shells():
+    node, P = parameters(**{"shell pair cap": 2.5})
+    assert node._rules(P).shell_pair_cap is None
+    node, P = parameters(**SETTINGS, **{"shell pair cap": 2.5})
+    assert node._rules(P).shell_pair_cap == pytest.approx(2.5)
+    node, P = parameters(**SETTINGS)
+    assert node._rules(P).shell_pair_cap is None
