@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.23 documentation</title>
+    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.25 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=aff7fe02"></script>
+    <script src="../_static/documentation_options.js?v=c006ead6"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -55,7 +55,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.23" />
+  <meta name="docsearch:version" content="2026.10.25" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -777,6 +777,16 @@ the shell pairs at their own levels, e.g. def2-TZVPPD, while the solvent pairs a
 every 1-body term stay at def2-QZVPPD. In Li-salt cells of about 520 atoms this cuts
 the cost by four to seven times. The job output lists, for each configuration,
 the number of increments at the shell levels by order.</p></li>
+<li><p><strong>Capped two-shell pairs:</strong> a pair of two shells holds 85–110 atoms and costs
+far more than any other fragment (about 25 h on 32 cores at revDSD/def2-TZVPPD in
+Li-salt cells). <strong>Cap for pairs of two shells</strong> r leaves out every pair of two
+shells at least r apart (by the distance criterion), and any larger fragment
+holding one: they are not computed and not in the sum, so for those pairs the
+labels stay at the low level (no [high − low] increment). The job output gives
+the number capped for each configuration, and <code class="docutils literal notranslate"><span class="pre">increments_c&lt;id&gt;.json</span></code> lists
+each capped pair with <code class="docutils literal notranslate"><span class="pre">&quot;capped&quot;:</span> <span class="pre">&quot;&lt;r&gt;A&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;computed&quot;:</span> <span class="pre">false</span></code> and no
+energy or forces, so they can be told apart from computed increments. 0 (the
+default) caps nothing.</p></li>
 <li><p><strong>Larger fragments:</strong> shell pairs are large, so give them more cores and memory
 with <strong>Larger fragments</strong> (see <a class="reference internal" href="#running-the-calculations">Running the calculations</a>).</p></li>
 <li><p><strong>Anions with B or P:</strong> ORCA’s exact exchange for B and P can be lifted for the
