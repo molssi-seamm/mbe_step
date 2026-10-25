@@ -1,6 +1,12 @@
 =======
 History
 =======
+2026.10.25.1 -- Bugfix: a set shell pair cap stopped the job at its start
+    * With **Cap for pairs of two shells** set, the step's description failed with
+      "'str' object has no attribute 'm_as'" before anything ran: the description
+      reads the parameters as text. It now reads the cap as text there too, and a
+      $variable counts as set.
+
 2026.10.25 -- A cap for the pairs of two ion shells
     * **Cap for pairs of two shells** r leaves out every pair of two ion shells at
       least r apart (by the distance criterion): they are not computed and not in

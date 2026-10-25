@@ -383,3 +383,15 @@ def test_the_shell_pair_cap_needs_shells():
     assert node._rules(P).shell_pair_cap == pytest.approx(2.5)
     node, P = parameters(**SETTINGS)
     assert node._rules(P).shell_pair_cap is None
+
+
+def test_the_shell_pair_cap_in_the_description():
+    """description_text gets the parameters as strings, as in a flowchart's run:
+    a cap of '2.5 Å' crashed it in 2026.10.25 (the f05 dry run, 2026-10-25)."""
+    for cap, shown in ((2.5, True), (0.0, False), ("$cap", True)):
+        node = mbe_step.Mbe()
+        for key, value in {**SETTINGS, "shell pair cap": cap}.items():
+            node.parameters[key].value = value
+        node._id = (1,)
+        text = " ".join(node.description_text(node.parameters.values_to_dict()).split())
+        assert ("are not computed (capped)" in text) is shown, cap
