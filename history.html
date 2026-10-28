@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>History &#8212; SEAMM MBE Plug-in 2026.10.25 documentation</title>
+    <title>History &#8212; SEAMM MBE Plug-in 2026.10.25.1 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="_static/documentation_options.js?v=c006ead6"></script>
+    <script src="_static/documentation_options.js?v=b65f04c2"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -54,7 +54,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.25" />
+  <meta name="docsearch:version" content="2026.10.25.1" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -511,6 +511,13 @@
   <section id="history">
 <h1>History<a class="headerlink" href="#history" title="Link to this heading">#</a></h1>
 <dl class="simple">
+<dt>2026.10.25.1 – Bugfix: a set shell pair cap stopped the job at its start</dt><dd><ul class="simple">
+<li><p>With <strong>Cap for pairs of two shells</strong> set, the step’s description failed with
+“‘str’ object has no attribute ‘m_as’” before anything ran: the description
+reads the parameters as text. It now reads the cap as text there too, and a
+$variable counts as set.</p></li>
+</ul>
+</dd>
 <dt>2026.10.25 – A cap for the pairs of two ion shells</dt><dd><ul class="simple">
 <li><p><strong>Cap for pairs of two shells</strong> r leaves out every pair of two ion shells at
 least r apart (by the distance criterion): they are not computed and not in
