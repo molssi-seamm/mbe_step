@@ -44,6 +44,17 @@ if path.exists():
     molsystem.add_properties_from_file(csv_file)
 
 
+def _distance_set(value):
+    """Whether a distance parameter is set (> 0): a Quantity when run() reads it,
+    a string such as '2.5 Å' or a $variable in the description."""
+    if hasattr(value, "m_as"):
+        return value.m_as("Å") > 0
+    try:
+        return float(str(value).split()[0]) > 0
+    except (ValueError, IndexError):
+        return True  # e.g. a variable, known only when the step runs
+
+
 def _truthy(value):
     return value is True or (isinstance(value, str) and value.lower() == "yes")
 
@@ -304,7 +315,7 @@ class Mbe(seamm.Node):
                 if P["shell truncation"] == "pairs":
                     text += ", and a shell's pairs are selected but not its triples"
                 text += "."
-                if P["shell pair cap"].m_as("Å") > 0:
+                if _distance_set(P["shell pair cap"]):
                     text += (
                         f" Pairs of two shells {P['shell pair cap']} or more apart "
                         "are not computed (capped)."
