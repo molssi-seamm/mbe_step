@@ -91,3 +91,26 @@ def test_extxyz_rewrites_a_configuration_instead_of_duplicating(tmp_path):
     assert len(frames) == 2
     assert "REF_energy=-2.00000000" in frames[0][1]
     assert "REF_energy=-3.00000000" in frames[1][1]
+
+
+def test_extxyz_names_read_back_by_ase(tmp_path):
+    """Names with '=', spaces, quotes or backslashes read back as themselves; ASE
+    writes 'a_toO=' without quotes and reads it back merged with the next key."""
+    from types import SimpleNamespace
+
+    ase_io = pytest.importorskip("ase.io")
+    system = SimpleNamespace(
+        periodic=False,
+        symbols=["O", "H", "H"],
+        coordinates=np.zeros((3, 3)),
+    )
+    labels = SimpleNamespace(reference_energy=-1.0, forces=np.zeros((3, 3)))
+    names = ["c1-m01_toO=", "two words", 'a "quoted" one', "back\\slash"]
+    path = tmp_path / "labels.extxyz"
+    for i, name in enumerate(names):
+        labels_.write_extxyz(
+            path, system, labels, name=name, model='rev"DSD"/QZ', identifier=i
+        )
+    frames = ase_io.read(str(path), index=":", format="extxyz")
+    assert [a.info["SEAMM/configuration_name"] for a in frames] == names
+    assert {a.info["model"] for a in frames} == {'rev"DSD"/QZ'}

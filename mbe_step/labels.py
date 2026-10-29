@@ -97,6 +97,14 @@ def voigt(tensor):
     return [t[0, 0], t[1, 1], t[2, 2], t[1, 2], t[0, 2], t[0, 1]]
 
 
+def _quoted(value):
+    """A value for the comment line of an extended XYZ file, in double quotes with
+    any backslash or double quote escaped, so that a name with spaces, '=' or quotes
+    reads back as itself in ASE."""
+    text = str(value).replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{text}"'
+
+
 def write_extxyz(
     path,
     system,
@@ -133,9 +141,9 @@ def write_extxyz(
         fields.append('pbc="T T T"')
     else:
         fields.append('pbc="F F F"')
-    fields.append(f'model="{model}"')
+    fields.append(f"model={_quoted(model)}")
     fields.append(f"counterpoise={'T' if counterpoise else 'F'}")
-    fields.append(f'SEAMM/configuration_name="{name}"')
+    fields.append(f"SEAMM/configuration_name={_quoted(name)}")
     if identifier is not None:
         fields.append(f"SEAMM/configuration_id={identifier}")
     if extra:

@@ -1,6 +1,12 @@
 =======
 History
 =======
+2026.10.29.1 -- Bugfix: names with quotes in the labels' extended XYZ file
+    * The configuration name and the model on the comment line of the labels'
+      extended XYZ file were quoted but not escaped, so a name with a double quote or
+      a backslash broke the line. They are now escaped, so that any name -- with
+      spaces, '=', quotes or backslashes -- reads back as itself in ASE.
+
 2026.10.29 -- Explicit auxiliary basis sets for 1-body terms
     * **Explicit auxiliary basis for 1-body terms** names units whose own 1-body
       term is computed with explicit auxiliary basis sets instead of AutoAux, as
