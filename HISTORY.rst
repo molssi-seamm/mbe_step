@@ -1,6 +1,19 @@
 =======
 History
 =======
+2026.10.29 -- Explicit auxiliary basis sets for 1-body terms
+    * **Explicit auxiliary basis for 1-body terms** names units whose own 1-body
+      term is computed with explicit auxiliary basis sets instead of AutoAux, as
+      entries 'level unit ...', e.g. 'high c1-m01 c1-m03', for units where AutoAux
+      makes the auxiliary basis linearly dependent and ORCA stops (Li+ shells at
+      revDSD-PBEP86-D4/def2-QZVPPD). Each is computed at the explicit-aux copy of
+      its level; nothing else changes.
+    * A 1-body term is an absolute energy, so its auxiliary sets shift it (about
+      -0.05 kJ/mol per atom for def2/J + def2-QZVPP/C at revDSD/def2-QZVPPD): the
+      step's description says those units are not on the AutoAux scale, for a
+      correction or flag downstream. **Explicit auxiliary basis for** still refuses
+      1-body terms, and the 1-body entry refuses fragments of two or more units.
+
 2026.10.25.1 -- Bugfix: a set shell pair cap stopped the job at its start
     * With **Cap for pairs of two shells** set, the step's description failed with
       "'str' object has no attribute 'm_as'" before anything ran: the description

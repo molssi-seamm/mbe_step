@@ -60,6 +60,7 @@ GROUPS = {
             "fragment resources",
             "task options",
             "auxiliary basis fragments",
+            "auxiliary basis monomers",
             "auxiliary basis sets",
             "periodic ranks",
             "periodic memory",
@@ -81,6 +82,7 @@ DRIVERS = (
     "ion shells",
     "counterpoise",
     "auxiliary basis fragments",
+    "auxiliary basis monomers",
 )
 
 
@@ -147,6 +149,7 @@ class TkMbe(seamm.TkNode):
             "fragment resources",
             "task options",
             "auxiliary basis fragments",
+            "auxiliary basis monomers",
             "auxiliary basis sets",
         ):
             if hasattr(self[key], "entry"):
@@ -275,9 +278,15 @@ class TkMbe(seamm.TkNode):
         )
         if order >= 2 and not counterpoise:
             shown.add("auxiliary basis fragments")
-            listed = (self._value("auxiliary basis fragments") or "").strip()
-            if listed.lower() not in ("", "none"):
-                shown.add("auxiliary basis sets")
+        if not counterpoise:
+            shown.add("auxiliary basis monomers")
+        listed = [
+            (self._value(key) or "").strip()
+            for key in ("auxiliary basis fragments", "auxiliary basis monomers")
+            if key in shown
+        ]
+        if any(text.lower() not in ("", "none") for text in listed):
+            shown.add("auxiliary basis sets")
         shown |= {"cell ranks", "cell memory", "bundle walltime", "archive"}
         if order >= 2:
             shown.add("cutoffs")
