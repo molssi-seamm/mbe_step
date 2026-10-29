@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mbe_step.labels &#8212; SEAMM MBE Plug-in 2026.10.29 documentation</title>
+    <title>mbe_step.labels &#8212; SEAMM MBE Plug-in 2026.10.29.1 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=1fe4c37e"></script>
+    <script src="../../_static/documentation_options.js?v=923375ad"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -52,7 +52,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.29" />
+  <meta name="docsearch:version" content="2026.10.29.1" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -602,6 +602,14 @@
 
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_quoted</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A value for the comment line of an extended XYZ file, in double quotes with</span>
+<span class="sd">    any backslash or double quote escaped, so that a name with spaces, '=' or quotes</span>
+<span class="sd">    reads back as itself in ASE."""</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"</span><span class="se">\\</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"</span><span class="se">\\\\</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'"'</span><span class="p">,</span> <span class="s1">'</span><span class="se">\\</span><span class="s1">"'</span><span class="p">)</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">'"</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">"'</span>
+
+
 <div class="viewcode-block" id="write_extxyz">
 <a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.labels.write_extxyz">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">write_extxyz</span><span class="p">(</span>
@@ -640,9 +648,9 @@
         <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'pbc="T T T"'</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'pbc="F F F"'</span><span class="p">)</span>
-    <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'model="</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s1">"'</span><span class="p">)</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"model=</span><span class="si">{</span><span class="n">_quoted</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"counterpoise=</span><span class="si">{</span><span class="s1">'T'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">counterpoise</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'F'</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-    <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'SEAMM/configuration_name="</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">"'</span><span class="p">)</span>
+    <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"SEAMM/configuration_name=</span><span class="si">{</span><span class="n">_quoted</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">identifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"SEAMM/configuration_id=</span><span class="si">{</span><span class="n">identifier</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">extra</span><span class="p">:</span>
