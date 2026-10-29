@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>History &#8212; SEAMM MBE Plug-in 2026.10.25.1 documentation</title>
+    <title>History &#8212; SEAMM MBE Plug-in 2026.10.29 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="_static/documentation_options.js?v=b65f04c2"></script>
+    <script src="_static/documentation_options.js?v=1fe4c37e"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -54,7 +54,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.25.1" />
+  <meta name="docsearch:version" content="2026.10.29" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -511,6 +511,20 @@
   <section id="history">
 <h1>History<a class="headerlink" href="#history" title="Link to this heading">#</a></h1>
 <dl class="simple">
+<dt>2026.10.29 – Explicit auxiliary basis sets for 1-body terms</dt><dd><ul class="simple">
+<li><p><strong>Explicit auxiliary basis for 1-body terms</strong> names units whose own 1-body
+term is computed with explicit auxiliary basis sets instead of AutoAux, as
+entries ‘level unit …’, e.g. ‘high c1-m01 c1-m03’, for units where AutoAux
+makes the auxiliary basis linearly dependent and ORCA stops (Li+ shells at
+revDSD-PBEP86-D4/def2-QZVPPD). Each is computed at the explicit-aux copy of
+its level; nothing else changes.</p></li>
+<li><p>A 1-body term is an absolute energy, so its auxiliary sets shift it (about
+-0.05 kJ/mol per atom for def2/J + def2-QZVPP/C at revDSD/def2-QZVPPD): the
+step’s description says those units are not on the AutoAux scale, for a
+correction or flag downstream. <strong>Explicit auxiliary basis for</strong> still refuses
+1-body terms, and the 1-body entry refuses fragments of two or more units.</p></li>
+</ul>
+</dd>
 <dt>2026.10.25.1 – Bugfix: a set shell pair cap stopped the job at its start</dt><dd><ul class="simple">
 <li><p>With <strong>Cap for pairs of two shells</strong> set, the step’s description failed with
 “‘str’ object has no attribute ‘m_as’” before anything ran: the description

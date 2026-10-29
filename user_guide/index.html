@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.25.1 documentation</title>
+    <title>User Guide &#8212; SEAMM MBE Plug-in 2026.10.29 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=b65f04c2"></script>
+    <script src="../_static/documentation_options.js?v=1fe4c37e"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -55,7 +55,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.25.1" />
+  <meta name="docsearch:version" content="2026.10.29" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -722,6 +722,17 @@ orbital basis (def2-TZVPP/C for def2-TZVPPD), or entries <code class="docutils l
 sets separated by commas, e.g. <code class="docutils literal notranslate"><span class="pre">high:shell</span> <span class="pre">def2/J,def2-TZVPP/C</span></code>. The sets change
 the energies slightly, so they are used only within an increment, never mixed with
 AutoAux results.</p>
+<p><strong>Explicit auxiliary basis for 1-body terms</strong> does the same for units’ own 1-body
+terms, which <strong>Explicit auxiliary basis for</strong> refuses: entries <code class="docutils literal notranslate"><span class="pre">level</span> <span class="pre">unit</span> <span class="pre">...</span></code>,
+e.g. <code class="docutils literal notranslate"><span class="pre">high</span> <span class="pre">c1-m01</span> <span class="pre">c1-m03</span></code>, for units where AutoAux fails, such as Li⁺ shells of
+50–56 atoms at revDSD-PBEP86-D4/def2-QZVPPD. Each listed unit’s 1-body term is
+computed at the explicit-aux copy of its level; nothing else changes. Unlike an
+increment, a 1-body term is an absolute energy, and the auxiliary sets shift it:
+for revDSD-PBEP86-D4/def2-QZVPPD, def2/J + def2-QZVPP/C instead of AutoAux lowers
+it by about 0.05 kJ/mol per atom (0.046 for a unit holding BF₄⁻), and changes its
+forces by about 1.5 meV/Å rms (Li-salt shells, 2026-10-28). So those units’
+energies are not on the AutoAux scale of the others; the step’s description says
+so, and the labels should be corrected or flagged downstream.</p>
 <p>The levels that run as batch tasks run at the same time, and the long periodic
 calculations (the whole cell and the periodic fragments) are started first, so
 they overlap the many molecular calculations instead of following them. For the
