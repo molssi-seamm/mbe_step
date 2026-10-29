@@ -110,6 +110,24 @@ def _shell_override(P, key, base):
     return text
 
 
+def _level_names(P):
+    """The level names ("high", "high:3", ...) that the task options may use with
+    these settings. The cell and cluster levels depend on the structures, known
+    only when the step runs, so both are allowed here."""
+    names = {"high", "molecular", "cell", "cluster"}
+    if _triples_level(P):
+        names.add("high:3")
+    if _triples_low_level(P):
+        names.add("molecular:3")
+    if _shell_level(P):
+        names.add("high:shell")
+    if _shell_low_level(P):
+        names.add("molecular:shell")
+    if P["periodic low level"] != "none":
+        names.add("periodic")
+    return names
+
+
 def _level_maps(P):
     """The seamm_mbe level maps ({order or "shell": level name}) for the high and
     the molecular low levels, or None for each without levels of their own."""
@@ -651,6 +669,29 @@ class Mbe(seamm.Node):
         printer.important("")
         return offsets
 
+    def check_flowchart(self, preceding):
+        """Check, before the job runs, that the task options name levels that
+        this step uses with its settings (MBE.run refuses the others)."""
+        P = self.parameters.values_to_dict()
+        text = P["task options"]
+        if not isinstance(text, str) or "$" in text:
+            return []
+        try:
+            options = levels.parse_task_options(text)
+        except ValueError as e:
+            return [f"'{self.title}': the task options: {e}"]
+        names = _level_names(P)
+        unused = [key for key in options if key not in names]
+        if not unused:
+            return []
+        these = "level" if len(unused) == 1 else "levels"
+        return [
+            f"'{self.title}': the task options are for the {these} "
+            f"{', '.join(unused)}, which this step does not use with its settings "
+            f"(the levels are {', '.join(sorted(names))}). Remove those entries, or "
+            "give that level its own model chemistry."
+        ]
+
     def _levels(self, P, context, frames):
         """Resolve each level's model chemistry, checking what is needed."""
         current = (
@@ -800,7 +841,8 @@ class Mbe(seamm.Node):
             if key not in result:
                 raise ValueError(
                     f"The task options are for the {key} level, which this step "
-                    "does not use."
+                    f"does not use. With these settings the levels are "
+                    f"{', '.join(sorted(result))}."
                 )
             add_options(key)
 

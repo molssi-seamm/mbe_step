@@ -128,3 +128,23 @@ def test_each_task_gets_the_options(monkeypatch):
             "ghost_atoms": [1],
         },
     }
+
+
+def test_check_flowchart_flags_options_for_an_unused_level():
+    """Validation catches what MBE.run refuses: options for high:shell when the
+    shell fragments use the high level (mbe, 2026-10-29)."""
+    node, P = parameters(
+        **{
+            "shell high level": "same as the high level",
+            "task options": "high exact_exchange_elements=none; "
+            "high:shell exact_exchange_elements=none",
+        }
+    )
+    problems = node.check_flowchart([])
+    assert len(problems) == 1 and "high:shell" in problems[0]
+
+    node, P = parameters(**{"task options": "high exact_exchange_elements=none"})
+    assert node.check_flowchart([]) == []
+
+    node, P = parameters(**{"task options": "nowhere a=1"})
+    assert "task options" in node.check_flowchart([])[0]
