@@ -529,6 +529,29 @@ class MbeParameters(seamm.Parameters):
                 "more units, at ORCA levels. Blank for none."
             ),
         },
+        "auxiliary basis monomers": {
+            "default": "",
+            "kind": "string",
+            "default_units": "",
+            "enumeration": tuple(),
+            "format_string": "",
+            "description": (
+                "Explicit auxiliary basis for 1-body terms (level unit ...):"
+            ),
+            "help_text": (
+                "1-body terms (units, e.g. an ion shell) computed with explicit "
+                "auxiliary basis sets instead of AutoAux, as entries 'level unit "
+                "...' separated by ';', e.g. 'high c1-m01 c1-m03' -- for units "
+                "where AutoAux makes the auxiliary basis linearly dependent and "
+                "ORCA stops. Each is computed at a copy of the level with the "
+                "explicit sets (<level>_aux), as for Explicit auxiliary basis for. "
+                "Unlike an increment, a 1-body term's absolute energy depends on "
+                "the auxiliary sets (revDSD-PBEP86-D4/def2-QZVPPD: about -0.05 "
+                "kJ/mol per atom for def2/J + def2-QZVPP/C), so these units' "
+                "energies are not on the AutoAux scale of the others: correct or "
+                "flag them downstream."
+            ),
+        },
         "auxiliary basis sets": {
             "default": "explicit",
             "kind": "string",

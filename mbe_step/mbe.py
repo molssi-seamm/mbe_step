@@ -44,6 +44,21 @@ if path.exists():
     molsystem.add_properties_from_file(csv_file)
 
 
+def _aux_listed(P):
+    """The fragments listed for explicit auxiliary basis sets, by level:
+    'auxiliary basis fragments' (increments of two or more units) and
+    'auxiliary basis monomers' (1-body terms) together. {str: set of str}"""
+    listed = levels.parse_aux_fragments(P["auxiliary basis fragments"])
+    for level, keys in _aux_monomers(P).items():
+        listed.setdefault(level, set()).update(keys)
+    return listed
+
+
+def _aux_monomers(P):
+    """The 1-body terms listed for explicit auxiliary basis sets, by level."""
+    return levels.parse_aux_fragments(P.get("auxiliary basis monomers", ""))
+
+
 def _distance_set(value):
     """Whether a distance parameter is set (> 0): a Quantity when run() reads it,
     a string such as '2.5 Å' or a $variable in the description."""
@@ -272,7 +287,7 @@ class Mbe(seamm.Node):
                 )
                 + "."
             )
-        listed = levels.parse_aux_fragments(P["auxiliary basis fragments"])
+        listed = _aux_listed(P)
         if listed:
             sets = levels.parse_aux_sets(P["auxiliary basis sets"])
             text += (
@@ -285,6 +300,11 @@ class Mbe(seamm.Node):
                 )
                 + "."
             )
+            if _aux_monomers(P):
+                text += (
+                    " The 1-body energies of those units are not on the AutoAux "
+                    "scale of the others."
+                )
         tiers = levels.parse_resources(P["fragment resources"])
         if tiers:
             text += (
@@ -510,7 +530,8 @@ class Mbe(seamm.Node):
         """The seamm_mbe level variants of a configuration for the fragments
         listed to use explicit auxiliary basis sets: {level: (level@aux,
         {fragment name})}."""
-        listed = levels.parse_aux_fragments(P["auxiliary basis fragments"])
+        listed = _aux_listed(P)
+        monomers = _aux_monomers(P)
         variants = {}
         for level, keys in listed.items():
             names = {k[len(prefix) :] for k in keys if k.startswith(prefix)}
@@ -526,11 +547,19 @@ class Mbe(seamm.Node):
                         f"The auxiliary basis fragment {where} is not a selected "
                         "fragment, so it has no increment of its own."
                     )
-                if f.order < 2:
+                one_body = prefix + name in monomers.get(level, set())
+                if f.order < 2 and not one_body:
                     raise ValueError(
                         f"The auxiliary basis fragment {where} is a monomer: the "
                         "1-body terms set the energy scale of every unit and stay "
-                        "at their level."
+                        "at their level, unless listed in 'Explicit auxiliary basis "
+                        "for 1-body terms'."
+                    )
+                if f.order >= 2 and one_body:
+                    raise ValueError(
+                        f"The 1-body auxiliary basis entry {where} is a fragment of "
+                        f"{f.order} units: list it in 'Explicit auxiliary basis for' "
+                        "instead."
                     )
                 uses = (
                     seamm_mbe.level_key(f, high_levels, "high", fragments.shells),
@@ -550,7 +579,7 @@ class Mbe(seamm.Node):
     def _check_aux_fragments(P, frames):
         """Refuse auxiliary basis fragments that name no configuration's fragment,
         e.g. a mistyped configuration number."""
-        listed = levels.parse_aux_fragments(P["auxiliary basis fragments"])
+        listed = _aux_listed(P)
         prefixes = [frame["prefix"] for frame in frames]
         for level, keys in listed.items():
             for key in sorted(keys):
@@ -802,7 +831,7 @@ class Mbe(seamm.Node):
         """Add to ``result`` the copies of the levels with explicit auxiliary
         basis sets, "<level>@aux", for the fragments listed to use them. Levels
         computed together (one Level) share one copy."""
-        listed = levels.parse_aux_fragments(P["auxiliary basis fragments"])
+        listed = _aux_listed(P)
         if not listed:
             return
         if P["counterpoise"] != "none":

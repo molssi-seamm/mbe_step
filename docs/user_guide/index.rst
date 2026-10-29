@@ -229,6 +229,18 @@ sets separated by commas, e.g. ``high:shell def2/J,def2-TZVPP/C``. The sets chan
 the energies slightly, so they are used only within an increment, never mixed with
 AutoAux results.
 
+**Explicit auxiliary basis for 1-body terms** does the same for units' own 1-body
+terms, which **Explicit auxiliary basis for** refuses: entries ``level unit ...``,
+e.g. ``high c1-m01 c1-m03``, for units where AutoAux fails, such as Li⁺ shells of
+50–56 atoms at revDSD-PBEP86-D4/def2-QZVPPD. Each listed unit's 1-body term is
+computed at the explicit-aux copy of its level; nothing else changes. Unlike an
+increment, a 1-body term is an absolute energy, and the auxiliary sets shift it:
+for revDSD-PBEP86-D4/def2-QZVPPD, def2/J + def2-QZVPP/C instead of AutoAux lowers
+it by about 0.05 kJ/mol per atom (0.046 for a unit holding BF₄⁻), and changes its
+forces by about 1.5 meV/Å rms (Li-salt shells, 2026-10-28). So those units'
+energies are not on the AutoAux scale of the others; the step's description says
+so, and the labels should be corrected or flagged downstream.
+
 The levels that run as batch tasks run at the same time, and the long periodic
 calculations (the whole cell and the periodic fragments) are started first, so
 they overlap the many molecular calculations instead of following them. For the

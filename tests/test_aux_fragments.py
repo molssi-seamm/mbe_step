@@ -167,3 +167,67 @@ def test_refusals(db, monkeypatch):
     node, P, frame = frame_with(f"high:shell {prefix}{pair.name}")
     with pytest.raises(ValueError, match="cannot take explicit auxiliary"):
         node._levels(P, {}, [frame])
+
+
+def evaluate_monomer_aux(self, node, structures, stress=False):
+    """As evaluate, and the high level's explicit-aux copy is the high level shifted."""
+    if self.name == "high_aux":
+        out = evaluate_with_bsse(types.SimpleNamespace(name="high"), node, structures)
+        for result in out.values():
+            result.energy += SHIFT * KJ_PER_EV
+        return out
+    return evaluate(self, node, structures, stress)
+
+
+def test_a_listed_1_body_term_moves_alone(db, monkeypatch):
+    """'Explicit auxiliary basis for 1-body terms' runs a unit's own 1-body term
+    at the explicit-aux copy of its level (Li-salt shells where AutoAux fails at
+    revDSD/def2-QZVPPD, 2026-10-29): only that term moves, by the copy's offset."""
+    monkeypatch.setattr(levels.Level, "evaluate", evaluate_monomer_aux)
+    conf = li_cluster(db)
+    node, P = parameters(**SHELL_TZ)
+    frame = node._frame(conf, node._rules(P), P)
+    fragments = frame["fragments"]
+    (shell,) = [f for f in fragments.by_order(1) if holds_shell(fragments, f)]
+    _, plain = run(node, P, frame, _levels(**{"high:shell": "high_shells"}))
+    increments = dict(frame["correction"].increments)
+
+    key = f"{frame['prefix']}{shell.name}"
+    node, P = parameters(**SHELL_TZ, **{"auxiliary basis monomers": f"high {key}"})
+    node._id = (1,)
+    text = " ".join(node.description_text(node.parameters.values_to_dict()).split())
+    assert "not on the AutoAux scale" in text
+    frame = node._frame(conf, node._rules(P), P)
+    calcs = frame["calculations"]
+    assert frame["variants"] == {"high": ("high@aux", {shell.name})}
+    assert calcs["high@aux"] == [shell.name]
+    assert shell.name not in calcs["high"]
+    levels_ = _levels(**{"high:shell": "high_shells", "high@aux": "high_aux"})
+    _, labels = run(node, P, frame, levels_)
+    assert labels.energy - plain.energy == pytest.approx(SHIFT, abs=1e-9)
+    for name, inc in frame["correction"].increments.items():
+        delta = inc.energy - increments[name].energy
+        if name == shell.name:
+            assert inc.high_level == "high@aux"
+            assert delta == pytest.approx(SHIFT, abs=1e-9)
+        else:
+            assert delta == pytest.approx(0.0, abs=1e-12)
+
+
+def test_1_body_entries_hold_only_1_body_terms(db, monkeypatch):
+    monkeypatch.setattr(mbe_step.Mbe, "variable_exists", lambda self, name: False)
+    conf = li_cluster(db)
+    node, P = parameters(**SHELL_TZ)
+    frame, pair = shell_pair(node, P, conf)
+    prefix = frame["prefix"]
+    node, P = parameters(
+        **SHELL_TZ, **{"auxiliary basis monomers": f"high:shell {prefix}{pair.name}"}
+    )
+    with pytest.raises(ValueError, match="is a fragment of 2 units"):
+        node._frame(conf, node._rules(P), P)
+    # a monomer under the increments' entry is still refused, with the pointer
+    node, P = parameters(
+        **SHELL_TZ, **{"auxiliary basis fragments": f"high {prefix}m00"}
+    )
+    with pytest.raises(ValueError, match="Explicit auxiliary basis for 1-body terms"):
+        node._frame(conf, node._rules(P), P)

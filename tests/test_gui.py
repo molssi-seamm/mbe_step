@@ -218,3 +218,14 @@ def test_auxiliary_basis_controls(tk_node):
     tk_node["maximum order"].set("1")
     tk_node.reset_dialog()
     assert not mapped(tk_node, "auxiliary basis fragments")
+    # 1-body terms: at any order, not with counterpoise; the sets once listed
+    assert mapped(tk_node, "auxiliary basis monomers")
+    assert not mapped(tk_node, "auxiliary basis sets")  # the pairs' entry is hidden
+    tk_node["auxiliary basis monomers"].set("high c1-m01")
+    tk_node.reset_dialog()
+    assert mapped(tk_node, "auxiliary basis sets")
+    tk_node["maximum order"].set("2")
+    tk_node["counterpoise"].set("pairwise")
+    tk_node.reset_dialog()
+    assert not mapped(tk_node, "auxiliary basis monomers")
+    assert not mapped(tk_node, "auxiliary basis sets")
