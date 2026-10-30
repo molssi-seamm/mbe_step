@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>mbe_step.mbe &#8212; SEAMM MBE Plug-in 2026.10.29.1 documentation</title>
+    <title>mbe_step.mbe &#8212; SEAMM MBE Plug-in 2026.10.29.2 documentation</title>
   
   
   
@@ -39,7 +39,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=923375ad"></script>
+    <script src="../../_static/documentation_options.js?v=a5cbffc7"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -52,7 +52,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.10.29.1" />
+  <meta name="docsearch:version" content="2026.10.29.2" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -601,6 +601,24 @@
     <span class="k">if</span> <span class="n">text</span> <span class="o">==</span> <span class="s2">""</span> <span class="ow">or</span> <span class="n">text</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"same as the"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">text</span> <span class="o">==</span> <span class="n">P</span><span class="p">[</span><span class="n">base</span><span class="p">]:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">text</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_level_names</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The level names ("high", "high:3", ...) that the task options may use with</span>
+<span class="sd">    these settings. The cell and cluster levels depend on the structures, known</span>
+<span class="sd">    only when the step runs, so both are allowed here."""</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"high"</span><span class="p">,</span> <span class="s2">"molecular"</span><span class="p">,</span> <span class="s2">"cell"</span><span class="p">,</span> <span class="s2">"cluster"</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">_triples_level</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"high:3"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">_triples_low_level</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"molecular:3"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">_shell_level</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"high:shell"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">_shell_low_level</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"molecular:shell"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">P</span><span class="p">[</span><span class="s2">"periodic low level"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"none"</span><span class="p">:</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">"periodic"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">names</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_level_maps</span><span class="p">(</span><span class="n">P</span><span class="p">):</span>
@@ -1152,6 +1170,32 @@
         <span class="n">printer</span><span class="o">.</span><span class="n">important</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">offsets</span>
 
+<div class="viewcode-block" id="Mbe.check_flowchart">
+<a class="viewcode-back" href="../../api/mbe_step.html#mbe_step.mbe.Mbe.check_flowchart">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_flowchart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preceding</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Check, before the job runs, that the task options name levels that</span>
+<span class="sd">        this step uses with its settings (MBE.run refuses the others)."""</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values_to_dict</span><span class="p">()</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="s2">"task options"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"$"</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="n">levels</span><span class="o">.</span><span class="n">parse_task_options</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">': the task options: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="n">_level_names</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+        <span class="n">unused</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">options</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">unused</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">these</span> <span class="o">=</span> <span class="s2">"level"</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unused</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">"levels"</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">': the task options are for the </span><span class="si">{</span><span class="n">these</span><span class="si">}</span><span class="s2"> "</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">unused</span><span class="p">)</span><span class="si">}</span><span class="s2">, which this step does not use with its settings "</span>
+            <span class="sa">f</span><span class="s2">"(the levels are </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">names</span><span class="p">))</span><span class="si">}</span><span class="s2">). Remove those entries, or "</span>
+            <span class="s2">"give that level its own model chemistry."</span>
+        <span class="p">]</span></div>
+
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_levels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">frames</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">"""Resolve each level's model chemistry, checking what is needed."""</span>
         <span class="n">current</span> <span class="o">=</span> <span class="p">(</span>
@@ -1301,7 +1345,8 @@
             <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">"The task options are for the </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> level, which this step "</span>
-                    <span class="s2">"does not use."</span>
+                    <span class="sa">f</span><span class="s2">"does not use. With these settings the levels are "</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">result</span><span class="p">))</span><span class="si">}</span><span class="s2">."</span>
                 <span class="p">)</span>
             <span class="n">add_options</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
