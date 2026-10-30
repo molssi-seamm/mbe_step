@@ -1,6 +1,12 @@
 =======
 History
 =======
+2026.10.29.2 -- Bugfix: task options for an unused level are caught before the job runs
+    * Task options for a level that the step does not use with its settings, such as
+      ``high:shell`` when the shell fragments use the high level, passed the flowchart
+      check and only failed when the job ran. The check now reports them, and the
+      run-time error lists the levels in use.
+
 2026.10.29.1 -- Bugfix: names with quotes in the labels' extended XYZ file
     * The configuration name and the model on the comment line of the labels'
       extended XYZ file were quoted but not escaped, so a name with a double quote or

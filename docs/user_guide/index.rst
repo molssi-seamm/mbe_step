@@ -199,7 +199,10 @@ of 20-minute jobs leave the cores idle between them.
 ``level key=value ...`` separated by ``;``. The levels are ``high``, ``high:3``,
 ``high:shell``, ``molecular``, ``molecular:3``, ``molecular:shell``, ``periodic``,
 ``cell`` and ``cluster``; the options are the program's task options, and a
-structure's own (such as counterpoise ghosts) take precedence. For example, ORCA
+structure's own (such as counterpoise ghosts) take precedence. Only the levels
+the step uses with its settings may be given: ``high:shell``, for example, only
+when the shell fragments have a high level of their own, not when it is "same as
+the high level". Checking the flowchart reports any other before the job runs. For example, ORCA
 uses exact exchange (NoCOSX) for every job with B or P, which doubles the cost of
 Li-salt cells with BF₄⁻ or PF₆⁻. ``high:shell exact_exchange_elements=none`` keeps
 RIJCOSX for the shell pairs, where it matches exact exchange in the increments
